@@ -4,13 +4,13 @@ import Image from "next/image";
 
 export default function Logo() {
     return(
-        <div className={styles.logo}>
-            <Image
+        <div className={styles.logo}> <p>Logo</p>
+            {/* <Image
                 src={''}
                 width={25}
                 height={25}
                 alt=""
-            />
+            /> */}
             <Link href={'/'}></Link>
         </div>
     )

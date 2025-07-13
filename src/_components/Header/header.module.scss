@@ -1,7 +1,12 @@
 .grid {
     display: flex;
     background-color: #f4f4f4;
-    padding: 25px 8px;
+    padding: 25px 40px;
     border-bottom: solid 3px #000;
-    justify-content: space-around;
+    justify-content: space-between;
+
+    &__left{
+        display: flex;
+        gap: 60px;
+    }
 }
