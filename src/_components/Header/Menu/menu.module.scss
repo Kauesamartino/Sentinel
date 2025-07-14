@@ -1,4 +1,6 @@
 .menu {
+    display: flex;
+    align-items: center;
     &__list {
         list-style: none;
         display: flex;
@@ -9,8 +11,8 @@
     &__link {
         display: flex;
         text-decoration: none;
-        font-size: 20px;
+        font-size: 15px;
         font-weight: 500;
-        color: black;
+        color: #000;
     }
 }
