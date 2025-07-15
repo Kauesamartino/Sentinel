@@ -11,6 +11,32 @@ const rows = [
   { label: 'Ações', styles: styles.actionscell },
 ];
 
+const ocorrencias = [{
+  id: 1,
+  description: 'Ocorrência de teste',
+  category: 'Categoria A',
+  date: '2023-10-01',
+  status: 'Pendente',
+  grau: 'Alto',
+  evidence: 'Evidência',
+}, {
+  id: 2,
+  description: 'Outra ocorrência de teste',
+  category: 'Categoria B',
+  date: '2023-10-02',
+  status: 'Concluída',
+  grau: 'Médio',
+  evidence: 'Evidência',
+}, {
+  id: 3,
+  description: 'Mais uma ocorrência de teste',
+  category: 'Categoria C',
+  date: '2023-10-03',
+  status: 'Em andamento',
+  grau: 'Baixo',
+  evidence: 'Evidência',
+}]
+
 const OcorrenciasPage = () => {
   return (
     <main className={styles.main}>
@@ -27,13 +53,18 @@ const OcorrenciasPage = () => {
             </tr>
           </thead>
           <tbody className={styles.tbody}>
-            <tr className={styles.tr}>
-              {rows.map((_, index) => (
-                <td key={index} className={styles.cell}>
-                  {/* Conteúdo da célula */}
-                </td>
-              ))}
-            </tr>
+            {ocorrencias.map((ocorrencia, index) => (
+              <tr className={styles.tr} key={index}>
+                <td className={styles.cell}>{ocorrencia.id}</td>
+                <td className={styles.cell}>{ocorrencia.description}</td>
+                <td className={styles.cell}>{ocorrencia.category}</td>
+                <td className={styles.cell}>{ocorrencia.date}</td>
+                <td className={styles.cell}>{ocorrencia.status}</td>
+                <td className={styles.cell}>{ocorrencia.grau}</td>
+                <td className={styles.cell}>{ocorrencia.evidence}</td>
+                <td className={styles.cell}>Ver Editar</td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
