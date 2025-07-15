@@ -1,0 +1,100 @@
+.main {
+  padding: 90px 60px 0 60px;
+  background-color: #f4f4f4;
+  height: 100%;
+}
+
+.container {
+  width: 100%;
+  max-width: 1280px; // limite opcional
+  margin: 0 auto;
+  padding: 0 40px;
+  box-sizing: border-box;
+}
+
+.table {
+  width: 100%;
+  margin-top: 60px;
+  border-collapse: collapse;
+  table-layout: fixed;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border-radius: 8px; 
+  overflow: hidden;   
+}
+
+.thead {
+  background-color: #f3f4f6;
+
+  th {
+    padding-left: 10px;
+    text-align: left;
+    position: sticky;
+    top: 0;
+    background-color: #f3f4f6;
+    z-index: 1;
+  }
+}
+
+.tr {
+  height: 50px;
+}
+
+.headerrows {
+    color: #4b5563;
+    font-size: 15px;
+}
+
+.cell {
+  padding: 12px 24px;
+  text-align: left;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #4b5563;
+}
+
+.tbody {
+  background-color: #fff;
+    tr{
+        height: 60px;
+        border-bottom: 1px solid #e5e7eb;
+    }
+}
+
+.tbody tr:hover {
+  background-color: #f9fafb; 
+  transition: background-color 0.2s ease;
+}
+
+
+// Largura específica para cada coluna
+.idcell {
+  width: 6rem;
+}
+
+.descriptioncell {
+  width: 30%;
+}
+
+.categorycell {
+  width: 8rem;
+}
+
+.datetimecell {
+  width: 8rem;
+}
+
+.statuscell {
+  width: 8rem;
+}
+
+.graucell {
+  width: 7rem;
+}
+
+.evidencecell {
+  width: 8rem;
+}
+
+.actionscell {
+  width: 10rem;
+}
