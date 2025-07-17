@@ -1,4 +1,9 @@
+'use client';
+
+import { useEffect, useState } from 'react';
 import styles from './ocorrenciaspage.module.scss';
+import { getOcorrencias } from '@/services/ocorrenciasService';
+
 
 const rows = [
   { label: 'id', styles: styles.idcell },
@@ -11,33 +16,31 @@ const rows = [
   { label: 'Ações', styles: styles.actionscell },
 ];
 
-const ocorrencias = [{
-  id: 1,
-  description: 'Ocorrência de teste',
-  category: 'Categoria A',
-  date: '2023-10-01',
-  status: 'Pendente',
-  grau: 'Alto',
-  evidence: 'Evidência',
-}, {
-  id: 2,
-  description: 'Outra ocorrência de teste',
-  category: 'Categoria B',
-  date: '2023-10-02',
-  status: 'Concluída',
-  grau: 'Médio',
-  evidence: 'Evidência',
-}, {
-  id: 3,
-  description: 'Mais uma ocorrência de teste',
-  category: 'Categoria C',
-  date: '2023-10-03',
-  status: 'Em andamento',
-  grau: 'Baixo',
-  evidence: 'Evidência',
-}]
+
+type Ocorrencia = {
+  id: number;
+  description: string;
+  category: string;
+  date: string;
+  status: string;
+  grau: string;
+  evidence: string;
+};
 
 const OcorrenciasPage = () => {
+
+  const [ocorrencias, setOcorrencias] = useState<Ocorrencia[]>([]);
+
+
+  useEffect(() => {
+    const fetchOcorrencias = async () => {
+      const data = await getOcorrencias();
+      setOcorrencias(data);
+    };
+
+    fetchOcorrencias();
+  }, []);
+
   return (
     <main className={styles.main}>
       <h1>Ocorrências</h1>
