@@ -36,7 +36,7 @@ export const createOcorrencia = async (payload: Record<string, unknown>) => {
     const text = await response.text();
     const body = text ? (() => { try { return JSON.parse(text) } catch { return { raw: text } } })() : {};
     if (!response.ok) {
-      const message = (body as any)?.error || (body as any)?.message || text || 'Erro ao criar ocorrência';
+  const message = (body?.error as string) || (body?.message as string) || text || 'Erro ao criar ocorrência';
       throw new Error(message);
     }
     return body;
@@ -56,7 +56,7 @@ export const updateOcorrencia = async (id: number, payload: Record<string, unkno
     const text = await response.text();
     const body = text ? (() => { try { return JSON.parse(text) } catch { return { raw: text } } })() : {};
     if (!response.ok) {
-      const message = (body as any)?.error || (body as any)?.message || text || 'Erro ao atualizar ocorrência';
+  const message = (body?.error as string) || (body?.message as string) || text || 'Erro ao atualizar ocorrência';
       throw new Error(message);
     }
     return body;

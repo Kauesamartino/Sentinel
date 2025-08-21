@@ -13,7 +13,7 @@ export const listRelatorios = async ({ page = 0, size = 10, sort = 'id' }: Pagea
   const res = await fetch(`/api/relatorios?${params.toString()}`, { cache: 'no-store' });
   const text = await res.text();
   const body = text ? (() => { try { return JSON.parse(text) } catch { return { raw: text } } })() : {};
-  if (!res.ok) throw new Error((body as any)?.error || (body as any)?.message || 'Erro ao listar relatórios');
+  if (!res.ok) throw new Error((body?.error as string) || (body?.message as string) || 'Erro ao listar relatórios');
   return body;
 };
 
@@ -25,7 +25,7 @@ export const createRelatorio = async (payload: RelatorioCreate) => {
   });
   const text = await res.text();
   const body = text ? (() => { try { return JSON.parse(text) } catch { return { raw: text } } })() : {};
-  if (!res.ok) throw new Error((body as any)?.error || (body as any)?.message || text || 'Erro ao criar relatório');
+  if (!res.ok) throw new Error((body?.error as string) || (body?.message as string) || text || 'Erro ao criar relatório');
   return body;
 };
 
@@ -34,6 +34,6 @@ export const listOcorrenciasByRelatorio = async (relatorioId: number, { page = 0
   const res = await fetch(`/api/ocorrencias/relatorio/${relatorioId}?${params.toString()}`, { cache: 'no-store' });
   const text = await res.text();
   const body = text ? (() => { try { return JSON.parse(text) } catch { return { raw: text } } })() : {};
-  if (!res.ok) throw new Error((body as any)?.error || (body as any)?.message || 'Erro ao listar ocorrências do relatório');
+  if (!res.ok) throw new Error((body?.error as string) || (body?.message as string) || 'Erro ao listar ocorrências do relatório');
   return body;
 }; 

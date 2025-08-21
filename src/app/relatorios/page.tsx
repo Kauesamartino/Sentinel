@@ -56,8 +56,16 @@ export default function RelatoriosPage() {
 
   const [viewOpen, setViewOpen] = useState(false);
   const [viewId, setViewId] = useState<number | null>(null);
-  const [viewPage, setViewPage] = useState(0);
-  const [viewData, setViewData] = useState<{ content: any[]; totalElements: number } | null>(null);
+  // const [viewPage, setViewPage] = useState(0); // Removido pois não é usado
+  type OcorrenciaView = {
+    id: number;
+    titulo: string;
+    tipoOcorrencia?: string;
+    data: string;
+    severidade?: string;
+    status?: string;
+  };
+  const [viewData, setViewData] = useState<{ content: OcorrenciaView[]; totalElements: number } | null>(null);
 
   const refreshList = async () => {
     setLoading(true);
@@ -81,7 +89,6 @@ export default function RelatoriosPage() {
   const openView = async (id: number, page = 0) => {
     setViewOpen(true);
     setViewId(id);
-    setViewPage(page);
     try {
       const res = await listOcorrenciasByRelatorio(id, { page, size: 10, sort: 'id' });
       setViewData(res);
@@ -169,7 +176,7 @@ export default function RelatoriosPage() {
           </div>
           <div className={styles.formRow}>
             <label className={styles.label}>Tipo de Ocorrência (opcional)</label>
-            <select className={styles.select} value={form.tipoOcorrencia} onChange={(e) => setForm((p) => ({ ...p, tipoOcorrencia: e.target.value as any }))}>
+            <select className={styles.select} value={form.tipoOcorrencia} onChange={(e) => setForm((p) => ({ ...p, tipoOcorrencia: e.target.value as RelatorioFormState['tipoOcorrencia'] }))}>
               <option value="">Todos</option>
               <option value="ACIDENTE">ACIDENTE</option>
               <option value="FALHA_TECNICA">FALHA_TECNICA</option>
@@ -211,14 +218,14 @@ export default function RelatoriosPage() {
                 </tr>
               </thead>
               <tbody className={styles.tbody}>
-                {(viewData.content || []).map((o: any) => (
+                {(viewData.content || []).map((o) => (
                   <tr className={styles.tr} key={o.id}>
                     <td className={styles.cell}>{o.id}</td>
                     <td className={styles.cell}>{o.titulo}</td>
-                    <td className={styles.cell}>{formatEnumValue(o.tipoOcorrencia)}</td>
+                    <td className={styles.cell}>{formatEnumValue(o.tipoOcorrencia ?? '')}</td>
                     <td className={styles.cell}>{formatDate(o.data)}</td>
-                    <td className={styles.cell}>{formatEnumValue(o.severidade)}</td>
-                    <td className={styles.cell}>{formatEnumValue(o.status)}</td>
+                    <td className={styles.cell}>{formatEnumValue(o.severidade ?? '')}</td>
+                    <td className={styles.cell}>{formatEnumValue(o.status ?? '')}</td>
                   </tr>
                 ))}
               </tbody>
