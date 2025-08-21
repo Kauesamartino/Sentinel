@@ -136,9 +136,9 @@ export default function OcorrenciaForm({ initial, onSubmit, submitLabel = 'Salva
             onChange={handleChange}
             className={styles.select}
           >
-            <option value="ABERTO">ABERTO</option>
-            <option value="EM_ANDAMENTO">EM_ANDAMENTO</option>
-            <option value="CONCLUIDO">CONCLUIDO</option>
+            <option value="ABERTO">Aberto</option>
+            <option value="EM_ANDAMENTO">Em andamento</option>
+            <option value="CONCLUIDO">Concluído</option>
           </select>
         </div>
       )}
@@ -151,10 +151,10 @@ export default function OcorrenciaForm({ initial, onSubmit, submitLabel = 'Salva
           onChange={handleChange}
           className={styles.select}
         >
-          <option value="ACIDENTE">ACIDENTE</option>
-          <option value="FALHA_TECNICA">FALHA_TÉCNICA</option>
-          <option value="INCIDENTE">INCIDENTE</option>
-          <option value="OUTROS">OUTROS</option>
+          <option value="ACIDENTE">Acidente</option>
+          <option value="FALHA_TECNICA">Falha técnica</option>
+          <option value="INCIDENTE">Incidente</option>
+          <option value="OUTROS">Outros</option>
         </select>
       </div>
       

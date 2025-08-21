@@ -261,7 +261,7 @@ const OcorrenciasPage = () => {
                 <div className={viewStyles.stationDetails}>
                   <div><strong>Nome:</strong> {viewData.dadosDetalhamentoEstacao?.nome}</div>
                   {viewData.dadosDetalhamentoEstacao?.linha && (
-                    <div><strong>Linha:</strong> <span className={viewStyles.value}>{formatEnumValue(viewData.dadosDetalhamentoEstacao.linha)}</span></div>
+                    <div><strong>Linha: </strong>{formatEnumValue(viewData.dadosDetalhamentoEstacao.linha)}</div>
                   )}
                   {viewData.dadosDetalhamentoEstacao?.dadosControle && (
                     <div><strong>Centro de Controle:</strong> {viewData.dadosDetalhamentoEstacao.dadosControle.nome}</div>
