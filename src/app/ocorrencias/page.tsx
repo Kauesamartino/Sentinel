@@ -152,18 +152,19 @@ const OcorrenciasPage = () => {
 
   return (
     <main className={styles.main}>
-      <h1>Ocorrências</h1>
       <div className={styles.container}>
-        <div className={styles.headerActions}>
-          <div />
-          <Button 
-            onClick={() => setCreateOpen(true)}
-            variant="primary"
-            size="medium"
-            className={styles.newOccurrenceButton}
-          >
-            Nova ocorrência
-          </Button>
+        <div className={styles.header}>
+          <h1 className={styles.title}>Ocorrências</h1>
+          <div className={styles.headerButtonWrapper}>
+            <Button 
+              onClick={() => setCreateOpen(true)}
+              variant="primary"
+              size="medium"
+              className={styles.newOccurrenceButton}
+            >
+              Nova ocorrência
+            </Button>
+          </div>
         </div>
         {error && <div className={styles.errorMessage}>{error}</div>}
         <table className={styles.table}>
