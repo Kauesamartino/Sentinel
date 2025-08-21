@@ -33,9 +33,11 @@ export const createOcorrencia = async (payload: Record<string, unknown>) => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
     });
-    const body = await response.json();
+    const text = await response.text();
+    const body = text ? (() => { try { return JSON.parse(text) } catch { return { raw: text } } })() : {};
     if (!response.ok) {
-      throw body;
+      const message = (body as any)?.error || (body as any)?.message || text || 'Erro ao criar ocorrência';
+      throw new Error(message);
     }
     return body;
   } catch (error) {
@@ -51,9 +53,11 @@ export const updateOcorrencia = async (id: number, payload: Record<string, unkno
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
     });
-    const body = await response.json();
+    const text = await response.text();
+    const body = text ? (() => { try { return JSON.parse(text) } catch { return { raw: text } } })() : {};
     if (!response.ok) {
-      throw body;
+      const message = (body as any)?.error || (body as any)?.message || text || 'Erro ao atualizar ocorrência';
+      throw new Error(message);
     }
     return body;
   } catch (error) {
