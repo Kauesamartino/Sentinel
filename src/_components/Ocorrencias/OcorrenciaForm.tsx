@@ -71,7 +71,8 @@ export default function OcorrenciaForm({ initial, onSubmit, submitLabel = 'Salva
       if (isEdit) {
         await onSubmit(form);
       } else {
-        const { id: _, status: __, ...createPayload } = form;
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { id, status, ...createPayload } = form;
         await onSubmit(createPayload);
       }
     } catch (err: unknown) {
