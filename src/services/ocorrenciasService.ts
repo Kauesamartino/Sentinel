@@ -1,7 +1,6 @@
 export const getOcorrencias = async (page: number = 0, size: number = 10, sort: string = 'id') => {
   try {
-    const params = new URLSearchParams({ page: String(page), size: String(size), sort })
-    const response = await fetch(`/api/ocorrencias?${params.toString()}`, { cache: 'no-store' });
+    const response = await fetch(`/api/ocorrencias?${new URLSearchParams({ page: String(page), size: String(size), sort }).toString()}`, { cache: 'no-store' });
     if (!response.ok) {
       throw new Error('Erro ao buscar ocorrências');
     }
@@ -11,7 +10,7 @@ export const getOcorrencias = async (page: number = 0, size: number = 10, sort: 
     console.error('Erro na chamada da API:', error);
     return [];
   }
-};
+}
 
 export const getOcorrenciaById = async (id: number) => {
   try {
