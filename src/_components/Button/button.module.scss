@@ -22,14 +22,15 @@
 }
 
 // Variants
+
 .primary {
-  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  background: linear-gradient(135deg, #273BE2 0%, #1a2a99 100%);
   color: white;
 
   &:hover:not(:disabled) {
-    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    background: linear-gradient(135deg, #1a2a99 0%, #273BE2 100%);
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    box-shadow: 0 4px 12px rgba(39, 59, 226, 0.18);
   }
 
   &:active:not(:disabled) {
@@ -50,10 +51,10 @@
 
 .transparent {
   background-color: transparent;
-  color: #3b82f6;
+  color: #273BE2;
 
   &:hover:not(:disabled) {
-    background-color: #3b82f6;
+    background-color: #273BE2;
     color: white;
   }
 }
