@@ -22,13 +22,13 @@ export async function GET(request: Request) {
     const content = Array.isArray(pageableData?.content) ? pageableData.content : []
 
     // Map external fields to the UI shape expected by the table
-    const mapped = content.map((item: any) => ({
-      id: item.id,
-      description: item.titulo ?? '',
-      category: item.tipoOcorrencia ?? '',
-      date: item.data ?? '',
-      status: item.status ?? '',
-      grau: item.severidade ?? '',
+    const mapped = content.map((item: Record<string, unknown>) => ({
+      id: item.id as number,
+      description: (item.titulo as string) ?? '',
+      category: (item.tipoOcorrencia as string) ?? '',
+      date: (item.data as string) ?? '',
+      status: (item.status as string) ?? '',
+      grau: (item.severidade as string) ?? '',
       evidence: '',
     }))
 

@@ -48,9 +48,9 @@ export default function OcorrenciaForm({ initial, onSubmit, submitLabel = 'Salva
     id: initial?.id ?? 0,
     titulo: initial?.titulo ?? '',
     descricao: initial?.descricao ?? '',
-    severidade: (initial?.severidade as any) ?? 'BAIXA',
-    status: (initial?.status as any) ?? 'ABERTO',
-    tipoOcorrencia: (initial?.tipoOcorrencia as any) ?? 'INCIDENTE',
+    severidade: (initial?.severidade as 'BAIXA' | 'MEDIA' | 'ALTA') ?? 'BAIXA',
+    status: (initial?.status as 'ABERTO' | 'EM_ANDAMENTO' | 'CONCLUIDO' | string) ?? 'ABERTO',
+    tipoOcorrencia: (initial?.tipoOcorrencia as 'ACIDENTE' | 'FALHA_TECNICA' | 'INCIDENTE' | 'OUTROS') ?? 'INCIDENTE',
   });
 
   const isValid = useMemo(() => !!form.titulo && !!form.tipoOcorrencia, [form]);
@@ -71,11 +71,12 @@ export default function OcorrenciaForm({ initial, onSubmit, submitLabel = 'Salva
       if (isEdit) {
         await onSubmit(form);
       } else {
-        const { id, status, ...createPayload } = form;
+        const { id: _id, status: _status, ...createPayload } = form;
         await onSubmit(createPayload);
       }
-    } catch (err: any) {
-      setError(err?.message || 'Falha ao salvar');
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : 'Falha ao salvar';
+      setError(errorMessage);
     } finally {
       setSubmitting(false);
     }
@@ -134,9 +135,9 @@ export default function OcorrenciaForm({ initial, onSubmit, submitLabel = 'Salva
             onChange={handleChange}
             className={styles.select}
           >
-            <option value="ABERTO">Aberto</option>
-            <option value="EM_ANDAMENTO">Em andamento</option>
-            <option value="CONCLUIDO">Concluído</option>
+            <option value="ABERTO">ABERTO</option>
+            <option value="EM_ANDAMENTO">EM_ANDAMENTO</option>
+            <option value="CONCLUIDO">CONCLUIDO</option>
           </select>
         </div>
       )}
@@ -149,10 +150,10 @@ export default function OcorrenciaForm({ initial, onSubmit, submitLabel = 'Salva
           onChange={handleChange}
           className={styles.select}
         >
-          <option value="ACIDENTE">Acidente</option>
-          <option value="FALHA_TECNICA">Falha técnica</option>
-          <option value="INCIDENTE">Incidente</option>
-          <option value="OUTROS">Outros</option>
+          <option value="ACIDENTE">ACIDENTE</option>
+          <option value="FALHA_TECNICA">FALHA_TÉCNICA</option>
+          <option value="INCIDENTE">INCIDENTE</option>
+          <option value="OUTROS">OUTROS</option>
         </select>
       </div>
       

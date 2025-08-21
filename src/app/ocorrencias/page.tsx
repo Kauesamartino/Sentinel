@@ -77,8 +77,9 @@ const OcorrenciasPage = () => {
     try {
       const data = await getOcorrencias(0, 10, 'id');
       setOcorrencias(data);
-    } catch (e: any) {
-      setError(e?.message || 'Erro ao carregar ocorrências');
+    } catch (e: unknown) {
+      const errorMessage = e instanceof Error ? e.message : 'Erro ao carregar ocorrências';
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -94,7 +95,7 @@ const OcorrenciasPage = () => {
       setViewData(null);
       const data = await getOcorrenciaById(id);
       setViewData(data);
-    } catch (e) {
+    } catch {
       setViewOpen(false);
     }
   };
@@ -107,25 +108,26 @@ const OcorrenciasPage = () => {
         id: data.id,
         titulo: data.titulo,
         descricao: data.descricao,
-        severidade: data.severidade as any,
-        status: data.status as any,
+        severidade: data.severidade as 'BAIXA' | 'MEDIA' | 'ALTA',
+        status: data.status as 'ABERTO' | 'EM_ANDAMENTO' | 'CONCLUIDO' | string,
         tipoOcorrencia: data.tipoOcorrencia as 'ACIDENTE' | 'FALHA_TECNICA' | 'INCIDENTE' | 'OUTROS',
       });
       setEditOpen(true);
-    } catch (e) {
+    } catch {
       // noop
     }
   };
 
   const submitCreate = async (payload: OcorrenciaPayload) => {
-    await createOcorrencia(payload);
+    await createOcorrencia(payload as Record<string, unknown>);
     setCreateOpen(false);
     await refreshList();
   };
 
-  const submitEdit = async (payload: OcorrenciaPayload) => {
+  const submitEdit = async (payload: OcorrenciaPayload | OcorrenciaUpdatePayload) => {
     if (!editId) return;
-    await updateOcorrencia(editId, payload);
+    const updatePayload = 'id' in payload ? payload : { ...payload, id: editId };
+    await updateOcorrencia(editId, updatePayload as Record<string, unknown>);
     setEditOpen(false);
     setEditId(null);
     await refreshList();

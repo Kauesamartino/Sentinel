@@ -26,7 +26,7 @@ export const getOcorrenciaById = async (id: number) => {
   }
 };
 
-export const createOcorrencia = async (payload: any) => {
+export const createOcorrencia = async (payload: Record<string, unknown>) => {
   try {
     const response = await fetch(`/api/ocorrencias`, {
       method: 'POST',
@@ -44,7 +44,7 @@ export const createOcorrencia = async (payload: any) => {
   }
 };
 
-export const updateOcorrencia = async (id: number, payload: any) => {
+export const updateOcorrencia = async (id: number, payload: Record<string, unknown>) => {
   try {
     const response = await fetch(`/api/ocorrencias/${id}`, {
       method: 'PUT',
