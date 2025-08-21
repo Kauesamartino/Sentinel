@@ -40,7 +40,24 @@ type OcorrenciaDetalhe = {
   status: string;
   tipoOcorrencia: string;
   ativo?: boolean;
-  dadosDetalhamentoEstacao?: any;
+  dadosDetalhamentoEstacao?: {
+    id: number;
+    nome: string;
+    linha?: string;
+    dadosControle?: {
+      id: number;
+      nome: string;
+    };
+    endereco?: {
+      logradouro: string;
+      bairro: string;
+      cep: string;
+      numero: string;
+      complemento: string;
+      cidade: string;
+      uf: string;
+    };
+  };
 };
 
 function formatDate(value: string): string {

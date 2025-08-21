@@ -71,7 +71,7 @@ export default function OcorrenciaForm({ initial, onSubmit, submitLabel = 'Salva
       if (isEdit) {
         await onSubmit(form);
       } else {
-        const { id: _id, status: _status, ...createPayload } = form;
+        const { id, status, ...createPayload } = form;
         await onSubmit(createPayload);
       }
     } catch (err: unknown) {
