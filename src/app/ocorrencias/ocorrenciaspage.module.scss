@@ -1,3 +1,37 @@
+// Container para scroll vertical da tabela
+.tableScrollContainer {
+  max-height: 700px;
+  min-height: 350px;
+  overflow-y: auto;
+  background: #ffffff00;
+  border-radius: 12px;
+  margin-bottom: 24px;
+  padding: 0 8px;  
+}
+
+.table {
+  width: 100%;
+  min-width: 900px;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: #fff;
+}
+
+.cell {
+  word-break: break-word;
+  white-space: normal;
+  vertical-align: middle;
+}
+
+.evidenceActions {
+  flex-wrap: wrap;
+  gap: 8px 4px;
+}
+.evidenceActions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
 .main {
   padding: 90px 60px 0 60px;
   background-color: #f4f4f4;
@@ -16,7 +50,7 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  margin: 60px 0 10px;
+  margin: 20px 0 10px;
 }
 
 .title {
@@ -156,12 +190,7 @@
 }
 
 .evidencecell {
-  width: 8rem;
-}
-
-.actionscell {
-  width: 6rem;
-  text-align: left;
+  width: 15rem;
 }
 
 // Responsive adjustments

@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import styles from './ocorrenciaspage.module.scss';
 import { getOcorrencias, getOcorrenciaById, createOcorrencia, updateOcorrencia } from '@/services/ocorrenciasService';
+import { generateEvidenciaURL } from '@/services/evidenciaService';
 import Modal from '@/_components/Modal';
 import OcorrenciaForm, { OcorrenciaPayload, OcorrenciaUpdatePayload, formatEnumValue } from '@/_components/Ocorrencias/OcorrenciaForm';
 import viewStyles from '@/_components/Ocorrencias/ocorrenciaView.module.scss';
@@ -16,8 +17,7 @@ const rows = [
   { label: 'Data', styles: styles.datetimecell },
   { label: 'Status', styles: styles.statuscell },
   { label: 'Grau', styles: styles.graucell },
-  { label: 'Evidências', styles: styles.evidencecell },
-  { label: 'Ações', styles: styles.actionscell },
+  { label: '', styles: styles.evidencecell },
 ];
 
 
@@ -75,9 +75,26 @@ function formatDate(value: string): string {
 
 const OcorrenciasPage = () => {
 
+
   const [ocorrencias, setOcorrencias] = useState<Ocorrencia[]>([]);
+  const [evidenciaLoading, setEvidenciaLoading] = useState<{ [id: number]: boolean }>({});
+  const [evidenciaLinks, setEvidenciaLinks] = useState<{ [id: number]: string }>({});
+  // Gera a evidência para uma ocorrência
+  const handleGerarEvidencia = async (id: number) => {
+    setEvidenciaLoading((prev) => ({ ...prev, [id]: true }));
+    try {
+      const url = await generateEvidenciaURL(`occ-${id}`); // ajuste se o id já vier com prefixo
+      setEvidenciaLinks((prev) => ({ ...prev, [id]: url }));
+    } catch {
+      setEvidenciaLinks((prev) => ({ ...prev, [id]: 'Erro ao gerar evidência' }));
+    } finally {
+      setEvidenciaLoading((prev) => ({ ...prev, [id]: false }));
+    }
+  };
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [page, setPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
 
   const [viewOpen, setViewOpen] = useState<boolean>(false);
   const [viewData, setViewData] = useState<OcorrenciaDetalhe | null>(null);
@@ -88,12 +105,19 @@ const OcorrenciasPage = () => {
 
   const [createOpen, setCreateOpen] = useState<boolean>(false);
 
-  const refreshList = async () => {
+  const refreshList = async (pageToFetch = page) => {
     setLoading(true);
     setError(null);
     try {
-      const data = await getOcorrencias(0, 10, 'id');
-      setOcorrencias(data);
+      const data = await getOcorrencias(pageToFetch, 10, 'id');
+      // Suporte a paginação: espera-se que a API retorne { content, totalPages }
+      if (Array.isArray(data)) {
+        setOcorrencias(data);
+        setTotalPages(1);
+      } else {
+        setOcorrencias(data.content || []);
+        setTotalPages(data.totalPages || 1);
+      }
     } catch (e: unknown) {
       const errorMessage = e instanceof Error ? e.message : 'Erro ao carregar ocorrências';
       setError(errorMessage);
@@ -103,8 +127,36 @@ const OcorrenciasPage = () => {
   };
 
   useEffect(() => {
-    refreshList();
-  }, []);
+    refreshList(page);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page]);
+  // Renderização dos controles de paginação
+  const renderPagination = () => {
+    if (totalPages <= 1) return null;
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', gap: 8, margin: '24px 0' }}>
+        <Button
+          variant="secondary"
+          size="small"
+          onClick={() => setPage((p) => Math.max(0, p - 1))}
+          disabled={page === 0}
+        >
+          Anterior
+        </Button>
+        <span style={{ alignSelf: 'center', fontWeight: 500 }}>
+          Página {page + 1} de {totalPages}
+        </span>
+        <Button
+          variant="secondary"
+          size="small"
+          onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
+          disabled={page >= totalPages - 1}
+        >
+          Próxima
+        </Button>
+      </div>
+    );
+  };
 
   const handleView = async (id: number) => {
     try {
@@ -167,56 +219,77 @@ const OcorrenciasPage = () => {
           </div>
         </div>
         {error && <div className={styles.errorMessage}>{error}</div>}
-        <table className={styles.table}>
-          <thead className={styles.thead}>
-            <tr className={styles.tr}>
-              {rows.map((row, index) => (
-                <th key={index} className={`${styles.headerrows} ${row.styles}`}>
-                  {row.label}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody className={styles.tbody}>
-            {loading ? (
+        <div className={styles.tableScrollContainer}>
+          <table className={styles.table}>
+            <thead className={styles.thead}>
               <tr className={styles.tr}>
-                <td colSpan={rows.length} className={styles.loadingMessage}>
-                  Carregando...
-                </td>
+                {rows.map((row, index) => (
+                  <th key={index} className={`${styles.headerrows} ${row.styles}`}>
+                    {row.label}
+                  </th>
+                ))}
               </tr>
-            ) : (
-              ocorrencias.map((ocorrencia, index) => (
-                <tr className={styles.tr} key={index}>
-                  <td className={`${styles.cell} ${styles.idcell}`}>{ocorrencia.id}</td>
-                  <td className={styles.cell}>{ocorrencia.description}</td>
-                  <td className={styles.cell}>{formatEnumValue(ocorrencia.category)}</td>
-                  <td className={styles.cell}>{formatDate(ocorrencia.date)}</td>
-                  <td className={styles.cell}>{formatEnumValue(ocorrencia.status)}</td>
-                  <td className={styles.cell}>{formatEnumValue(ocorrencia.grau)}</td>
-                  <td className={styles.cell}>{ocorrencia.evidence}</td>
-                  <td className={styles.cell}>
-                    <div className={styles.actionsContainer}>
-                      <Button 
-                        onClick={() => handleView(ocorrencia.id)}
-                        variant="transparent"
-                        size="small"
-                      >
-                        Ver
-                      </Button>
-                      <Button 
-                        onClick={() => handleEdit(ocorrencia.id)}
-                        variant="transparent"
-                        size="small"
-                      >
-                        Editar
-                      </Button>
-                    </div>
+            </thead>
+            <tbody className={styles.tbody}>
+              {loading ? (
+                <tr className={styles.tr}>
+                  <td colSpan={rows.length} className={styles.loadingMessage}>
+                    Carregando...
                   </td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+              ) : (
+                ocorrencias.map((ocorrencia, index) => (
+                  <tr className={styles.tr} key={index}>
+                    <td className={`${styles.cell} ${styles.idcell}`}>{ocorrencia.id}</td>
+                    <td className={styles.cell}>{ocorrencia.description}</td>
+                    <td className={styles.cell}>{formatEnumValue(ocorrencia.category)}</td>
+                    <td className={styles.cell}>{formatDate(ocorrencia.date)}</td>
+                    <td className={styles.cell}>{formatEnumValue(ocorrencia.status)}</td>
+                    <td className={styles.cell}>{formatEnumValue(ocorrencia.grau)}</td>
+                    <td className={styles.cell}>
+                      <div className={styles.evidenceActions}>
+                        {ocorrencia.evidence && <span>{ocorrencia.evidence}</span>}
+                        <Button
+                          variant="transparent"
+                          size="small"
+                          onClick={() => handleGerarEvidencia(ocorrencia.id)}
+                          disabled={evidenciaLoading[ocorrencia.id]}
+                        >
+                          {evidenciaLoading[ocorrencia.id] ? 'Gerando...' : 'Gerar evidência'}
+                        </Button>
+                        <Button
+                          onClick={() => handleView(ocorrencia.id)}
+                          variant="transparent"
+                          size="small"
+                        >
+                          Ver
+                        </Button>
+                        <Button
+                          onClick={() => handleEdit(ocorrencia.id)}
+                          variant="transparent"
+                          size="small"
+                        >
+                          Editar
+                        </Button>
+                      </div>
+                      {evidenciaLinks[ocorrencia.id] && evidenciaLinks[ocorrencia.id].startsWith('http') && (
+                        <div>
+                          <a href={evidenciaLinks[ocorrencia.id]} target="_blank" rel="noopener noreferrer" style={{ color: '#273BE2', fontWeight: 500, fontSize: 13 }}>
+                            Ver evidência
+                          </a>
+                        </div>
+                      )}
+                      {evidenciaLinks[ocorrencia.id] && evidenciaLinks[ocorrencia.id].startsWith('Erro') && (
+                        <div style={{ color: '#e30613', fontSize: 13 }}>{evidenciaLinks[ocorrencia.id]}</div>
+                      )}
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+        {renderPagination()}
       </div>
 
       <Modal open={viewOpen} title="Ocorrência" onClose={() => setViewOpen(false)} width={600}>
