@@ -1,6 +1,5 @@
 import Logo from './Logo'
 import { Menu } from './Menu'
-import { Perfil } from './Perfil'
 import styles from './header.module.scss'
 
 export default function Header() {
@@ -10,7 +9,6 @@ export default function Header() {
                 <Logo />
                 <Menu />
             </div>
-            <Perfil />
         </header>
     )
 }
