@@ -27,6 +27,7 @@
 
   th {
     padding-left: 10px;
+    padding-right: 10px;
     text-align: left;
     position: sticky;
     top: 0;
@@ -68,11 +69,17 @@
 
 // Largura específica para cada coluna
 .idcell {
-  width: 6rem;
+  width: 4rem;
+  text-align: center;
+}
+
+/* Remove left padding for the ID header cell */
+.thead .idcell {
+  text-align: center;
 }
 
 .descriptioncell {
-  width: 30%;
+  width: 8rem;
 }
 
 .categorycell {
@@ -80,21 +87,22 @@
 }
 
 .datetimecell {
-  width: 8rem;
+  width: 10rem;
 }
 
 .statuscell {
-  width: 8rem;
+  width: 5rem;
 }
 
 .graucell {
-  width: 7rem;
+  width: 5rem;
 }
 
 .evidencecell {
-  width: 8rem;
+  width: 5rem;
 }
 
 .actionscell {
   width: 10rem;
+  text-align: center;
 }

@@ -13,7 +13,7 @@ const rows = [
   { label: 'Status', styles: styles.statuscell },
   { label: 'Grau', styles: styles.graucell },
   { label: 'Evidências', styles: styles.evidencecell },
-  { label: 'Ações', styles: styles.actionscell },
+  { label: '', styles: styles.actionscell },
 ];
 
 
@@ -27,6 +27,19 @@ type Ocorrencia = {
   evidence: string;
 };
 
+function formatDate(value: string): string {
+  if (!value) return '';
+  const d = new Date(value);
+  if (Number.isNaN(d.getTime())) return value;
+  return new Intl.DateTimeFormat('pt-BR', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  }).format(d);
+}
+
 const OcorrenciasPage = () => {
 
   const [ocorrencias, setOcorrencias] = useState<Ocorrencia[]>([]);
@@ -34,7 +47,8 @@ const OcorrenciasPage = () => {
 
   useEffect(() => {
     const fetchOcorrencias = async () => {
-      const data = await getOcorrencias();
+      // Example: requesting page=0, size=1, sort=id as required
+      const data = await getOcorrencias(0, 1, 'id');
       setOcorrencias(data);
     };
 
@@ -58,14 +72,14 @@ const OcorrenciasPage = () => {
           <tbody className={styles.tbody}>
             {ocorrencias.map((ocorrencia, index) => (
               <tr className={styles.tr} key={index}>
-                <td className={styles.cell}>{ocorrencia.id}</td>
+                <td className={`${styles.cell} ${styles.idcell}`}>{ocorrencia.id}</td>
                 <td className={styles.cell}>{ocorrencia.description}</td>
                 <td className={styles.cell}>{ocorrencia.category}</td>
-                <td className={styles.cell}>{ocorrencia.date}</td>
+                <td className={styles.cell}>{formatDate(ocorrencia.date)}</td>
                 <td className={styles.cell}>{ocorrencia.status}</td>
                 <td className={styles.cell}>{ocorrencia.grau}</td>
                 <td className={styles.cell}>{ocorrencia.evidence}</td>
-                <td className={styles.cell}>Ver Editar</td>
+                <td className={styles.cell}>Ver</td>
               </tr>
             ))}
           </tbody>
