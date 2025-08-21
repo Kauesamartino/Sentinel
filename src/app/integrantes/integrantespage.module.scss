@@ -1,0 +1,97 @@
+/* Estilos para a página de integrantes */
+.main {
+  padding: 120px 60px 0 60px;
+  background-color: #f4f4f4;
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 44px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  height: 100%;
+}
+
+.title {
+  font-size: 2.42rem;
+  font-weight: 700;
+  color: #22223b;
+  margin-bottom: 35px;
+  text-align: left;
+  align-self: flex-start;
+}
+
+.integrantesGrid {
+  display: flex;
+  gap: 44px;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+}
+
+
+.card {
+  background: #fff;
+  border-radius: 24px;
+  box-shadow: 0 4.4px 17.6px rgba(0,0,0,0.12);
+  padding: 59px 42px 42px 42px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 352px;
+  transition: box-shadow 0.2s;
+}
+.card:hover {
+  box-shadow: 0 8.8px 35.2px rgba(37,99,235,0.16);
+}
+
+.photo {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 26px;
+  border: 4.4px solid #2563eb;
+}
+
+.name {
+  font-size: 1.65rem;
+  font-weight: 700;
+  color: #22223b;
+  margin-bottom: 11px;
+  text-align: center;
+}
+
+.rm {
+  font-size: 1.21rem;
+  color: #374151;
+  background: #e0e7ff;
+  border-radius: 8.8px;
+  padding: 7.7px 19.8px;
+  margin-bottom: 7.7px;
+}
+
+@media (max-width: 900px) {
+  .integrantesGrid {
+    gap: 20px;
+  }
+  .card {
+    width: 90vw;
+    max-width: 340px;
+  }
+}
+@media (max-width: 600px) {
+  .main {
+    padding: 60px 10px 0 10px;
+  }
+  .container {
+    padding: 20px 0;
+  }
+  .title {
+    font-size: 1.4rem;
+  }
+}
