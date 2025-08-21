@@ -1,0 +1,44 @@
+import { NextResponse } from "next/server"
+
+export async function GET(_request: Request, context: { params: { id: string } }) {
+	try {
+		const { id } = context.params
+		const externalUrl = `https://sentinel-api-306n.onrender.com/ocorrencias/${id}`
+		const externalResponse = await fetch(externalUrl, { cache: 'no-store' })
+
+		if (!externalResponse.ok) {
+			const errorBody = await externalResponse.json().catch(() => ({}))
+			return NextResponse.json(errorBody || { error: 'Erro ao buscar ocorrência' }, { status: externalResponse.status })
+		}
+
+		const data = await externalResponse.json()
+		return NextResponse.json(data)
+	} catch (error) {
+		console.error('Erro na API interna GET /api/ocorrencias/[id]:', error)
+		return NextResponse.json({ error: 'Erro interno ao buscar ocorrência' }, { status: 500 })
+	}
+}
+
+export async function PUT(request: Request, context: { params: { id: string } }) {
+	try {
+		const { id } = context.params
+		const body = await request.json()
+		const externalUrl = `https://sentinel-api-306n.onrender.com/ocorrencias/${id}`
+		const externalResponse = await fetch(externalUrl, {
+			method: 'PUT',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify(body),
+		})
+
+		const responseBody = await externalResponse.json().catch(() => ({}))
+
+		if (!externalResponse.ok) {
+			return NextResponse.json(responseBody || { error: 'Erro ao atualizar ocorrência' }, { status: externalResponse.status })
+		}
+
+		return NextResponse.json(responseBody)
+	} catch (error) {
+		console.error('Erro na API interna PUT /api/ocorrencias/[id]:', error)
+		return NextResponse.json({ error: 'Erro interno ao atualizar ocorrência' }, { status: 500 })
+	}
+} 

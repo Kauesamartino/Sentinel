@@ -38,3 +38,26 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: 'Erro interno ao buscar ocorrências' }, { status: 500 })
   }
 }
+
+export async function POST(request: Request) {
+  try {
+    const body = await request.json()
+    const externalUrl = 'https://sentinel-api-306n.onrender.com/ocorrencias'
+    const externalResponse = await fetch(externalUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    })
+
+    const responseBody = await externalResponse.json().catch(() => ({}))
+
+    if (!externalResponse.ok) {
+      return NextResponse.json(responseBody || { error: 'Erro ao criar ocorrência' }, { status: externalResponse.status })
+    }
+
+    return NextResponse.json(responseBody, { status: 201 })
+  } catch (error) {
+    console.error('Erro na API interna POST /api/ocorrencias:', error)
+    return NextResponse.json({ error: 'Erro interno ao criar ocorrência' }, { status: 500 })
+  }
+}

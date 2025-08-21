@@ -1,0 +1,91 @@
+.button {
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  font-family: inherit;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+}
+
+// Variants
+.primary {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  color: white;
+
+  &:hover:not(:disabled) {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
+  }
+}
+
+.secondary {
+  background-color: #f3f4f6;
+  color: #374151;
+  border: 1px solid #d1d5db;
+
+  &:hover:not(:disabled) {
+    background-color: #e5e7eb;
+    border-color: #9ca3af;
+  }
+}
+
+.transparent {
+  background-color: transparent;
+  color: #3b82f6;
+
+  &:hover:not(:disabled) {
+    background-color: #3b82f6;
+    color: white;
+  }
+}
+
+// Sizes
+.small {
+  padding: 6px 12px;
+  font-size: 14px;
+  min-height: 32px;
+}
+
+.medium {
+  padding: 12px 24px;
+  font-size: 14px;
+  min-height: 40px;
+}
+
+.large {
+  padding: 16px 32px;
+  font-size: 16px;
+  min-height: 48px;
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .medium {
+    padding: 10px 20px;
+    font-size: 16px; // Better for mobile
+  }
+  
+  .large {
+    padding: 14px 28px;
+    font-size: 18px;
+  }
+} 
