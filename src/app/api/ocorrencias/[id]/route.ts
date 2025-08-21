@@ -1,8 +1,11 @@
-import { NextResponse } from "next/server"
+import { NextRequest, NextResponse } from "next/server"
 
-export async function GET(_request: Request, context: { params: { id: string } }) {
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
 	try {
-		const { id } = context.params
+		const { id } = await params
 		const externalUrl = `https://sentinel-api-306n.onrender.com/ocorrencias/${id}`
 		const externalResponse = await fetch(externalUrl, { cache: 'no-store' })
 
@@ -19,9 +22,12 @@ export async function GET(_request: Request, context: { params: { id: string } }
 	}
 }
 
-export async function PUT(request: Request, context: { params: { id: string } }) {
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
 	try {
-		const { id } = context.params
+		const { id } = await params
 		const body = await request.json()
 		const externalUrl = `https://sentinel-api-306n.onrender.com/ocorrencias/${id}`
 		const externalResponse = await fetch(externalUrl, {
