@@ -15,26 +15,6 @@ export type OcorrenciaUpdatePayload = OcorrenciaPayload & {
   status: 'ABERTO' | 'EM_ANDAMENTO' | 'CONCLUIDO' | string;
 };
 
-// Utility function to format enum values for display
-export const formatEnumValue = (value: string): string => {
-  if (!value) return '';
-  
-  // Handle LINHA_X_NAME format
-  if (value.startsWith('LINHA_')) {
-    const parts = value.replace('LINHA_', '').split('_');
-    if (parts.length >= 2) {
-      const number = parts[0];
-      const name = parts.slice(1).join(' ');
-      return `Linha ${number} - ${name.charAt(0).toUpperCase() + name.slice(1).toLowerCase()}`;
-    }
-  }
-  
-  // Handle other enum formats
-  return value
-    .split('_')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-    .join(' ');
-};
 
 type Props = {
   initial?: Partial<OcorrenciaUpdatePayload>;

@@ -2,7 +2,7 @@
 import React from 'react';
 import Button from '@/_components/Button';
 import styles from './OcorrenciasTable.module.scss';
-import { formatEnumValue } from '../OcorrenciaForm/index';
+import { formatEnumValue } from '../utils/formatEnumValue';
 
 export type Ocorrencia = {
 	id: number;
