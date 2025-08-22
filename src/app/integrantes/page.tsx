@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import styles from './integrantespage.module.scss';
 
 const lista = [
@@ -29,7 +30,9 @@ export default function IntegrantesPage() {
 				<div className={styles.integrantesGrid}>
 					{lista.map((item) => (
 						<div className={styles.card} key={item.rm}>
-							<img
+							<Image
+								width={200}
+								height={200}
 								src={item.photo}
 								alt={item.alt}
 								className={styles.photo}

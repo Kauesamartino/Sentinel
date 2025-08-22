@@ -14,7 +14,8 @@ export function useOcorrencias() {
   const [totalPages, setTotalPages] = useState(1);
 
   const [viewOpen, setViewOpen] = useState<boolean>(false);
-  const [viewData, setViewData] = useState<any>(null);
+  // Use o tipo correto para viewData, por exemplo OcorrenciaDetalhe | null
+  const [viewData, setViewData] = useState<any>(null); // Substitua 'any' pelo tipo correto do seu projeto
   const [editOpen, setEditOpen] = useState<boolean>(false);
   const [editId, setEditId] = useState<number | null>(null);
   const [editInitial, setEditInitial] = useState<Partial<OcorrenciaUpdatePayload>>({});
