@@ -25,7 +25,7 @@ export function useOcorrencias() {
     setLoading(true);
     setError(null);
     try {
-      const data = await getOcorrencias(pageToFetch, 10, 'id');
+      const data = await getOcorrencias(pageToFetch); // Removido size e sort
       if (Array.isArray(data)) {
         setOcorrencias(data);
         setTotalPages(1);

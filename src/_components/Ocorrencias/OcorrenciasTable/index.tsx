@@ -23,6 +23,7 @@ interface OcorrenciasTableProps {
 	onGerarEvidencia: (id: number) => void;
 	onView: (id: number) => void;
 	onEdit: (id: number) => void;
+	formatDate?: (value: string) => string;
 }
 
 const OcorrenciasTable: React.FC<OcorrenciasTableProps> = ({
@@ -34,6 +35,7 @@ const OcorrenciasTable: React.FC<OcorrenciasTableProps> = ({
 	onGerarEvidencia,
 	onView,
 	onEdit,
+	formatDate,
 }) => {
 	return (
 		<div className={styles.tableScrollContainer}>
@@ -60,7 +62,7 @@ const OcorrenciasTable: React.FC<OcorrenciasTableProps> = ({
 								<td className={`${styles.cell} ${styles.idcell}`}>{ocorrencia.id}</td>
 								<td className={styles.cell}>{ocorrencia.description}</td>
 								<td className={styles.cell}>{formatEnumValue(ocorrencia.category)}</td>
-								<td className={styles.cell}>{ocorrencia.date}</td>
+								<td className={styles.cell}>{formatDate ? formatDate(ocorrencia.date) : ocorrencia.date}</td>
 								<td className={styles.cell}>{formatEnumValue(ocorrencia.status)}</td>
 								<td className={styles.cell}>{formatEnumValue(ocorrencia.grau)}</td>
 								<td className={styles.cell}>

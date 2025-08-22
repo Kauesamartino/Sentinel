@@ -11,23 +11,32 @@
   border-collapse: separate;
   border-spacing: 0;
   background: #fff;
+  margin-top: 20px;
+  border-collapse: collapse;
+  table-layout: fixed;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border-radius: 8px; 
+  overflow: hidden;   
 }
 
 .cell {
   word-break: break-word;
   white-space: normal;
   vertical-align: middle;
+  padding: 10px;
+  text-align: left;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #4b5563;
 }
 
-.evidenceActions {
-  flex-wrap: wrap;
-  gap: 8px 4px;
-}
 .evidenceActions {
   display: flex;
   gap: 8px;
   align-items: center;
+  flex-wrap: wrap;
 }
+
 .main {
   padding: 90px 60px 0 60px;
   background-color: #f4f4f4;
@@ -36,7 +45,7 @@
 
 .container {
   width: 100%;
-  max-width: 1280px; // limite opcional
+  max-width: 1280px;
   margin: 0 auto;
   padding: 0 40px;
   box-sizing: border-box;
@@ -94,16 +103,6 @@
   padding: 20px;
 }
 
-.table {
-  width: 100%;
-  margin-top: 20px;
-  border-collapse: collapse;
-  table-layout: fixed;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  border-radius: 8px; 
-  overflow: hidden;   
-}
-
 .thead {
   background-color: #f3f4f6;
 
@@ -118,29 +117,12 @@
   }
 }
 
-.tr {
-  height: 50px;
-}
-
-.headerrows {
-    color: #4b5563;
-    font-size: 15px;
-}
-
-.cell {
-  padding: 10px;
-  text-align: left;
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: #4b5563;
-}
-
 .tbody {
   background-color: #fff;
-    tr{
-        height: 60px;
-        border-bottom: 1px solid #e5e7eb;
-    }
+  tr {
+    height: 60px;
+    border-bottom: 1px solid #e5e7eb;
+  }
 }
 
 .tbody tr:hover {
@@ -160,7 +142,6 @@
   text-align: center;
 }
 
-/* Remove left padding for the ID header cell */
 .thead .idcell {
   text-align: center;
 }
@@ -197,12 +178,6 @@
   
   .container {
     padding: 0 20px;
-  }
-  
-  .headerActions {
-    flex-direction: column;
-    gap: 16px;
-    align-items: stretch;
   }
   
   .newOccurrenceButton {

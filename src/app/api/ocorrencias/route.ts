@@ -4,13 +4,9 @@ export async function GET(request: Request) {
   try {
     const url = new URL(request.url)
     const page = url.searchParams.get('page') ?? '0'
-    const size = url.searchParams.get('size') ?? '50'
-    const sort = url.searchParams.get('sort') ?? 'id'
 
     const externalUrl = new URL('https://sentinel-api-306n.onrender.com/ocorrencias')
     externalUrl.searchParams.set('page', page)
-    externalUrl.searchParams.set('size', size)
-    externalUrl.searchParams.set('sort', sort)
 
     const externalResponse = await fetch(externalUrl.toString(), { cache: 'no-store' })
 
@@ -41,23 +37,23 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
-    const body = await request.json()
-    const externalUrl = 'https://sentinel-api-306n.onrender.com/ocorrencias'
+    const body = await request.json();
+    const externalUrl = 'https://sentinel-api-306n.onrender.com/ocorrencias';
     const externalResponse = await fetch(externalUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
-    })
+    });
 
-    const responseBody = await externalResponse.json().catch(() => ({}))
+    const responseBody = await externalResponse.json().catch(() => ({}));
 
     if (!externalResponse.ok) {
-      return NextResponse.json(responseBody || { error: 'Erro ao criar ocorrência' }, { status: externalResponse.status })
+      return NextResponse.json(responseBody || { error: 'Erro ao criar ocorrência' }, { status: externalResponse.status });
     }
 
-    return NextResponse.json(responseBody, { status: 201 })
+    return NextResponse.json(responseBody, { status: 201 });
   } catch (error) {
-    console.error('Erro na API interna POST /api/ocorrencias:', error)
-    return NextResponse.json({ error: 'Erro interno ao criar ocorrência' }, { status: 500 })
+    console.error('Erro na API interna POST /api/ocorrencias:', error);
+    return NextResponse.json({ error: 'Erro interno ao criar ocorrência' }, { status: 500 });
   }
 }

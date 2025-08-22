@@ -88,6 +88,7 @@ const OcorrenciasPage = () => {
           onGerarEvidencia={handleGerarEvidencia}
           onView={handleView}
           onEdit={handleEdit}
+          formatDate={formatDate}
         />
         <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
       </div>
