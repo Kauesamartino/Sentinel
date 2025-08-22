@@ -1,0 +1,13 @@
+
+.pagination {
+	display: flex;
+	justify-content: center;
+	gap: 8px;
+	margin: 24px 0;
+}
+
+.paginationLabel {
+	align-self: center;
+	font-weight: 500;
+	font-size: 15px;
+}

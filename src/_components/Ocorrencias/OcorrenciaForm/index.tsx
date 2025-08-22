@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useMemo, useState } from 'react';
-import styles from './ocorrenciaForm.module.scss';
+import styles from './OcorrenciaForm.module.scss';
 
 export type OcorrenciaPayload = {
   titulo: string;

@@ -4,10 +4,13 @@ import { useEffect, useState } from 'react';
 import styles from './ocorrenciaspage.module.scss';
 import { getOcorrencias, getOcorrenciaById, createOcorrencia, updateOcorrencia } from '@/services/ocorrenciasService';
 import { generateEvidenciaURL } from '@/services/evidenciaService';
-import Modal from '@/_components/Modal';
-import OcorrenciaForm, { OcorrenciaPayload, OcorrenciaUpdatePayload, formatEnumValue } from '@/_components/Ocorrencias/OcorrenciaForm';
-import viewStyles from '@/_components/Ocorrencias/ocorrenciaView.module.scss';
 import Button from '@/_components/Button';
+import OcorrenciasTable, { Ocorrencia } from '@/_components/Ocorrencias/OcorrenciasTable/index';
+import Pagination from '@/_components/Ocorrencias/Pagination/index';
+import OcorrenciaViewModal from '@/_components/Ocorrencias/OcorrenciaViewModal/index';
+import OcorrenciaCreateModal from '@/_components/Ocorrencias/OcorrenciaCreateModal/index';
+import OcorrenciaEditModal from '@/_components/Ocorrencias/OcorrenciaEditModal/index';
+import OcorrenciaForm, { OcorrenciaPayload, OcorrenciaUpdatePayload, formatEnumValue } from '@/_components/Ocorrencias/OcorrenciaForm/index';
 
 
 const rows = [
@@ -21,15 +24,7 @@ const rows = [
 ];
 
 
-type Ocorrencia = {
-  id: number;
-  description: string;
-  category: string;
-  date: string;
-  status: string;
-  grau: string;
-  evidence: string;
-};
+// Tipo Ocorrencia importado de OcorrenciasTable
 
 type OcorrenciaDetalhe = {
   id: number;
@@ -130,33 +125,7 @@ const OcorrenciasPage = () => {
     refreshList(page);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
-  // Renderização dos controles de paginação
-  const renderPagination = () => {
-    if (totalPages <= 1) return null;
-    return (
-      <div style={{ display: 'flex', justifyContent: 'center', gap: 8, margin: '24px 0' }}>
-        <Button
-          variant="secondary"
-          size="small"
-          onClick={() => setPage((p) => Math.max(0, p - 1))}
-          disabled={page === 0}
-        >
-          Anterior
-        </Button>
-        <span style={{ alignSelf: 'center', fontWeight: 500 }}>
-          Página {page + 1} de {totalPages}
-        </span>
-        <Button
-          variant="secondary"
-          size="small"
-          onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
-          disabled={page >= totalPages - 1}
-        >
-          Próxima
-        </Button>
-      </div>
-    );
-  };
+  // ...existing code...
 
   const handleView = async (id: number) => {
     try {
@@ -219,141 +188,37 @@ const OcorrenciasPage = () => {
           </div>
         </div>
         {error && <div className={styles.errorMessage}>{error}</div>}
-        <div className={styles.tableScrollContainer}>
-          <table className={styles.table}>
-            <thead className={styles.thead}>
-              <tr className={styles.tr}>
-                {rows.map((row, index) => (
-                  <th key={index} className={`${styles.headerrows} ${row.styles}`}>
-                    {row.label}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody className={styles.tbody}>
-              {loading ? (
-                <tr className={styles.tr}>
-                  <td colSpan={rows.length} className={styles.loadingMessage}>
-                    Carregando...
-                  </td>
-                </tr>
-              ) : (
-                ocorrencias.map((ocorrencia, index) => (
-                  <tr className={styles.tr} key={index}>
-                    <td className={`${styles.cell} ${styles.idcell}`}>{ocorrencia.id}</td>
-                    <td className={styles.cell}>{ocorrencia.description}</td>
-                    <td className={styles.cell}>{formatEnumValue(ocorrencia.category)}</td>
-                    <td className={styles.cell}>{formatDate(ocorrencia.date)}</td>
-                    <td className={styles.cell}>{formatEnumValue(ocorrencia.status)}</td>
-                    <td className={styles.cell}>{formatEnumValue(ocorrencia.grau)}</td>
-                    <td className={styles.cell}>
-                      <div className={styles.evidenceActions}>
-                        {ocorrencia.evidence && <span>{ocorrencia.evidence}</span>}
-                        <Button
-                          variant="transparent"
-                          size="small"
-                          onClick={() => handleGerarEvidencia(ocorrencia.id)}
-                          disabled={evidenciaLoading[ocorrencia.id]}
-                        >
-                          {evidenciaLoading[ocorrencia.id] ? 'Gerando...' : 'Gerar evidência'}
-                        </Button>
-                        <Button
-                          onClick={() => handleView(ocorrencia.id)}
-                          variant="transparent"
-                          size="small"
-                        >
-                          Ver
-                        </Button>
-                        <Button
-                          onClick={() => handleEdit(ocorrencia.id)}
-                          variant="transparent"
-                          size="small"
-                        >
-                          Editar
-                        </Button>
-                      </div>
-                      {evidenciaLinks[ocorrencia.id] && evidenciaLinks[ocorrencia.id].startsWith('http') && (
-                        <div>
-                          <a href={evidenciaLinks[ocorrencia.id]} target="_blank" rel="noopener noreferrer" style={{ color: '#273BE2', fontWeight: 500, fontSize: 13 }}>
-                            Ver evidência
-                          </a>
-                        </div>
-                      )}
-                      {evidenciaLinks[ocorrencia.id] && evidenciaLinks[ocorrencia.id].startsWith('Erro') && (
-                        <div style={{ color: '#e30613', fontSize: 13 }}>{evidenciaLinks[ocorrencia.id]}</div>
-                      )}
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
-        {renderPagination()}
+        <OcorrenciasTable
+          ocorrencias={ocorrencias}
+          loading={loading}
+          error={error}
+          rows={rows}
+          evidenciaLoading={evidenciaLoading}
+          evidenciaLinks={evidenciaLinks}
+          onGerarEvidencia={handleGerarEvidencia}
+          onView={handleView}
+          onEdit={handleEdit}
+        />
+        <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
       </div>
-
-      <Modal open={viewOpen} title="Ocorrência" onClose={() => setViewOpen(false)} width={600}>
-        {!viewData ? (
-          <div className={styles.loadingMessage}>Carregando...</div>
-        ) : (
-          <div className={viewStyles.viewContainer}>
-            <div className={viewStyles.fields}>
-              <div className={viewStyles.field}>
-                <span className={viewStyles.label}>Título</span>
-                <div className={viewStyles.value}>{viewData.titulo}</div>
-              </div>
-              
-              <div className={viewStyles.field}>
-                <span className={viewStyles.label}>Descrição</span>
-                <div className={viewStyles.description}>{viewData.descricao || 'Sem descrição'}</div>
-              </div>
-              
-              <div className={viewStyles.field}>
-                <span className={viewStyles.label}>Data</span>
-                <div className={viewStyles.value}>{formatDate(viewData.data)}</div>
-              </div>
-              
-              <div className={viewStyles.field}>
-                <span className={viewStyles.label}>Severidade</span>
-                <div className={viewStyles.value}>{formatEnumValue(viewData.severidade)}</div>
-              </div>
-              
-              <div className={viewStyles.field}>
-                <span className={viewStyles.label}>Status</span>
-                <div className={viewStyles.value}>{formatEnumValue(viewData.status)}</div>
-              </div>
-              
-              <div className={viewStyles.field}>
-                <span className={viewStyles.label}>Tipo</span>
-                <div className={viewStyles.value}>{formatEnumValue(viewData.tipoOcorrencia)}</div>
-              </div>
-            </div>
-            
-            {viewData?.dadosDetalhamentoEstacao && (
-              <div className={viewStyles.stationInfo}>
-                <h4 className={viewStyles.stationTitle}>Informações da Estação</h4>
-                <div className={viewStyles.stationDetails}>
-                  <div><strong>Nome:</strong> {viewData.dadosDetalhamentoEstacao?.nome}</div>
-                  {viewData.dadosDetalhamentoEstacao?.linha && (
-                    <div><strong>Linha: </strong>{formatEnumValue(viewData.dadosDetalhamentoEstacao.linha)}</div>
-                  )}
-                  {viewData.dadosDetalhamentoEstacao?.dadosControle && (
-                    <div><strong>Centro de Controle:</strong> {viewData.dadosDetalhamentoEstacao.dadosControle.nome}</div>
-                  )}
-                </div>
-              </div>
-            )}
-          </div>
-        )}
-      </Modal>
-
-      <Modal open={createOpen} title="Nova ocorrência" onClose={() => setCreateOpen(false)} width={500}>
-        <OcorrenciaForm submitLabel="Criar" onSubmit={submitCreate} />
-      </Modal>
-
-      <Modal open={editOpen} title={editId ? `Editar ocorrência #${editId}` : 'Editar'} onClose={() => setEditOpen(false)} width={500}>
-        <OcorrenciaForm initial={editInitial} submitLabel="Salvar" onSubmit={submitEdit} isEdit={true} />
-      </Modal>
+      <OcorrenciaViewModal
+        open={viewOpen}
+        onClose={() => setViewOpen(false)}
+        viewData={viewData}
+        formatDate={formatDate}
+      />
+      <OcorrenciaCreateModal
+        open={createOpen}
+        onClose={() => setCreateOpen(false)}
+        onSubmit={submitCreate}
+      />
+      <OcorrenciaEditModal
+        open={editOpen}
+        onClose={() => setEditOpen(false)}
+        editId={editId}
+        initial={editInitial}
+        onSubmit={submitEdit}
+      />
     </main>
   );
 };

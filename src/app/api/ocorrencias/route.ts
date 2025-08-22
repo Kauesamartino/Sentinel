@@ -4,7 +4,7 @@ export async function GET(request: Request) {
   try {
     const url = new URL(request.url)
     const page = url.searchParams.get('page') ?? '0'
-    const size = url.searchParams.get('size') ?? '10'
+    const size = url.searchParams.get('size') ?? '50'
     const sort = url.searchParams.get('sort') ?? 'id'
 
     const externalUrl = new URL('https://sentinel-api-306n.onrender.com/ocorrencias')

@@ -1,0 +1,76 @@
+
+.viewContainer {
+	display: grid;
+	gap: 20px;
+	min-width: 500px;
+}
+
+.fields {
+	display: grid;
+	gap: 16px;
+}
+
+.field {
+	display: grid;
+	gap: 6px;
+}
+
+.label {
+	font-weight: 600;
+	color: #64748b;
+	font-size: 12px;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+}
+
+.value {
+	font-size: 16px;
+	color: #1e293b;
+	padding: 12px 16px;
+	background-color: #f8fafc;
+	border: 1px solid #e2e8f0;
+	border-radius: 8px;
+	font-weight: 500;
+}
+
+.description {
+	@extend .value;
+	white-space: pre-wrap;
+	min-height: 60px;
+	line-height: 1.5;
+}
+
+.stationInfo {
+	margin-top: 20px;
+	padding: 16px;
+	background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+	border: 1px solid #bae6fd;
+	border-radius: 8px;
+}
+
+.stationTitle {
+	font-weight: 600;
+	color: #0369a1;
+	margin: 0 0 12px 0;
+	font-size: 14px;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+}
+
+.stationDetails {
+	display: grid;
+	gap: 8px;
+	font-size: 14px;
+	color: #0c4a6e;
+}
+
+@media (max-width: 768px) {
+	.viewContainer {
+		min-width: auto;
+		gap: 16px;
+	}
+	.value, .description {
+		font-size: 14px;
+		padding: 10px 14px;
+	}
+}
