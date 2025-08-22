@@ -43,7 +43,7 @@ const OcorrenciasTable: React.FC<OcorrenciasTableProps> = ({
 				<thead className={styles.thead}>
 					<tr className={styles.tr}>
 						{rows.map((row, index) => (
-							<th key={index} className={`${styles.headerrows} ${row.styles ? row.styles : ''}`}>
+							<th key={index} className={`${styles.headerrows} ${row.styles ? row.styles : ''} ${row.label === 'id' ? styles.idcell : ''}`}>
 								{row.label}
 							</th>
 						))}

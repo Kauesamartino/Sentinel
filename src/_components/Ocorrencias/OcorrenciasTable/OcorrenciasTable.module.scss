@@ -25,6 +25,17 @@
 	text-align: left;
 }
 
+/* Centraliza o th da coluna id */
+.idcell {
+	font-weight: 700;
+	color: #334155;
+	text-align: center;
+}
+
+.headerrows.idcell {
+	text-align: center;
+}
+
 
 .cell {
 	padding: 10px 8px;
@@ -35,6 +46,7 @@
 .idcell {
 	font-weight: 700;
 	color: #334155;
+	text-align: center;
 }
 
 .evidenceActions {
