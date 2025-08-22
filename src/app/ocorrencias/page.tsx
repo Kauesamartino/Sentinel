@@ -82,7 +82,6 @@ const OcorrenciasPage = () => {
         <OcorrenciasTable
           ocorrencias={ocorrencias}
           loading={loading}
-          error={error}
           rows={rows}
           evidenciaLoading={evidenciaLoading}
           evidenciaLinks={evidenciaLinks}
