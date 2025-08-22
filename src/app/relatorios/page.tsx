@@ -5,7 +5,7 @@ import styles from './relatoriospage.module.scss';
 import Button from '@/_components/Button';
 import Modal from '@/_components/Modal';
 import { createRelatorio, listOcorrenciasByRelatorio, listRelatorios, RelatorioCreate } from '@/services/relatoriosService';
-import { formatEnumValue } from '@/_components/Ocorrencias/OcorrenciaForm';
+import { formatEnumValue } from '../../utils/formatEnumValue';
 
 function formatDate(value: string): string {
   if (!value) return '';

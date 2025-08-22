@@ -1,7 +1,7 @@
 import React from 'react';
 import Modal from '@/_components/Modal';
 import viewStyles from './OcorrenciaViewModal.module.scss';
-import { formatEnumValue } from '../utils/formatEnumValue';
+import { formatEnumValue } from '../../../utils/formatEnumValue';
 
 export type OcorrenciaDetalhe = {
 	id: number;

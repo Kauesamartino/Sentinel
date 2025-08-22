@@ -8,7 +8,7 @@ import Pagination from '@/_components/Ocorrencias/Pagination';
 import OcorrenciaViewModal from '@/_components/Ocorrencias/OcorrenciaViewModal';
 import OcorrenciaCreateModal from '@/_components/Ocorrencias/OcorrenciaCreateModal';
 import OcorrenciaEditModal from '@/_components/Ocorrencias/OcorrenciaEditModal';
-import { useOcorrencias } from '@/_components/Ocorrencias/hooks/useOcorrencias';
+import { useOcorrencias } from '@/hooks/useOcorrencias';
 
 
 const rows = [
