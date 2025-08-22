@@ -20,7 +20,7 @@ export async function GET(request: Request) {
     // Map external fields to the UI shape expected by the table
     const mapped = content.map((item: Record<string, unknown>) => ({
       id: item.id as number,
-      description: (item.titulo as string) ?? '',
+      title: (item.titulo as string) ?? '',
       category: (item.tipoOcorrencia as string) ?? '',
       date: (item.data as string) ?? '',
       status: (item.status as string) ?? '',

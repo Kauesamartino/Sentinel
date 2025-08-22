@@ -13,7 +13,7 @@ import { useOcorrencias } from '@/hooks/useOcorrencias';
 
 const rows = [
   { label: 'id', styles: styles.idcell },
-  { label: 'Descrição', styles: styles.descriptioncell },
+  { label: 'Título', styles: styles.descriptioncell },
   { label: 'Categoria', styles: styles.categorycell },
   { label: 'Data', styles: styles.datetimecell },
   { label: 'Status', styles: styles.statuscell },

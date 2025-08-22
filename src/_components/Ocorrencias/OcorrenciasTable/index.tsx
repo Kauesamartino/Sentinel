@@ -6,7 +6,8 @@ import { formatEnumValue } from '../../../utils/formatEnumValue';
 
 export type Ocorrencia = {
 	id: number;
-	description: string;
+	title: string;
+	description?: string;
 	category: string;
 	date: string;
 	status: string;
@@ -60,7 +61,7 @@ const OcorrenciasTable: React.FC<OcorrenciasTableProps> = ({
 						ocorrencias.map((ocorrencia, index) => (
 							<tr className={styles.tr} key={index}>
 								<td className={`${styles.cell} ${styles.idcell}`}>{ocorrencia.id}</td>
-								<td className={styles.cell}>{ocorrencia.description}</td>
+								<td className={styles.cell}>{ocorrencia.title}</td>
 								<td className={styles.cell}>{formatEnumValue(ocorrencia.category)}</td>
 								<td className={styles.cell}>{formatDate ? formatDate(ocorrencia.date) : ocorrencia.date}</td>
 								<td className={styles.cell}>{formatEnumValue(ocorrencia.status)}</td>
