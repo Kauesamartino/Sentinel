@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { getOcorrencias, getOcorrenciaById, createOcorrencia, updateOcorrencia } from '@/services/ocorrenciasService';
 import { generateEvidenciaURL } from '@/services/evidenciaService';
 import { Ocorrencia } from '@/_components/Ocorrencias/OcorrenciasTable';
+import { OcorrenciaDetalhe } from '@/_components/Ocorrencias/OcorrenciaViewModal';
 import { OcorrenciaPayload, OcorrenciaUpdatePayload } from '@/_components/Ocorrencias/OcorrenciaForm';
 
 export function useOcorrencias() {
@@ -14,8 +15,7 @@ export function useOcorrencias() {
   const [totalPages, setTotalPages] = useState(1);
 
   const [viewOpen, setViewOpen] = useState<boolean>(false);
-  // Use o tipo correto para viewData, por exemplo OcorrenciaDetalhe | null
-  const [viewData, setViewData] = useState<any>(null); // Substitua 'any' pelo tipo correto do seu projeto
+  const [viewData, setViewData] = useState<OcorrenciaDetalhe | null>(null);
   const [editOpen, setEditOpen] = useState<boolean>(false);
   const [editId, setEditId] = useState<number | null>(null);
   const [editInitial, setEditInitial] = useState<Partial<OcorrenciaUpdatePayload>>({});

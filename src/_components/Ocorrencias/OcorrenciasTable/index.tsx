@@ -17,7 +17,6 @@ export type Ocorrencia = {
 interface OcorrenciasTableProps {
 	ocorrencias: Ocorrencia[];
 	loading: boolean;
-	error: string | null;
 	rows: { label: string; styles?: string }[];
 	evidenciaLoading: { [id: number]: boolean };
 	evidenciaLinks: { [id: number]: string };
@@ -29,7 +28,6 @@ interface OcorrenciasTableProps {
 const OcorrenciasTable: React.FC<OcorrenciasTableProps> = ({
 	ocorrencias,
 	loading,
-	error,
 	rows,
 	evidenciaLoading,
 	evidenciaLinks,
