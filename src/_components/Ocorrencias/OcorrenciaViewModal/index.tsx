@@ -12,7 +12,7 @@ export type OcorrenciaDetalhe = {
 	status: string;
 	tipoOcorrencia: string;
 	ativo?: boolean;
-	dadosDetalhamentoEstacao?: {
+	estacaoOutDto?: {
 		id: number;
 		nome: string;
 		linha?: string;
@@ -71,16 +71,16 @@ const OcorrenciaViewModal: React.FC<OcorrenciaViewModalProps> = ({ open, onClose
 					<div className={viewStyles.value}>{formatEnumValue(viewData.tipoOcorrencia)}</div>
 				</div>
 				</div>
-				{viewData?.dadosDetalhamentoEstacao && (
+				{viewData?.estacaoOutDto && (
 					<div className={viewStyles.stationInfo}>
 						<h4 className={viewStyles.stationTitle}>Informações da Estação</h4>
 						<div className={viewStyles.stationDetails}>
-							<div><strong>Nome:</strong> {viewData.dadosDetalhamentoEstacao?.nome}</div>
-							{viewData.dadosDetalhamentoEstacao?.linha && (
-								<div><strong>Linha: </strong>{formatEnumValue(viewData.dadosDetalhamentoEstacao.linha)}</div>
+							<div><strong>Nome:</strong> {viewData.estacaoOutDto?.nome}</div>
+							{viewData.estacaoOutDto?.linha && (
+								<div><strong>Linha: </strong>{formatEnumValue(viewData.estacaoOutDto.linha)}</div>
 							)}
-							{viewData.dadosDetalhamentoEstacao?.dadosControle && (
-								<div><strong>Centro de Controle:</strong> {viewData.dadosDetalhamentoEstacao.dadosControle.nome}</div>
+							{viewData.estacaoOutDto?.dadosControle && (
+								<div><strong>Centro de Controle:</strong> {viewData.estacaoOutDto.dadosControle.nome}</div>
 							)}
 						</div>
 					</div>

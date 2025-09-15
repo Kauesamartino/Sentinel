@@ -7,7 +7,7 @@ export async function GET(request: Request) {
     const size = url.searchParams.get('size') ?? '10'
     const sort = url.searchParams.get('sort') ?? 'id'
 
-    const externalUrl = new URL('https://sentinel-api-306n.onrender.com/relatorios')
+    const externalUrl = new URL('http://localhost:8080/relatorios')
     externalUrl.searchParams.set('page', page)
     externalUrl.searchParams.set('size', size)
     externalUrl.searchParams.set('sort', sort)
@@ -27,7 +27,7 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const payload = await request.json()
-    const externalResponse = await fetch('https://sentinel-api-306n.onrender.com/relatorios', {
+    const externalResponse = await fetch(`http://${process.env.API_URL}/relatorios`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),

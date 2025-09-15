@@ -6,7 +6,7 @@ export async function GET(
 ) {
 	try {
 		const { id } = await params
-		const externalUrl = `https://sentinel-api-306n.onrender.com/ocorrencias/${id}`
+		const externalUrl = `http://${process.env.API_URL}/ocorrencias/${id}`
 		const externalResponse = await fetch(externalUrl, { cache: 'no-store' })
 
 		if (!externalResponse.ok) {
@@ -29,7 +29,7 @@ export async function PUT(
 	try {
 		const { id } = await params
 		const body = await request.json()
-		const externalUrl = `https://sentinel-api-306n.onrender.com/ocorrencias/${id}`
+		const externalUrl = `http://${process.env.API_URL}/ocorrencias/${id}`
 		const externalResponse = await fetch(externalUrl, {
 			method: 'PUT',
 			headers: { 'Content-Type': 'application/json' },

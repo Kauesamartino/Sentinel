@@ -11,7 +11,7 @@ export async function GET(
     const size = url.searchParams.get('size') ?? '10'
     const sort = url.searchParams.get('sort') ?? 'id'
 
-    const externalUrl = new URL(`https://sentinel-api-306n.onrender.com/ocorrencias/relatorio/${id}`)
+    const externalUrl = new URL(`http://${process.env.API_URL}/ocorrencias/relatorio/${id}`)
     externalUrl.searchParams.set('page', page)
     externalUrl.searchParams.set('size', size)
     externalUrl.searchParams.set('sort', sort)
