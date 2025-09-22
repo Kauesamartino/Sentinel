@@ -5,7 +5,7 @@ export async function GET(request: Request) {
     const url = new URL(request.url)
     const page = url.searchParams.get('page') ?? '0'
 
-    const externalUrl = new URL('`http://${process.env.API_URL}/relatorios`')
+    const externalUrl = new URL(`http://${process.env.API_URL}/relatorios`)
     externalUrl.searchParams.set('page', page)
 
     const externalResponse = await fetch(externalUrl.toString(), { cache: 'no-store' })
