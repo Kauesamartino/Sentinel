@@ -4,13 +4,9 @@ export async function GET(request: Request) {
   try {
     const url = new URL(request.url)
     const page = url.searchParams.get('page') ?? '0'
-    const size = url.searchParams.get('size') ?? '10'
-    const sort = url.searchParams.get('sort') ?? 'id'
 
-    const externalUrl = new URL('http://localhost:8080/relatorios')
+    const externalUrl = new URL('`http://${process.env.API_URL}/relatorios`')
     externalUrl.searchParams.set('page', page)
-    externalUrl.searchParams.set('size', size)
-    externalUrl.searchParams.set('sort', sort)
 
     const externalResponse = await fetch(externalUrl.toString(), { cache: 'no-store' })
     const body = await externalResponse.json().catch(() => ({}))
