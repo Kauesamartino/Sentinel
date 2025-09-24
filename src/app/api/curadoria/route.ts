@@ -1,3 +1,17 @@
+export async function DELETE(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const id = searchParams.get("id");
+  if (!id) {
+    return NextResponse.json({ error: "ID não informado" }, { status: 400 });
+  }
+  // Proxy DELETE to ocorrencias endpoint
+  const externalUrl = `https://sentinel-api-306n.onrender.com/ocorrencias/${id}`;
+  const response = await fetch(externalUrl, { method: "DELETE" });
+  if (!response.ok) {
+    return NextResponse.json({ error: "Erro ao desaprovar ocorrência" }, { status: response.status });
+  }
+  return NextResponse.json({ success: true });
+}
 import { NextResponse } from "next/server";
 
 export async function GET() {
