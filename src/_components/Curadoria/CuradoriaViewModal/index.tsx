@@ -1,5 +1,4 @@
-import { OcorrenciaDetalhe } from "@/_components/Ocorrencias/OcorrenciaViewModal";
-import styles from './CuradoriaViewModal.module.css';
+import styles from './CuradoriaViewModal.module.scss';
 import Modal from '@/_components/Modal'; // Adjust the import path if necessary
 
 interface CuradoriaViewModalProps {
