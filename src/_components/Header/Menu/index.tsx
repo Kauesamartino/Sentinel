@@ -12,6 +12,9 @@ export const Menu = () => {
     }, {
         label: 'Integrantes',
         to: 'integrantes'
+    }, {
+        label: 'Curadoria',
+        to: 'curadoria'
     }]
 
     return (

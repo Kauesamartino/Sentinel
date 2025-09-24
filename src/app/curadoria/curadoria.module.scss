@@ -1,0 +1,184 @@
+// Container para scroll vertical da tabela
+.tableScrollContainer {
+	max-height: 700px;
+	min-height: 350px;
+	overflow-y: auto;  
+}
+
+.table {
+	width: 100%;
+	min-width: 900px;
+	border-collapse: separate;
+	border-spacing: 0;
+	background: #fff;
+	margin-top: 20px;
+	border-collapse: collapse;
+	table-layout: fixed;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+	border-radius: 8px; 
+	overflow: hidden;   
+}
+
+.cell {
+	word-break: break-word;
+	white-space: normal;
+	vertical-align: middle;
+	padding: 10px;
+	text-align: left;
+	font-size: 0.875rem;
+	font-weight: 600;
+	color: #4b5563;
+}
+
+.evidenceActions {
+	display: flex;
+	gap: 8px;
+	align-items: center;
+	flex-wrap: wrap;
+}
+
+.main {
+	padding: 90px 60px 0 60px;
+	background-color: #f4f4f4;
+	height: 100%;
+}
+
+.container {
+	width: 100%;
+	max-width: 1280px;
+	margin: 0 auto;
+	padding: 0 40px;
+	box-sizing: border-box;
+}
+
+.header {
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+	margin: 20px 0 10px;
+}
+
+.title {
+	font-weight: 700;
+	color: #22223b;
+	margin: 0;
+}
+
+.headerButtonWrapper {
+	margin-left: auto;
+	display: flex;
+	align-items: flex-start;
+}
+
+.newOccurrenceButton {
+	padding: 12px 24px;
+	background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+	color: white;
+	border: none;
+	border-radius: 8px;
+	font-weight: 600;
+	cursor: pointer;
+	font-size: 14px;
+	transition: all 0.2s ease;
+
+	&:hover {
+		background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+		transform: translateY(-1px);
+		box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+	}
+}
+
+.errorMessage {
+	color: #dc2626;
+	margin-top: 8px;
+	padding: 12px;
+	background-color: #fef2f2;
+	border: 1px solid #fecaca;
+	border-radius: 8px;
+}
+
+.loadingMessage {
+	text-align: center;
+	color: #6b7280;
+	padding: 20px;
+}
+
+.thead {
+	background-color: #f3f4f6;
+
+	th {
+		padding-left: 10px;
+		padding-right: 10px;
+		text-align: left;
+		position: sticky;
+		top: 0;
+		background-color: #f3f4f6;
+		z-index: 1;
+	}
+}
+
+.tbody {
+	background-color: #fff;
+	tr {
+		height: 60px;
+		border-bottom: 1px solid #e5e7eb;
+	}
+}
+
+.tbody tr:hover {
+	background-color: #f9fafb; 
+	transition: background-color 0.2s ease;
+}
+
+.actionsContainer {
+	display: flex;
+	gap: 8px;
+	justify-content: flex-start;
+}
+
+// Largura específica para cada coluna
+.idcell {
+	width: 4rem;
+	text-align: center;
+}
+
+.thead .idcell {
+	text-align: center;
+}
+
+.namecell {
+	width: 8rem;
+}
+
+.areacell {
+	width: 8rem;
+}
+
+.datetimecell {
+	width: 10rem;
+}
+
+.statuscell {
+	width: 5rem;
+}
+
+.actionsCell {
+	width: 15rem;
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+	.main {
+		padding: 60px 20px 0 20px;
+	}
+  
+	.container {
+		padding: 0 20px;
+	}
+  
+	.newOccurrenceButton {
+		width: 100%;
+		padding: 14px 20px;
+		font-size: 16px;
+	}
+}

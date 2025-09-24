@@ -1,12 +1,39 @@
+export async function PATCH(request: Request) {
+  try {
+    const url = new URL(request.url);
+    const id = url.searchParams.get('id');
+    if (!id) {
+      return NextResponse.json({ error: 'ID não informado' }, { status: 400 });
+    }
+    const externalUrl = `https://sentinel-api-306n.onrender.com/ocorrencias/${id}`;
+    const externalResponse = await fetch(externalUrl, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id }),
+    });
+    const responseBody = await externalResponse.json().catch(() => ({}));
+    if (!externalResponse.ok) {
+      return NextResponse.json(responseBody || { error: 'Erro ao aprovar ocorrência' }, { status: externalResponse.status });
+    }
+    return NextResponse.json(responseBody, { status: 200 });
+  } catch (error) {
+    console.error('Erro na API PATCH /api/ocorrencias:', error);
+    return NextResponse.json({ error: 'Erro interno ao aprovar ocorrência' }, { status: 500 });
+  }
+}
 import { NextResponse } from "next/server"
 
 export async function GET(request: Request) {
   try {
-    const url = new URL(request.url)
-    const page = url.searchParams.get('page') ?? '0'
+  const url = new URL(request.url)
+  const pageNumber = url.searchParams.get('pageNumber') ?? '0'
+  const pageSize = url.searchParams.get('pageSize') ?? '20'
+  const direction = url.searchParams.get('direction') ?? 'DESC'
 
-    const externalUrl = new URL(`http://${process.env.API_URL}/ocorrencias`)
-    externalUrl.searchParams.set('page', page)
+  const externalUrl = new URL(`https://sentinel-api-306n.onrender.com/ocorrencias`)
+  externalUrl.searchParams.set('pageSize', pageSize)
+  externalUrl.searchParams.set('pageNumber', pageNumber)
+  externalUrl.searchParams.set('direction', direction)
 
     const externalResponse = await fetch(externalUrl.toString(), { cache: 'no-store' })
 
@@ -38,7 +65,7 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const externalUrl = `http://${process.env.API_URL}/ocorrencias`;
+    const externalUrl = `https://sentinel-api-306n.onrender.com/ocorrencias`;
     const externalResponse = await fetch(externalUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

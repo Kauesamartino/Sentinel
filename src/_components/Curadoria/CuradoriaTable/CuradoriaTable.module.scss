@@ -1,0 +1,110 @@
+// Botões de ação customizados
+.approveButton {
+    gap: 8px;
+    background: rgba(34,197,94,0.08) !important;
+    color: #22c55e !important;
+    border-radius: 4px;
+    transition: background 0.2s;
+}
+
+.approveButton:hover {
+    background: #22c55e !important;
+    color: #fff !important;
+}
+
+.disapproveButton {
+    gap: 8px;
+    background: rgba(239,68,68,0.08) !important;
+    color: #ef4444 !important;
+    border-radius: 4px;
+    transition: background 0.2s;
+}
+
+.disapproveButton:hover {
+    background: #ef4444 !important;
+    color: #fff !important;
+}
+.tableScrollContainer {
+    overflow-x: auto;
+    margin: 16px 0;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    font-size: 15px;
+}
+
+.thead {
+    background: #f3f4f6;
+}
+
+.headerrows {
+    font-weight: 600;
+    color: #1e293b;
+    padding: 12px 8px;
+    border-bottom: 2px solid #e5e7eb;
+    text-align: left;
+}
+
+/* Centraliza o th da coluna id */
+.idcell {
+    font-weight: 700;
+    color: #334155;
+    text-align: center;
+}
+
+.headerrows.idcell {
+    text-align: center;
+}
+
+.cell {
+    padding: 10px 8px;
+    border-bottom: 1px solid #e5e7eb;
+    color: #334155;
+}
+
+.evidenceActions {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+    margin-bottom: 4px;
+}
+
+.separator {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.evidenceLink {
+    color: #273be2;
+    font-weight: 500;
+    font-size: 13px;
+    text-decoration: underline;
+}
+
+.evidenceError {
+    color: #e30613;
+    font-size: 13px;
+}
+
+.loadingMessage {
+    text-align: center;
+    color: #64748b;
+    font-size: 16px;
+    padding: 24px 0;
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+    .tableScrollContainer {
+        padding: 0 10px;
+    }
+    .table {
+        min-width: 100%;
+    }
+}
