@@ -31,7 +31,7 @@ export async function GET(request: Request) {
   const pageSize = url.searchParams.get('pageSize') ?? '20'
   const direction = url.searchParams.get('direction') ?? 'DESC'
 
-  const externalUrl = new URL(`https://sentinel-api-306n.onrender.com/ocorrencias`)
+  const externalUrl = new URL(`https://${process.env.API_URL}/ocorrencias`)
   externalUrl.searchParams.set('pageSize', pageSize)
   externalUrl.searchParams.set('pageNumber', pageNumber)
   externalUrl.searchParams.set('direction', direction)

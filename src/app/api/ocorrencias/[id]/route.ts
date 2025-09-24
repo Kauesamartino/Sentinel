@@ -30,7 +30,7 @@ export async function PUT(
 	try {
 		const { id } = await params
 		const body = await request.json()
-		const externalUrl = `${API_URL}/ocorrencias/${id}`
+		const externalUrl = `${process.env.API_URL}/ocorrencias/${id}`
 		const externalResponse = await fetch(externalUrl, {
 			method: 'PUT',
 			headers: { 'Content-Type': 'application/json' },

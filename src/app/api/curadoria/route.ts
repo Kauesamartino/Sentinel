@@ -6,7 +6,7 @@ export async function DELETE(request: Request) {
     return NextResponse.json({ error: "ID não informado" }, { status: 400 });
   }
   // Proxy DELETE to ocorrencias endpoint
-    const externalUrl = `${API_URL}/ocorrencias/${id}`;
+  const externalUrl = `${process.env.API_URL}/ocorrencias/${id}`;
   const response = await fetch(externalUrl, { method: "DELETE" });
   if (!response.ok) {
     return NextResponse.json({ error: "Erro ao desaprovar ocorrência" }, { status: response.status });
