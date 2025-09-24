@@ -7,14 +7,14 @@ export const Menu = () => {
         label: 'Ocorrências',
         to: '/ocorrencias'
     }, {
+        label: 'Curadoria',
+        to: '/curadoria'
+    }, {
         label: 'Relatórios',
-        to: 'relatorios'
+        to: '/relatorios'
     }, {
         label: 'Integrantes',
-        to: 'integrantes'
-    }, {
-        label: 'Curadoria',
-        to: 'curadoria'
+        to: '/integrantes'
     }]
 
     return (
