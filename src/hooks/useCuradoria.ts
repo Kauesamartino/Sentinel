@@ -1,8 +1,18 @@
-
 import { useState, useEffect } from "react";
 
+// Update the import path to the correct location of ocorrencia.ts or ocorrencia.js
+import { getOcorrenciaById } from "@/services/ocorrenciasService";
+
 export function useCuradoria() {
-  const [curadorias, setCuradorias] = useState<any[]>([]);
+  type Curadoria = {
+    id: number;
+    titulo: string;
+    tipoOcorrencia: string;
+    data: string;
+    severidade?: string;
+    status: string;
+  };
+  const [curadorias, setCuradorias] = useState<Curadoria[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState(1);
@@ -10,8 +20,7 @@ export function useCuradoria() {
 
   // Modal de visualização
   const [viewOpen, setViewOpen] = useState(false);
-  const [viewData, setViewData] = useState<any | null>(null);
-
+  const [viewData, setViewData] = useState<Curadoria | null>(null);
 
   async function fetchCuradorias(pageNumber = 1) {
     setLoading(true);
@@ -33,21 +42,25 @@ export function useCuradoria() {
     fetchCuradorias(page);
   }, [page]);
 
-
-  async function handleView(id: number) {
-    setLoading(true);
-    setViewOpen(true);
+  const handleView = async (id: number) => {
     try {
-      const res = await fetch(`/api/ocorrencias/${id}`);
-      if (!res.ok) throw new Error('Erro ao buscar detalhes da ocorrência');
-      const data = await res.json();
-      setViewData(data);
-    } catch (err: any) {
+      setViewOpen(true);
       setViewData(null);
-      setError(err.message || 'Erro desconhecido');
+      const data = await getOcorrenciaById(id);
+      setViewData({
+        ...data,
+        severidade: data.severidade ?? "",
+        // garanta também os outros campos obrigatórios
+        descricao: data.descricao ?? "",
+        status: data.status ?? "",
+        titulo: data.titulo ?? "",
+        tipoOcorrencia: data.tipoOcorrencia ?? "",
+        data: data.data ?? "",
+      });
+    } catch {
+      setViewOpen(false);
     }
-    setLoading(false);
-  }
+  };
 
   async function aprovarCuradoria(id: number) {
     setLoading(true);

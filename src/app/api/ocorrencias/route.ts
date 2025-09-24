@@ -54,36 +54,11 @@ export async function GET(request: Request) {
       status: (item.status as string) ?? '',
       grau: (item.severidade as string) ?? '',
       evidence: '',
-    }))
+    }));
 
-    return NextResponse.json(mapped)
-  } catch (error) {
-          const API_URL = process.env.API_URL;
-          const externalUrl = new URL(`${API_URL}/ocorrencias`)
-    return NextResponse.json({ error: 'Erro interno ao buscar ocorrências' }, { status: 500 })
-  }
-}
-
-export async function POST(request: Request) {
-  try {
-    const body = await request.json();
-      const API_URL = process.env.API_URL;
-      const externalUrl = `${API_URL}/ocorrencias`;
-    const externalResponse = await fetch(externalUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
-    });
-
-    const responseBody = await externalResponse.json().catch(() => ({}));
-
-    if (!externalResponse.ok) {
-      return NextResponse.json(responseBody || { error: 'Erro ao criar ocorrência' }, { status: externalResponse.status });
+        return NextResponse.json(mapped);
+      } catch (error) {
+        console.error('Erro na API GET /api/ocorrencias:', error);
+        return NextResponse.json({ error: 'Erro interno ao consultar ocorrências' }, { status: 500 });
+      }
     }
-
-    return NextResponse.json(responseBody, { status: 201 });
-  } catch (error) {
-    console.error('Erro na API interna POST /api/ocorrencias:', error);
-    return NextResponse.json({ error: 'Erro interno ao criar ocorrência' }, { status: 500 });
-  }
-}

@@ -1,6 +1,13 @@
-import React from "react";
-import Modal from '@/_components/Modal';
-import styles from "./CuradoriaViewModal.module.scss";
+import { OcorrenciaDetalhe } from "@/_components/Ocorrencias/OcorrenciaViewModal";
+import styles from './CuradoriaViewModal.module.css';
+import Modal from '@/_components/Modal'; // Adjust the import path if necessary
+
+interface CuradoriaViewModalProps {
+  open: boolean;
+  onClose: () => void;
+  viewData: CuradoriaDetalhe | null;
+  formatDate: (value: string) => string;
+}
 
 export type CuradoriaDetalhe = {
   id: number;
@@ -30,14 +37,6 @@ export type CuradoriaDetalhe = {
     };
   };
 };
-
-interface CuradoriaViewModalProps {
-  open: boolean;
-  onClose: () => void;
-  viewData: CuradoriaDetalhe | null;
-  formatDate: (value: string) => string;
-}
-
 const CuradoriaViewModal: React.FC<CuradoriaViewModalProps> = ({ open, onClose, viewData, formatDate }) => (
   <Modal open={open} title="Curadoria" onClose={onClose} width={600}>
     {!viewData ? (

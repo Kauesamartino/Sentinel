@@ -20,7 +20,15 @@ export async function GET() {
   const response = await fetch(externalUrl, { cache: 'no-store' });
   const data = await response.json();
   // Map content fields, but keep pagination info
-  const mappedContent = Array.isArray(data?.content) ? data.content.map((item: any) => ({
+  type CuradoriaItem = {
+    id: number;
+    titulo: string;
+    tipoOcorrencia: string;
+    data: string;
+    severidade: string;
+    status: string;
+  };
+  const mappedContent = Array.isArray(data?.content) ? (data.content as CuradoriaItem[]).map((item) => ({
     id: item.id,
     titulo: item.titulo,
     tipoOcorrencia: item.tipoOcorrencia,
