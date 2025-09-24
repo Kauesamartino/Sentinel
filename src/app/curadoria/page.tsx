@@ -5,6 +5,7 @@ import styles from "./curadoria.module.scss";
 import { CuradoriaTable, CuradoriaViewModal, Pagination } from "@/_components/Curadoria";
 import ConfirmActionModal from "@/_components/Curadoria/ConfirmActionModal";
 import { useCuradoria } from "@/hooks/useCuradoria";
+import { toast } from "react-toastify";
 
 const rows = [
     { label: "id", styles: styles.idcell },
@@ -58,15 +59,20 @@ const CuradoriaPage = () => {
     async function handleActionConfirm() {
         if (!selectedId || !confirmAction) return;
         setActionLoading(true);
-        if (confirmAction === "aprovar") {
-            await aprovarCuradoria(selectedId);
-        } else {
-            await desaprovarCuradoria(selectedId);
+        try {
+            if (confirmAction === "aprovar") {
+                await aprovarCuradoria(selectedId);
+            } else {
+                await desaprovarCuradoria(selectedId);
+            }
+        } catch (err: any) {
+            toast.error("Erro ao aprovar");
+        } finally {
+            setActionLoading(false);
+            setConfirmModalOpen(false);
+            setSelectedId(null);
+            setConfirmAction(null);
         }
-        setActionLoading(false);
-        setConfirmModalOpen(false);
-        setSelectedId(null);
-        setConfirmAction(null);
     }
 
     return (
