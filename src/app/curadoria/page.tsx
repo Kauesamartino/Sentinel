@@ -65,7 +65,7 @@ const CuradoriaPage = () => {
             } else {
                 await desaprovarCuradoria(selectedId);
             }
-        } catch (err: any) {
+        } catch {
             toast.error("Erro ao aprovar");
         } finally {
             setActionLoading(false);
@@ -99,8 +99,8 @@ const CuradoriaPage = () => {
                         viewData
                             ? {
                                 ...viewData,
-                                descricao: (viewData as any).descricao ?? "",
-                                severidade: (viewData as any).severidade ?? "",
+                                descricao: (viewData as unknown as { descricao?: string }).descricao ?? "",
+                                severidade: (viewData as unknown as { severidade?: string }).severidade ?? "",
                             }
                             : null
                     }

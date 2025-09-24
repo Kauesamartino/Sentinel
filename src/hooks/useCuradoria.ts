@@ -32,8 +32,8 @@ export function useCuradoria() {
       // Espera-se que data tenha: content, totalPages, totalElements
       setCuradorias(Array.isArray(data.content) ? data.content : []);
       setTotalPages(data.totalPages || 1);
-    } catch (err: any) {
-      setError(err.message || "Erro desconhecido");
+    } catch {
+      setError("Erro ao buscar curadorias");
     }
     setLoading(false);
   }
@@ -50,7 +50,6 @@ export function useCuradoria() {
       setViewData({
         ...data,
         severidade: data.severidade ?? "",
-        // garanta também os outros campos obrigatórios
         descricao: data.descricao ?? "",
         status: data.status ?? "",
         titulo: data.titulo ?? "",
@@ -72,7 +71,7 @@ export function useCuradoria() {
         body: JSON.stringify({ id }),
       });
       fetchCuradorias();
-    } catch (err: any) {
+    } catch {
       setError("Erro ao aprovar curadoria");
     }
     setLoading(false);
@@ -86,7 +85,7 @@ export function useCuradoria() {
         method: "DELETE",
       });
       fetchCuradorias();
-    } catch (err: any) {
+    } catch {
       setError("Erro ao desaprovar curadoria");
     }
     setLoading(false);
