@@ -5,7 +5,8 @@ export async function PATCH(request: Request) {
     if (!id) {
       return NextResponse.json({ error: 'ID não informado' }, { status: 400 });
     }
-    const externalUrl = `https://sentinel-api-306n.onrender.com/ocorrencias/${id}`;
+      const API_URL = process.env.API_URL?.startsWith('https://') ? process.env.API_URL : `https://${process.env.API_URL}`;
+      const externalUrl = `${API_URL}/ocorrencias/${id}`;
     const externalResponse = await fetch(externalUrl, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
@@ -57,7 +58,8 @@ export async function GET(request: Request) {
 
     return NextResponse.json(mapped)
   } catch (error) {
-    console.error('Erro na API interna /api/ocorrencias:', error)
+          const API_URL = process.env.API_URL;
+          const externalUrl = new URL(`${API_URL}/ocorrencias`)
     return NextResponse.json({ error: 'Erro interno ao buscar ocorrências' }, { status: 500 })
   }
 }
@@ -65,7 +67,8 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const externalUrl = `https://sentinel-api-306n.onrender.com/ocorrencias`;
+      const API_URL = process.env.API_URL;
+      const externalUrl = `${API_URL}/ocorrencias`;
     const externalResponse = await fetch(externalUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

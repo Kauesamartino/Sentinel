@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server"
+const API_URL = process.env.API_URL?.startsWith('https://') ? process.env.API_URL : `https://${process.env.API_URL}`;
 
 export async function GET(request: Request) {
   try {
     const url = new URL(request.url)
     const page = url.searchParams.get('page') ?? '0'
 
-    const externalUrl = new URL(`https://sentinel-api-306n.onrender.com/relatorios`)
+  const externalUrl = new URL(`${API_URL}/relatorios`)
     externalUrl.searchParams.set('page', page)
 
     const externalResponse = await fetch(externalUrl.toString(), { cache: 'no-store' })
@@ -23,7 +24,7 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const payload = await request.json()
-    const externalResponse = await fetch(`https://sentinel-api-306n.onrender.com/relatorios`, {
+  const externalResponse = await fetch(`${API_URL}/relatorios`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
