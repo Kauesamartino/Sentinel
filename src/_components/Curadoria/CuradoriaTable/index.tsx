@@ -96,7 +96,7 @@ const CuradoriaTable: React.FC<CuradoriaTableProps> = ({
                                                 className={tableStyles.disapproveButton}
                                             >
                                                 <FaTimesCircle style={{ fontSize: '18px', verticalAlign: 'middle' }} />
-                                                Desaprovar
+                                                Recusar
                                             </Button>
                                         </div>
                                     </div>
