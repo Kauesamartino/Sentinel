@@ -19,9 +19,6 @@ interface OcorrenciasTableProps {
 	ocorrencias: Ocorrencia[];
 	loading: boolean;
 	rows: { label: string; styles?: string }[];
-	evidenciaLoading: { [id: number]: boolean };
-	evidenciaLinks: { [id: number]: string };
-	onGerarEvidencia: (id: number) => void;
 	onView: (id: number) => void;
 	onEdit: (id: number) => void;
 	formatDate?: (value: string) => string;
@@ -31,9 +28,6 @@ const OcorrenciasTable: React.FC<OcorrenciasTableProps> = ({
 	ocorrencias,
 	loading,
 	rows,
-	evidenciaLoading,
-	evidenciaLinks,
-	onGerarEvidencia,
 	onView,
 	onEdit,
 	formatDate,
@@ -67,16 +61,20 @@ const OcorrenciasTable: React.FC<OcorrenciasTableProps> = ({
 								<td className={styles.cell}>{formatEnumValue(ocorrencia.status)}</td>
 								<td className={styles.cell}>{formatEnumValue(ocorrencia.grau)}</td>
 								<td className={styles.cell}>
-									<div className={styles.evidenceActions}>
-										{ocorrencia.evidence && <span>{ocorrencia.evidence}</span>}
-										<Button
-											variant="transparent"
-											size="small"
-											onClick={() => onGerarEvidencia(ocorrencia.id)}
-											disabled={evidenciaLoading[ocorrencia.id]}
-										>
-											{evidenciaLoading[ocorrencia.id] ? 'Gerando...' : 'Gerar evidência'}
-										</Button>
+									<div className={styles.actions}>
+										{/* Campo Evidência como link clicável */}
+										{ocorrencia.evidence ? (
+											<a
+												href={ocorrencia.evidence}
+												target="_blank"
+												rel="noopener noreferrer"
+												className={styles.evidenceLink}
+											>
+												Ver evidência
+											</a>
+										) : (
+											<span className={styles.noEvidence}>Sem evidência</span>
+										)}
 										<Button
 											onClick={() => onView(ocorrencia.id)}
 											variant="transparent"
@@ -92,21 +90,6 @@ const OcorrenciasTable: React.FC<OcorrenciasTableProps> = ({
 											Editar
 										</Button>
 									</div>
-									{evidenciaLinks[ocorrencia.id] && evidenciaLinks[ocorrencia.id].startsWith('http') && (
-										<div>
-											<a
-												href={evidenciaLinks[ocorrencia.id]}
-												target="_blank"
-												rel="noopener noreferrer"
-												className={styles.evidenceLink}
-											>
-												Ver evidência
-											</a>
-										</div>
-									)}
-									{evidenciaLinks[ocorrencia.id] && evidenciaLinks[ocorrencia.id].startsWith('Erro') && (
-										<div className={styles.evidenceError}>{evidenciaLinks[ocorrencia.id]}</div>
-									)}
 								</td>
 							</tr>
 						))

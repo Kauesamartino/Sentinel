@@ -1,14 +1,12 @@
 import { useState, useEffect } from 'react';
 import { getOcorrencias, getOcorrenciaById, createOcorrencia, updateOcorrencia } from '@/services/ocorrenciasService';
-import { generateEvidenciaURL } from '@/services/evidenciaService';
+import { getEvidencias } from '@/services/evidenciaService';
 import { Ocorrencia } from '@/_components/Ocorrencias/OcorrenciasTable';
 import { OcorrenciaDetalhe } from '@/_components/Ocorrencias/OcorrenciaViewModal';
 import { OcorrenciaPayload, OcorrenciaUpdatePayload } from '@/_components/Ocorrencias/OcorrenciaForm';
 
 export function useOcorrencias() {
   const [ocorrencias, setOcorrencias] = useState<Ocorrencia[]>([]);
-  const [evidenciaLoading, setEvidenciaLoading] = useState<{ [id: number]: boolean }>({});
-  const [evidenciaLinks, setEvidenciaLinks] = useState<{ [id: number]: string }>({});
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState(0);
@@ -25,14 +23,27 @@ export function useOcorrencias() {
     setLoading(true);
     setError(null);
     try {
-      const data = await getOcorrencias(pageToFetch); // Removido size e sort
-      if (Array.isArray(data)) {
-        setOcorrencias(data);
-        setTotalPages(1);
-      } else {
-        setOcorrencias(data.content || []);
-        setTotalPages(data.totalPages || 1);
-      }
+      const data = await getOcorrencias(pageToFetch);
+      let ocorrenciasList = Array.isArray(data) ? data : (data.content || []);
+      
+      // Buscar evidências para cada ocorrência
+      const ocorrenciasComEvidencias = await Promise.all(
+        ocorrenciasList.map(async (ocorrencia: Ocorrencia) => {
+          try {
+            const evidencias = await getEvidencias(`occ-${ocorrencia.id.toString().padStart(8, '0')}`);
+            return {
+              ...ocorrencia,
+              evidence: evidencias && evidencias.urls.length > 0 ? evidencias.urls[0].url : ''
+            };
+          } catch (error) {
+            console.error(`Erro ao buscar evidências para ocorrência ${ocorrencia.id}:`, error);
+            return { ...ocorrencia, evidence: '' };
+          }
+        })
+      );
+      
+      setOcorrencias(ocorrenciasComEvidencias);
+      setTotalPages(Array.isArray(data) ? 1 : (data.totalPages || 1));
     } catch (e: unknown) {
       const errorMessage = e instanceof Error ? e.message : 'Erro ao carregar ocorrências';
       setError(errorMessage);
@@ -46,17 +57,7 @@ export function useOcorrencias() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
 
-  const handleGerarEvidencia = async (id: number) => {
-    setEvidenciaLoading((prev) => ({ ...prev, [id]: true }));
-    try {
-      const url = await generateEvidenciaURL(`occ-${id}`);
-      setEvidenciaLinks((prev) => ({ ...prev, [id]: url }));
-    } catch {
-      setEvidenciaLinks((prev) => ({ ...prev, [id]: 'Erro ao gerar evidência' }));
-    } finally {
-      setEvidenciaLoading((prev) => ({ ...prev, [id]: false }));
-    }
-  };
+
 
   const handleView = async (id: number) => {
     try {
@@ -104,8 +105,6 @@ export function useOcorrencias() {
 
   return {
     ocorrencias,
-    evidenciaLoading,
-    evidenciaLinks,
     loading,
     error,
     page,
@@ -124,7 +123,6 @@ export function useOcorrencias() {
     createOpen,
     setCreateOpen,
     refreshList,
-    handleGerarEvidencia,
     handleView,
     handleEdit,
     submitCreate,

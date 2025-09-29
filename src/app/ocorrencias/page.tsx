@@ -18,7 +18,7 @@ const rows = [
   { label: 'Data', styles: styles.datetimecell },
   { label: 'Status', styles: styles.statuscell },
   { label: 'Grau', styles: styles.graucell },
-  { label: '', styles: styles.evidencecell },
+  { label: '', styles: styles.evidencecell }
 ];
 
 
@@ -39,8 +39,6 @@ function formatDate(value: string): string {
 const OcorrenciasPage = () => {
   const {
     ocorrencias,
-    evidenciaLoading,
-    evidenciaLinks,
     loading,
     error,
     page,
@@ -55,7 +53,6 @@ const OcorrenciasPage = () => {
     editInitial,
     createOpen,
     setCreateOpen,
-    handleGerarEvidencia,
     handleView,
     handleEdit,
     submitCreate,
@@ -83,9 +80,6 @@ const OcorrenciasPage = () => {
           ocorrencias={ocorrencias}
           loading={loading}
           rows={rows}
-          evidenciaLoading={evidenciaLoading}
-          evidenciaLinks={evidenciaLinks}
-          onGerarEvidencia={handleGerarEvidencia}
           onView={handleView}
           onEdit={handleEdit}
           formatDate={formatDate}

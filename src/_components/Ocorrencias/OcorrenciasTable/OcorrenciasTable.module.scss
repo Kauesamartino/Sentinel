@@ -49,11 +49,10 @@
 	text-align: center;
 }
 
-.evidenceActions {
+.actions {
 	display: flex;
 	gap: 8px;
 	align-items: center;
-	margin-bottom: 4px;
 }
 
 .evidenceLink {
@@ -61,11 +60,17 @@
 	font-weight: 500;
 	font-size: 13px;
 	text-decoration: underline;
+	
+	&:hover {
+		color: #1e40af;
+		text-decoration: none;
+	}
 }
 
-.evidenceError {
-	color: #e30613;
-	font-size: 13px;
+.noEvidence {
+	color: #64748b;
+	font-style: italic;
+	font-size: 12px;
 }
 
 .loadingMessage {
