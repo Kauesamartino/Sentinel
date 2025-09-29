@@ -41,8 +41,6 @@ const OcorrenciasPage = () => {
     ocorrencias,
     loading,
     error,
-    page,
-    setPage,
     totalPages,
     totalElements,
     pageSize,
@@ -101,7 +99,6 @@ const OcorrenciasPage = () => {
           next={next}
           onPrevious={goToPrevious}
           onNext={goToNext}
-          onPageChange={goToPage}
         />
       </div>
       <OcorrenciaViewModal

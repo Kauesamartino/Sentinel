@@ -39,7 +39,7 @@ export default function OcorrenciaForm({ initial, onSubmit, submitLabel = 'Salva
   const isValid = useMemo(() => !!form.titulo && !!form.tipoOcorrencia && form.idEstacao > 0, [form]);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [estacoes, setEstacoes] = useState<Estacao[]>([]);
+    const [estacoes, setEstacoes] = useState<Estacao[]>([]);
   const [loadingEstacoes, setLoadingEstacoes] = useState(true);
 
   // Função para agrupar estações por linha

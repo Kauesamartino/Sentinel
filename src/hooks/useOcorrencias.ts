@@ -26,7 +26,7 @@ export function useOcorrencias() {
     setError(null);
     try {
       const data = await getOcorrencias(pageToFetch, pageSize);
-      let ocorrenciasList = Array.isArray(data) ? data : (data.content || []);
+      const ocorrenciasList = Array.isArray(data) ? data : (data.content || []);
       
       // Buscar evidências para cada ocorrência
       const ocorrenciasComEvidencias = await Promise.all(

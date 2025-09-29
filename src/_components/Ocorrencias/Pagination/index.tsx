@@ -11,7 +11,6 @@ interface PaginationProps {
 	next: number | null;
 	onPrevious: () => void;
 	onNext: () => void;
-	onPageChange: (page: number) => void;
 }
 
 const Pagination: React.FC<PaginationProps> = ({ 
@@ -22,8 +21,7 @@ const Pagination: React.FC<PaginationProps> = ({
 	prev, 
 	next, 
 	onPrevious, 
-	onNext,
-	onPageChange 
+	onNext
 }) => {
 	if (totalPages <= 1) return null;
 
