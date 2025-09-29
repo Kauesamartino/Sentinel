@@ -44,6 +44,14 @@ const OcorrenciasPage = () => {
     page,
     setPage,
     totalPages,
+    totalElements,
+    pageSize,
+    currentPage,
+    prev,
+    next,
+    goToPrevious,
+    goToNext,
+    goToPage,
     viewOpen,
     setViewOpen,
     viewData,
@@ -84,7 +92,17 @@ const OcorrenciasPage = () => {
           onEdit={handleEdit}
           formatDate={formatDate}
         />
-        <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
+        <Pagination 
+          currentPage={currentPage}
+          totalPages={totalPages}
+          totalElements={totalElements}
+          pageSize={pageSize}
+          prev={prev}
+          next={next}
+          onPrevious={goToPrevious}
+          onNext={goToNext}
+          onPageChange={goToPage}
+        />
       </div>
       <OcorrenciaViewModal
         open={viewOpen}

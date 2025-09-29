@@ -3,34 +3,65 @@ import Button from '@/_components/Button';
 import styles from './Pagination.module.scss';
 
 interface PaginationProps {
-	page: number;
+	currentPage: number;
 	totalPages: number;
+	totalElements: number;
+	pageSize: number;
+	prev: number | null;
+	next: number | null;
+	onPrevious: () => void;
+	onNext: () => void;
 	onPageChange: (page: number) => void;
 }
 
-const Pagination: React.FC<PaginationProps> = ({ page, totalPages, onPageChange }) => {
+const Pagination: React.FC<PaginationProps> = ({ 
+	currentPage, 
+	totalPages, 
+	totalElements, 
+	pageSize,
+	prev, 
+	next, 
+	onPrevious, 
+	onNext,
+	onPageChange 
+}) => {
 	if (totalPages <= 1) return null;
+
+	// Calcular range de itens mostrados
+	const startItem = (currentPage - 1) * pageSize + 1;
+	const endItem = Math.min(currentPage * pageSize, totalElements);
+	
 	return (
 		<div className={styles.pagination}>
-			<Button
-				variant="secondary"
-				size="small"
-				onClick={() => onPageChange(Math.max(0, page - 1))}
-				disabled={page === 0}
-			>
-				Anterior
-			</Button>
-			<span className={styles.paginationLabel}>
-				Página {page + 1} de {totalPages}
-			</span>
-			<Button
-				variant="secondary"
-				size="small"
-				onClick={() => onPageChange(Math.min(totalPages - 1, page + 1))}
-				disabled={page >= totalPages - 1}
-			>
-				Próxima
-			</Button>
+			<div className={styles.paginationInfo}>
+				<span>Mostrando {startItem}-{endItem} de {totalElements} itens</span>
+			</div>
+			
+			<div className={styles.paginationControls}>
+				{prev !== null && (
+					<Button
+						variant="secondary"
+						size="small"
+						onClick={onPrevious}
+					>
+						← Anterior
+					</Button>
+				)}
+				
+				<span className={styles.paginationLabel}>
+					Página {currentPage} de {totalPages}
+				</span>
+				
+				{next !== null && (
+					<Button
+						variant="secondary"
+						size="small"
+						onClick={onNext}
+					>
+						Próxima →
+					</Button>
+				)}
+			</div>
 		</div>
 	);
 };

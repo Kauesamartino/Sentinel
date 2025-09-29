@@ -11,6 +11,8 @@ export function useOcorrencias() {
   const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
+  const [totalElements, setTotalElements] = useState(0);
+  const [pageSize] = useState(10);
 
   const [viewOpen, setViewOpen] = useState<boolean>(false);
   const [viewData, setViewData] = useState<OcorrenciaDetalhe | null>(null);
@@ -23,7 +25,7 @@ export function useOcorrencias() {
     setLoading(true);
     setError(null);
     try {
-      const data = await getOcorrencias(pageToFetch);
+      const data = await getOcorrencias(pageToFetch, pageSize);
       let ocorrenciasList = Array.isArray(data) ? data : (data.content || []);
       
       // Buscar evidências para cada ocorrência
@@ -43,7 +45,17 @@ export function useOcorrencias() {
       );
       
       setOcorrencias(ocorrenciasComEvidencias);
-      setTotalPages(Array.isArray(data) ? 1 : (data.totalPages || 1));
+      
+      // Atualizar dados de paginação
+      if (Array.isArray(data)) {
+        // Fallback para APIs que retornam array direto
+        setTotalElements(data.length);
+        setTotalPages(Math.ceil(data.length / pageSize) || 1);
+      } else {
+        // API Spring Boot com estrutura de paginação padrão
+        setTotalPages(data.totalPages || 1);
+        setTotalElements(data.totalElements || 0);
+      }
     } catch (e: unknown) {
       const errorMessage = e instanceof Error ? e.message : 'Erro ao carregar ocorrências';
       setError(errorMessage);
@@ -103,6 +115,29 @@ export function useOcorrencias() {
     await refreshList();
   };
 
+  // Lógica de navegação prev/next inspirada no exemplo fornecido
+  const currentPage = page + 1; // Converter de base 0 para base 1 para exibição
+  const prev = page > 0 ? page - 1 : null;
+  const next = page < totalPages - 1 ? page + 1 : null;
+  
+  const goToPrevious = () => {
+    if (prev !== null) {
+      setPage(prev);
+    }
+  };
+  
+  const goToNext = () => {
+    if (next !== null) {
+      setPage(next);
+    }
+  };
+  
+  const goToPage = (targetPage: number) => {
+    if (targetPage >= 0 && targetPage < totalPages) {
+      setPage(targetPage);
+    }
+  };
+
   return {
     ocorrencias,
     loading,
@@ -110,6 +145,14 @@ export function useOcorrencias() {
     page,
     setPage,
     totalPages,
+    totalElements,
+    pageSize,
+    currentPage,
+    prev,
+    next,
+    goToPrevious,
+    goToNext,
+    goToPage,
     viewOpen,
     setViewOpen,
     viewData,

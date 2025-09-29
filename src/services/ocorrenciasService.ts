@@ -1,5 +1,11 @@
-export async function getOcorrencias(page: number) {
-  const res = await fetch(`/api/ocorrencias?page=${page}`);
+export async function getOcorrencias(page: number = 0, pageSize: number = 20) {
+  const params = new URLSearchParams({
+    pageNumber: page.toString(),
+    pageSize: pageSize.toString(),
+    direction: 'DESC'
+  });
+  
+  const res = await fetch(`/api/ocorrencias?${params}`);
   if (!res.ok) throw new Error('Erro ao buscar ocorrências');
   return res.json();
 }
