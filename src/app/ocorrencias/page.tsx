@@ -49,7 +49,6 @@ const OcorrenciasPage = () => {
     next,
     goToPrevious,
     goToNext,
-    goToPage,
     viewOpen,
     setViewOpen,
     viewData,

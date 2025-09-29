@@ -33,7 +33,7 @@ export default function OcorrenciaForm({ initial, onSubmit, submitLabel = 'Salva
     severidade: (initial?.severidade as 'BAIXA' | 'MEDIA' | 'ALTA') ?? 'BAIXA',
     status: (initial?.status as 'ABERTO' | 'EM_ANDAMENTO' | 'CONCLUIDO' | string) ?? 'ABERTO',
     tipoOcorrencia: (initial?.tipoOcorrencia as 'ACIDENTE' | 'FALHA_TECNICA' | 'INCIDENTE' | 'OUTROS') ?? 'INCIDENTE',
-    idEstacao: (initial as any)?.idEstacao ?? 0,
+    idEstacao: (initial as { idEstacao?: number })?.idEstacao ?? 0,
   });
 
   const isValid = useMemo(() => !!form.titulo && !!form.tipoOcorrencia && form.idEstacao > 0, [form]);
