@@ -1,4 +1,3 @@
-const API_URL = process.env.API_URL?.startsWith('https://') ? process.env.API_URL : `https://${process.env.API_URL}`;
 export async function DELETE(request: Request) {
   const { searchParams } = new URL(request.url);
   const id = searchParams.get("id");
@@ -6,7 +5,7 @@ export async function DELETE(request: Request) {
     return NextResponse.json({ error: "ID não informado" }, { status: 400 });
   }
   // Proxy DELETE to ocorrencias endpoint
-  const externalUrl = `${API_URL}/ocorrencias/${id}`;
+  const externalUrl = `${process.env.API_URL}/ocorrencias/${id}`;
   const response = await fetch(externalUrl, { method: "DELETE" });
   if (!response.ok) {
     return NextResponse.json({ error: "Erro ao desaprovar ocorrência" }, { status: response.status });
@@ -16,7 +15,7 @@ export async function DELETE(request: Request) {
 import { NextResponse } from "next/server";
 
 export async function GET() {
-  const externalUrl = `${API_URL}/ocorrencias/curadoria`;
+  const externalUrl = `${process.env.API_URL}/ocorrencias/curadoria`;
   const response = await fetch(externalUrl, { cache: 'no-store' });
   const data = await response.json();
   // Map content fields, but keep pagination info

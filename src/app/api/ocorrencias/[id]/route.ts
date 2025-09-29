@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server"
-const API_URL = process.env.API_URL?.startsWith('https://') ? process.env.API_URL : `https://${process.env.API_URL}`;
 
 export async function GET(
   request: NextRequest,
@@ -7,7 +6,7 @@ export async function GET(
 ) {
 	try {
 		const { id } = await params
-		const externalUrl = `${API_URL}/ocorrencias/${id}`
+		const externalUrl = `${process.env.API_URL}/ocorrencias/${id}`
 		const externalResponse = await fetch(externalUrl, { cache: 'no-store' })
 
 		if (!externalResponse.ok) {
@@ -30,7 +29,7 @@ export async function PUT(
 	try {
 		const { id } = await params
 		const body = await request.json()
-		const externalUrl = `${API_URL}/ocorrencias/${id}`
+		const externalUrl = `${process.env.API_URL}/ocorrencias/${id}`
 		const externalResponse = await fetch(externalUrl, {
 			method: 'PUT',
 			headers: { 'Content-Type': 'application/json' },

@@ -1,13 +1,15 @@
 'use client';
 
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import styles from './OcorrenciaForm.module.scss';
+import { getEstacoes, type Estacao } from '@/services/estacoesService';
 
 export type OcorrenciaPayload = {
   titulo: string;
   descricao: string;
   severidade: 'BAIXA' | 'MEDIA' | 'ALTA';
   tipoOcorrencia: 'ACIDENTE' | 'FALHA_TECNICA' | 'INCIDENTE' | 'OUTROS';
+  idEstacao: number;
 };
 
 export type OcorrenciaUpdatePayload = OcorrenciaPayload & {
@@ -31,11 +33,50 @@ export default function OcorrenciaForm({ initial, onSubmit, submitLabel = 'Salva
     severidade: (initial?.severidade as 'BAIXA' | 'MEDIA' | 'ALTA') ?? 'BAIXA',
     status: (initial?.status as 'ABERTO' | 'EM_ANDAMENTO' | 'CONCLUIDO' | string) ?? 'ABERTO',
     tipoOcorrencia: (initial?.tipoOcorrencia as 'ACIDENTE' | 'FALHA_TECNICA' | 'INCIDENTE' | 'OUTROS') ?? 'INCIDENTE',
+    idEstacao: (initial as any)?.idEstacao ?? 0,
   });
 
-  const isValid = useMemo(() => !!form.titulo && !!form.tipoOcorrencia, [form]);
+  const isValid = useMemo(() => !!form.titulo && !!form.tipoOcorrencia && form.idEstacao > 0, [form]);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [estacoes, setEstacoes] = useState<Estacao[]>([]);
+  const [loadingEstacoes, setLoadingEstacoes] = useState(true);
+
+  // Função para agrupar estações por linha
+  const estacoesAgrupadas = useMemo(() => {
+    const grupos: Record<string, Estacao[]> = {};
+    
+    estacoes.forEach((estacao) => {
+      const linha = estacao.linha.replace('LINHA_', 'Linha ').replace('_', ' ');
+      if (!grupos[linha]) {
+        grupos[linha] = [];
+      }
+      grupos[linha].push(estacao);
+    });
+    
+    // Ordenar estações dentro de cada linha por nome
+    Object.keys(grupos).forEach((linha) => {
+      grupos[linha].sort((a, b) => a.nome.localeCompare(b.nome));
+    });
+    
+    return grupos;
+  }, [estacoes]);
+
+  useEffect(() => {
+    const fetchEstacoes = async () => {
+      try {
+        const response = await getEstacoes();
+        setEstacoes(response.content || []);
+      } catch (err) {
+        console.error('Erro ao buscar estações:', err);
+        setError('Erro ao carregar estações');
+      } finally {
+        setLoadingEstacoes(false);
+      }
+    };
+
+    fetchEstacoes();
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -89,6 +130,33 @@ export default function OcorrenciaForm({ initial, onSubmit, submitLabel = 'Salva
           className={styles.textarea}
           placeholder="Descreva os detalhes da ocorrência"
         />
+      </div>
+      
+      <div className={styles.field}>
+        <label className={styles.label}>Estação</label>
+        <select 
+          name="idEstacao" 
+          value={form.idEstacao} 
+          onChange={handleChange}
+          required
+          className={styles.select}
+          disabled={loadingEstacoes}
+        >
+          <option value={0}>
+            {loadingEstacoes ? 'Carregando estações...' : 'Selecione uma estação'}
+          </option>
+          {Object.entries(estacoesAgrupadas)
+            .sort(([linhaA], [linhaB]) => linhaA.localeCompare(linhaB))
+            .map(([linha, estacoesLinha]) => (
+              <optgroup key={linha} label={linha}>
+                {estacoesLinha.map((estacao) => (
+                  <option key={estacao.id} value={estacao.id}>
+                    {estacao.nome}
+                  </option>
+                ))}
+              </optgroup>
+            ))}
+        </select>
       </div>
       
       {!isEdit && (
