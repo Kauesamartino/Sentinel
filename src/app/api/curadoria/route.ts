@@ -110,7 +110,7 @@ export async function PATCH(request: Request) {
     if (response.status !== 204) {
       try {
         result = await response.json();
-      } catch (e) {
+      } catch {
         console.log('PATCH /api/curadoria - Resposta sem JSON válido');
       }
     }
