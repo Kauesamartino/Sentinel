@@ -29,120 +29,31 @@ export async function DELETE(request: Request) {
 }
 import { NextResponse } from "next/server";
 
-export async function GET(request: Request) {
-  try {
-    // Verificar se API_URL está definida
-    if (!process.env.API_URL) {
-      console.error('GET /api/curadoria - Variável API_URL não definida');
-      return NextResponse.json({ 
-        error: 'Configuração da API não encontrada',
-        details: 'Variável de ambiente API_URL não está definida'
-      }, { status: 500 });
-    }
-
-    const { searchParams } = new URL(request.url);
-    const pageNumber = searchParams.get('pageNumber') || '0';
-    const pageSize = searchParams.get('pageSize') || '10';
-    const direction = searchParams.get('direction') || 'desc';
-    
-    const params = new URLSearchParams({
-      pageNumber,
-      pageSize,
-      direction
-    });
-    
-    // Usar o endpoint padrão de ocorrências - a curadoria são ocorrências pendentes
-    const externalUrl = `${process.env.API_URL}/ocorrencias?${params.toString()}`;
-    console.log('GET /api/curadoria - URL externa:', externalUrl);
-    
-    const response = await fetch(externalUrl, { 
-      cache: 'no-store',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
-    
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error('GET /api/curadoria - Erro da API externa:', {
-        status: response.status,
-        statusText: response.statusText,
-        body: errorText
-      });
-      return NextResponse.json({ 
-        error: 'Erro ao buscar curadorias',
-        details: `API externa retornou ${response.status}: ${response.statusText}`,
-        externalUrl
-      }, { status: response.status });
-    }
-    
-    const data = await response.json();
-    console.log('GET /api/curadoria - Dados recebidos:', data);
-    
-    // Map content fields, but keep pagination info
-    type CuradoriaItem = {
-      id: number;
-      titulo: string;
-      tipoOcorrencia: string;
-      data: string;
-      severidade: string;
-      status: string;
-    };
-    
-    let mappedContent: CuradoriaItem[] = [];
-    
-    if (Array.isArray(data?.content)) {
-      // Filtrar apenas ocorrências que precisam de curadoria
-      mappedContent = (data.content as CuradoriaItem[])
-        .filter((item) => {
-          // Incluir ocorrências que estão em status que precisa de curadoria
-          const statusQuePreecisaCuradoria = ['EM_ANDAMENTO', 'ABERTO', 'PENDENTE'];
-          return statusQuePreecisaCuradoria.includes(item.status);
-        })
-        .map((item) => ({
-          id: item.id,
-          titulo: item.titulo,
-          tipoOcorrencia: item.tipoOcorrencia,
-          data: item.data,
-          severidade: item.severidade,
-          status: item.status,
-        }));
-    } else if (Array.isArray(data)) {
-      // Fallback se a API retornar array direto
-      mappedContent = (data as CuradoriaItem[])
-        .filter((item) => {
-          const statusQuePreecisaCuradoria = ['EM_ANDAMENTO', 'ABERTO', 'PENDENTE'];
-          return statusQuePreecisaCuradoria.includes(item.status);
-        })
-        .map((item) => ({
-          id: item.id,
-          titulo: item.titulo,
-          tipoOcorrencia: item.tipoOcorrencia,
-          data: item.data,
-          severidade: item.severidade,
-          status: item.status,
-        }));
-    }
-    
-    // Retornar estrutura de paginação adequada
-    const result = Array.isArray(data) ? {
-      content: mappedContent,
-      totalElements: mappedContent.length,
-      totalPages: Math.ceil(mappedContent.length / parseInt(pageSize)) || 1,
-      size: parseInt(pageSize),
-      number: parseInt(pageNumber)
-    } : {
-      ...data,
-      content: mappedContent,
-      totalElements: data?.totalElements || mappedContent.length,
-    };
-    
-    console.log('GET /api/curadoria - Resultado final:', result);
-    return NextResponse.json(result);
-  } catch (error) {
-    console.error('Erro na API GET /api/curadoria:', error);
-    return NextResponse.json({ error: 'Erro interno do servidor' }, { status: 500 });
-  }
+export async function GET() {
+  const externalUrl = `${process.env.API_URL}/ocorrencias/curadoria`;
+  const response = await fetch(externalUrl, { cache: 'no-store' });
+  const data = await response.json();
+  // Map content fields, but keep pagination info
+  type CuradoriaItem = {
+    id: number;
+    titulo: string;
+    tipoOcorrencia: string;
+    data: string;
+    severidade: string;
+    status: string;
+  };
+  const mappedContent = Array.isArray(data?.content) ? (data.content as CuradoriaItem[]).map((item) => ({
+    id: item.id,
+    titulo: item.titulo,
+    tipoOcorrencia: item.tipoOcorrencia,
+    data: item.data,
+    severidade: item.severidade,
+    status: item.status,
+  })) : [];
+  return NextResponse.json({
+    ...data,
+    content: mappedContent,
+  });
 }
 
 export async function PATCH(request: Request) {
