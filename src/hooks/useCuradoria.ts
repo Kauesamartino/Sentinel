@@ -100,30 +100,46 @@ export function useCuradoria() {
     setLoading(true);
     setError(null);
     try {
-      await fetch(`/api/curadoria`, {
+      const response = await fetch(`/api/curadoria`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id }),
       });
-      fetchCuradorias();
-    } catch {
-      setError("Erro ao aprovar curadoria");
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Erro ao aprovar curadoria');
+      }
+      
+      await fetchCuradorias(page);
+    } catch (error) {
+      console.error('Erro ao aprovar curadoria:', error);
+      setError(error instanceof Error ? error.message : "Erro ao aprovar curadoria");
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   }
 
   async function desaprovarCuradoria(id: number) {
     setLoading(true);
     setError(null);
     try {
-      await fetch(`/api/curadoria?id=${id}`, {
+      const response = await fetch(`/api/curadoria?id=${id}`, {
         method: "DELETE",
       });
-      fetchCuradorias();
-    } catch {
-      setError("Erro ao desaprovar curadoria");
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Erro ao desaprovar curadoria');
+      }
+      
+      await fetchCuradorias(page);
+    } catch (error) {
+      console.error('Erro ao desaprovar curadoria:', error);
+      setError(error instanceof Error ? error.message : "Erro ao desaprovar curadoria");
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   }
 
   // Lógica de navegação prev/next
