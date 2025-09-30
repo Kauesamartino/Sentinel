@@ -11,6 +11,7 @@ interface Curadoria {
     tipoOcorrencia: string;
     data: string;
     status: string;
+    evidence?: string;
 }
 
 interface Row {
@@ -72,6 +73,19 @@ const CuradoriaTable: React.FC<CuradoriaTableProps> = ({
                                 <td className={styles.cell}>{curadoria.status}</td>
                                 <td className={styles.cell}>
                                     <div className={styles.evidenceActions}>
+                                        {/* Campo Evidência como link clicável */}
+                                        {curadoria.evidence ? (
+                                            <a
+                                                href={curadoria.evidence}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className={styles.evidenceLink}
+                                            >
+                                                Ver evidência
+                                            </a>
+                                        ) : (
+                                            <span className={styles.evidenceError}>Sem evidência</span>
+                                        )}
                                         <Button
                                             onClick={() => onView(curadoria.id)}
                                             variant="transparent"

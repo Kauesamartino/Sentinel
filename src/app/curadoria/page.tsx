@@ -34,9 +34,14 @@ const CuradoriaPage = () => {
         curadorias,
         loading,
         error,
-        page,
-        setPage,
         totalPages,
+        totalElements,
+        pageSize,
+        currentPage,
+        prev,
+        next,
+        goToPrevious,
+        goToNext,
         viewOpen,
         setViewOpen,
         viewData,
@@ -91,7 +96,16 @@ const CuradoriaPage = () => {
                     onAprovar={(id: number) => handleConfirm("aprovar", id)}
                     onDesaprovar={(id: number) => handleConfirm("desaprovar", id)}
                 />
-                <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
+                <Pagination 
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    totalElements={totalElements}
+                    pageSize={pageSize}
+                    prev={prev}
+                    next={next}
+                    onPrevious={goToPrevious}
+                    onNext={goToNext}
+                />
                 <CuradoriaViewModal
                     open={viewOpen}
                     onClose={() => setViewOpen(false)}

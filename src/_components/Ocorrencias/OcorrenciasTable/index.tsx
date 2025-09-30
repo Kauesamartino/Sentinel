@@ -3,6 +3,7 @@ import React from 'react';
 import Button from '@/_components/Button';
 import styles from './OcorrenciasTable.module.scss';
 import { formatEnumValue } from '../../../utils/formatEnumValue';
+import Link from 'next/link';
 
 export type Ocorrencia = {
 	id: number;
@@ -64,14 +65,14 @@ const OcorrenciasTable: React.FC<OcorrenciasTableProps> = ({
 									<div className={styles.actions}>
 										{/* Campo Evidência como link clicável */}
 										{ocorrencia.evidence ? (
-											<a
+											<Link
 												href={ocorrencia.evidence}
 												target="_blank"
 												rel="noopener noreferrer"
 												className={styles.evidenceLink}
 											>
 												Ver evidência
-											</a>
+											</Link>
 										) : (
 											<span className={styles.noEvidence}>Sem evidência</span>
 										)}
