@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 // Update the import path to the correct location of ocorrencia.ts or ocorrencia.js
 import { getOcorrenciaById } from "@/services/ocorrenciasService";
@@ -26,7 +26,7 @@ export function useCuradoria() {
   const [viewOpen, setViewOpen] = useState(false);
   const [viewData, setViewData] = useState<Curadoria | null>(null);
 
-  async function fetchCuradorias(pageNumber = 0) {
+  const fetchCuradorias = useCallback(async (pageNumber = 0) => {
     setLoading(true);
     setError(null);
     try {
@@ -39,7 +39,7 @@ export function useCuradoria() {
       if (!res.ok) throw new Error("Erro ao buscar curadorias");
       const data = await res.json();
       
-      let curadoriasList = Array.isArray(data) ? data : (data.content || []);
+      const curadoriasList = Array.isArray(data) ? data : (data.content || []);
       
       // Buscar evidências para cada curadoria
       const curadoriasComEvidencias = await Promise.all(
@@ -71,11 +71,11 @@ export function useCuradoria() {
       setError("Erro ao buscar curadorias");
     }
     setLoading(false);
-  }
+  }, [pageSize]);
 
   useEffect(() => {
     fetchCuradorias(page);
-  }, [page]);
+  }, [page, fetchCuradorias]);
 
   const handleView = async (id: number) => {
     try {
