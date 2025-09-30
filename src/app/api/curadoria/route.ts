@@ -67,34 +67,62 @@ export async function PATCH(request: Request) {
     
     console.log('PATCH /api/curadoria - Aprovando ocorrência:', id);
     
-    // Proxy PATCH to ocorrencias endpoint to approve
+    // Verificar se API_URL está definida
+    if (!process.env.API_URL) {
+      console.error('PATCH /api/curadoria - Variável API_URL não definida');
+      return NextResponse.json({ 
+        error: 'Configuração da API não encontrada',
+        details: 'Variável de ambiente API_URL não está definida'
+      }, { status: 500 });
+    }
+    
+    // Baseado no backend Spring, usar PATCH sem payload para ativar
     const externalUrl = `${process.env.API_URL}/ocorrencias/${id}`;
-    const updatePayload = {
-      status: 'APROVADO' // ou o status apropriado para aprovação
-    };
     
     console.log('PATCH /api/curadoria - URL externa:', externalUrl);
-    console.log('PATCH /api/curadoria - Payload:', updatePayload);
     
     const response = await fetch(externalUrl, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(updatePayload)
+      // Não enviar payload, apenas ativar a ocorrência
     });
     
+    console.log('PATCH /api/curadoria - Status da resposta:', response.status);
+    
     if (!response.ok) {
-      console.error('PATCH /api/curadoria - Erro da API externa:', response.status);
-      return NextResponse.json({ error: "Erro ao aprovar ocorrência" }, { status: response.status });
+      const errorText = await response.text();
+      console.error('PATCH /api/curadoria - Erro da API externa:', {
+        status: response.status,
+        statusText: response.statusText,
+        body: errorText
+      });
+      return NextResponse.json({ 
+        error: "Erro ao aprovar ocorrência",
+        details: `API externa retornou ${response.status}: ${response.statusText}`,
+        externalUrl
+      }, { status: response.status });
     }
     
-    const result = await response.json();
-    console.log('PATCH /api/curadoria - Resultado:', result);
+    // Se a resposta é 204 (No Content), não há JSON para parsear
+    let result = null;
+    if (response.status !== 204) {
+      try {
+        result = await response.json();
+      } catch (e) {
+        console.log('PATCH /api/curadoria - Resposta sem JSON válido');
+      }
+    }
     
+    console.log('PATCH /api/curadoria - Ocorrência aprovada com sucesso');
     return NextResponse.json({ success: true, data: result });
   } catch (error) {
     console.error('Erro na API PATCH /api/curadoria:', error);
-    return NextResponse.json({ error: 'Erro interno do servidor' }, { status: 500 });
+    const errorMessage = error instanceof Error ? error.message : 'Erro interno do servidor';
+    return NextResponse.json({ 
+      error: 'Erro interno do servidor',
+      details: errorMessage 
+    }, { status: 500 });
   }
 }
