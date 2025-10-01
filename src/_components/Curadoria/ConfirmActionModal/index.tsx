@@ -13,13 +13,13 @@ const actionLabels = {
   aprovar: {
     title: "Confirmar aprovação",
     message: "Tem certeza que deseja aprovar esta ocorrência?",
-    confirm: "Aprovar",
+    confirm: "Confirmar",
     color: "#273BE2"
   },
   desaprovar: {
     title: "Confirmar desaprovação",
     message: "Tem certeza que deseja desaprovar esta ocorrência?",
-    confirm: "Desaprovar",
+    confirm: "Confirmar",
     color: "#273BE2"
   }
 };
