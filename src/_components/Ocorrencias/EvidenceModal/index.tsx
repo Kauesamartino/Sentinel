@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Modal from '@/_components/Modal';
 import styles from './EvidenceModal.module.scss';
 import { getEvidencias, type EvidenciaResponse } from '@/services/evidenciaService';
 import Link from 'next/link';
+import Image from 'next/image';
 
 interface EvidenceModalProps {
     open: boolean;
@@ -17,14 +18,7 @@ const EvidenceModal: React.FC<EvidenceModalProps> = ({ open, onClose, occurrence
 
     console.log('EvidenceModal renderizado com props:', { open, occurrenceId });
 
-    useEffect(() => {
-        console.log('EvidenceModal useEffect:', { open, occurrenceId });
-        if (open && occurrenceId) {
-            fetchEvidence();
-        }
-    }, [open, occurrenceId]);
-
-    const fetchEvidence = async () => {
+    const fetchEvidence = useCallback(async () => {
         setLoading(true);
         try {
             const data = await getEvidencias(occurrenceId.toString());
@@ -37,7 +31,14 @@ const EvidenceModal: React.FC<EvidenceModalProps> = ({ open, onClose, occurrence
         } finally {
             setLoading(false);
         }
-    };
+    }, [occurrenceId]);
+
+    useEffect(() => {
+        console.log('EvidenceModal useEffect:', { open, occurrenceId });
+        if (open && occurrenceId) {
+            fetchEvidence();
+        }
+    }, [open, occurrenceId, fetchEvidence]);
 
     const handleUrlSelect = (url: string) => {
         console.log('Arquivo selecionado:', url);
@@ -108,7 +109,7 @@ const EvidenceModal: React.FC<EvidenceModalProps> = ({ open, onClose, occurrence
                                             const fileType = getFileType(selectedFile?.key || '');
                                             console.log('Renderizando preview para:', selectedFile?.key, 'Tipo:', fileType);
                                             return fileType === 'image' ? (
-                                            <img
+                                            <Image
                                                 src={selectedUrl}
                                                 alt="Evidência"
                                                 className={styles.imagePreview}
@@ -122,7 +123,7 @@ const EvidenceModal: React.FC<EvidenceModalProps> = ({ open, onClose, occurrence
                                                 src={selectedUrl}
                                                 controls
                                                 className={styles.videoPreview}
-                                                onError={(e) => {
+                                                onError={() => {
                                                     console.error('Erro ao carregar vídeo:', selectedUrl);
                                                 }}
                                                 onLoadStart={() => {
