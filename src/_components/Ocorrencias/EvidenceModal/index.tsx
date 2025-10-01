@@ -141,7 +141,7 @@ const EvidenceModal: React.FC<EvidenceModalProps> = ({ open, onClose, occurrence
                                                 rel="noopener noreferrer"
                                                 className={styles.openButton}
                                             >
-                                                Abrir em Nova Aba
+                                                Fazer download
                                             </Link>
                                         </div>
                                     </div>
