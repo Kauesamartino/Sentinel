@@ -3,7 +3,6 @@ import React from 'react';
 import Button from '@/_components/Button';
 import styles from './OcorrenciasTable.module.scss';
 import { formatEnumValue } from '../../../utils/formatEnumValue';
-import Link from 'next/link';
 
 export type Ocorrencia = {
 	id: number;
@@ -22,6 +21,7 @@ interface OcorrenciasTableProps {
 	rows: { label: string; styles?: string }[];
 	onView: (id: number) => void;
 	onEdit: (id: number) => void;
+	onViewEvidence: (id: number) => void;
 	formatDate?: (value: string) => string;
 }
 
@@ -31,6 +31,7 @@ const OcorrenciasTable: React.FC<OcorrenciasTableProps> = ({
 	rows,
 	onView,
 	onEdit,
+	onViewEvidence,
 	formatDate,
 }) => {
 	return (
@@ -63,25 +64,24 @@ const OcorrenciasTable: React.FC<OcorrenciasTableProps> = ({
 								<td className={styles.cell}>{formatEnumValue(ocorrencia.grau)}</td>
 								<td className={styles.cell}>
 									<div className={styles.actions}>
-										{/* Campo Evidência como link clicável */}
-										{ocorrencia.evidence ? (
-											<Link
-												href={ocorrencia.evidence}
-												target="_blank"
-												rel="noopener noreferrer"
-												className={styles.evidenceLink}
-											>
-												Ver evidência
-											</Link>
-										) : (
-											<span className={styles.noEvidence}>Sem evidência</span>
-										)}
+										{/* Botão para abrir modal de evidências */}
+										<Button
+											onClick={() => {
+												console.log('Botão Ver evidência clicado para ID:', ocorrencia.id);
+												onViewEvidence(ocorrencia.id);
+											}}
+											variant="transparent"
+											size="small"
+											className={styles.evidenceButton}
+										>
+											Ver evidência
+										</Button>
 										<Button
 											onClick={() => onView(ocorrencia.id)}
 											variant="transparent"
 											size="small"
 										>
-											Ver
+											Detalhes
 										</Button>
 										<Button
 											onClick={() => onEdit(ocorrencia.id)}

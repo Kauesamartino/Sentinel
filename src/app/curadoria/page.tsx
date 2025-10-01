@@ -1,9 +1,10 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import styles from "./curadoria.module.scss";
 import { CuradoriaTable, CuradoriaViewModal, Pagination } from "@/_components/Curadoria";
 import ConfirmActionModal from "@/_components/Curadoria/ConfirmActionModal";
+import EvidenceModal from "@/_components/Ocorrencias/EvidenceModal";
 import { useCuradoria } from "@/hooks/useCuradoria";
 import { toast } from "react-toastify";
 
@@ -54,12 +55,23 @@ const CuradoriaPage = () => {
     const [confirmAction, setConfirmAction] = React.useState<"aprovar" | "desaprovar" | null>(null);
     const [selectedId, setSelectedId] = React.useState<number | null>(null);
     const [actionLoading, setActionLoading] = React.useState(false);
+    
+    // Estado para modal de evidências
+    const [evidenceModalOpen, setEvidenceModalOpen] = useState(false);
+    const [selectedOccurrenceId, setSelectedOccurrenceId] = useState<number | null>(null);
 
     function handleConfirm(action: "aprovar" | "desaprovar", id: number) {
         setConfirmAction(action);
         setSelectedId(id);
         setConfirmModalOpen(true);
     }
+
+    const handleViewEvidence = (id: number) => {
+        console.log('handleViewEvidence chamado com ID (curadoria):', id);
+        setSelectedOccurrenceId(id);
+        setEvidenceModalOpen(true);
+        console.log('Estado do modal definido para true (curadoria)');
+    };
 
     async function handleActionConfirm() {
         if (!selectedId || !confirmAction) return;
@@ -93,6 +105,7 @@ const CuradoriaPage = () => {
                     rows={rows}
                     formatDate={formatDate}
                     onView={handleView}
+                    onViewEvidence={handleViewEvidence}
                     onAprovar={(id: number) => handleConfirm("aprovar", id)}
                     onDesaprovar={(id: number) => handleConfirm("desaprovar", id)}
                 />
@@ -129,6 +142,11 @@ const CuradoriaPage = () => {
                         loading={actionLoading}
                     />
                 )}
+                <EvidenceModal
+                    open={evidenceModalOpen}
+                    onClose={() => setEvidenceModalOpen(false)}
+                    occurrenceId={selectedOccurrenceId || 0}
+                />
             </div>
         </main>
     );

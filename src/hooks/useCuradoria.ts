@@ -45,7 +45,7 @@ export function useCuradoria() {
       const curadoriasComEvidencias = await Promise.all(
         curadoriasList.map(async (curadoria: Curadoria) => {
           try {
-            const evidencias = await getEvidencias(`occ-${curadoria.id.toString().padStart(8, '0')}`);
+            const evidencias = await getEvidencias(curadoria.id.toString());
             return {
               ...curadoria,
               evidence: evidencias && evidencias.urls.length > 0 ? evidencias.urls[0].url : ''

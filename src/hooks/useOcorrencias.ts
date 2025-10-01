@@ -32,7 +32,7 @@ export function useOcorrencias() {
       const ocorrenciasComEvidencias = await Promise.all(
         ocorrenciasList.map(async (ocorrencia: Ocorrencia) => {
           try {
-            const evidencias = await getEvidencias(`occ-${ocorrencia.id.toString().padStart(8, '0')}`);
+            const evidencias = await getEvidencias(ocorrencia.id.toString());
             return {
               ...ocorrencia,
               evidence: evidencias && evidencias.urls.length > 0 ? evidencias.urls[0].url : ''

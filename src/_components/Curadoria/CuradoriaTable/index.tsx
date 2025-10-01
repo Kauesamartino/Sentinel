@@ -24,6 +24,7 @@ interface CuradoriaTableProps {
     loading: boolean;
     rows: Row[];
     onView: (id: number) => void;
+    onViewEvidence: (id: number) => void;
     onAprovar: (id: number) => void;
     formatDate: (date: string) => string;
     onDesaprovar: (id: number) => void;
@@ -34,6 +35,7 @@ const CuradoriaTable: React.FC<CuradoriaTableProps> = ({
     loading,
     rows,
     onView,
+    onViewEvidence,
     onAprovar,
     formatDate,
     onDesaprovar,
@@ -73,25 +75,24 @@ const CuradoriaTable: React.FC<CuradoriaTableProps> = ({
                                 <td className={styles.cell}>{curadoria.status}</td>
                                 <td className={styles.cell}>
                                     <div className={styles.evidenceActions}>
-                                        {/* Campo Evidência como link clicável */}
-                                        {curadoria.evidence ? (
-                                            <a
-                                                href={curadoria.evidence}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className={styles.evidenceLink}
-                                            >
-                                                Ver evidência
-                                            </a>
-                                        ) : (
-                                            <span className={styles.evidenceError}>Sem evidência</span>
-                                        )}
+                                        {/* Botão para abrir modal de evidências */}
+                                        <Button
+                                            onClick={() => {
+                                                console.log('Botão Ver evidência clicado para ID (curadoria):', curadoria.id);
+                                                onViewEvidence(curadoria.id);
+                                            }}
+                                            variant="transparent"
+                                            size="small"
+                                            className={styles.evidenceButton}
+                                        >
+                                            Ver evidência
+                                        </Button>
                                         <Button
                                             onClick={() => onView(curadoria.id)}
                                             variant="transparent"
                                             size="small"
                                         >
-                                            Ver
+                                            Detalhes
                                         </Button>
                                         <div className={styles.separator}>
                                             <Button

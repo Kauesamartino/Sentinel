@@ -1,6 +1,6 @@
 'use client';
 
-
+import React, { useState } from 'react';
 import styles from './ocorrenciaspage.module.scss';
 import Button from '@/_components/Button';
 import OcorrenciasTable from '@/_components/Ocorrencias/OcorrenciasTable';
@@ -8,6 +8,7 @@ import Pagination from '@/_components/Ocorrencias/Pagination';
 import OcorrenciaViewModal from '@/_components/Ocorrencias/OcorrenciaViewModal';
 import OcorrenciaCreateModal from '@/_components/Ocorrencias/OcorrenciaCreateModal';
 import OcorrenciaEditModal from '@/_components/Ocorrencias/OcorrenciaEditModal';
+import EvidenceModal from '@/_components/Ocorrencias/EvidenceModal';
 import { useOcorrencias } from '@/hooks/useOcorrencias';
 
 
@@ -64,13 +65,24 @@ const OcorrenciasPage = () => {
     submitEdit,
   } = useOcorrencias();
 
+  // Estado para modal de evidências
+  const [evidenceModalOpen, setEvidenceModalOpen] = useState(false);
+  const [selectedOccurrenceId, setSelectedOccurrenceId] = useState<number | null>(null);
+
+  const handleViewEvidence = (id: number) => {
+    console.log('handleViewEvidence chamado com ID:', id);
+    setSelectedOccurrenceId(id);
+    setEvidenceModalOpen(true);
+    console.log('Estado do modal definido para true');
+  };
+
   return (
     <main className={styles.main}>
       <div className={styles.container}>
         <div className={styles.header}>
           <h1 className={styles.title}>Ocorrências</h1>
           <div className={styles.headerButtonWrapper}>
-            <Button 
+            <Button
               onClick={() => setCreateOpen(true)}
               variant="primary"
               size="medium"
@@ -87,9 +99,10 @@ const OcorrenciasPage = () => {
           rows={rows}
           onView={handleView}
           onEdit={handleEdit}
+          onViewEvidence={handleViewEvidence}
           formatDate={formatDate}
         />
-        <Pagination 
+        <Pagination
           currentPage={currentPage}
           totalPages={totalPages}
           totalElements={totalElements}
@@ -117,6 +130,11 @@ const OcorrenciasPage = () => {
         editId={editId}
         initial={editInitial}
         onSubmit={submitEdit}
+      />
+      <EvidenceModal
+        open={evidenceModalOpen}
+        onClose={() => setEvidenceModalOpen(false)}
+        occurrenceId={selectedOccurrenceId || 0}
       />
     </main>
   );
