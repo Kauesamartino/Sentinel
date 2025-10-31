@@ -1,6 +1,6 @@
 "use client";
 
-import React from 'react';
+import React, { useCallback } from 'react';
 import styles from './dashboards.module.scss';
 import { useDashboard } from '@/hooks/useDashboard';
 import ChartWithFilter from '@/_components/ChartWithFilter';
@@ -14,6 +14,23 @@ const DashboardPage: React.FC = () => {
     handleTimeFilterChange,
     refreshData
   } = useDashboard();
+
+  // Memoizar as funções de callback para evitar re-renders
+  const handleTempoFilterChange = useCallback((filter: string) => {
+    handleTimeFilterChange('tempo', filter as any);
+  }, [handleTimeFilterChange]);
+
+  const handleTipoFilterChange = useCallback((filter: string) => {
+    handleTimeFilterChange('tipo', filter as any);
+  }, [handleTimeFilterChange]);
+
+  const handleStatusFilterChange = useCallback((filter: string) => {
+    handleTimeFilterChange('status', filter as any);
+  }, [handleTimeFilterChange]);
+
+  const handleSeveridadeFilterChange = useCallback((filter: string) => {
+    handleTimeFilterChange('severidade', filter as any);
+  }, [handleTimeFilterChange]);
 
   return (
     <main className={styles.dashboardMain}>
@@ -52,7 +69,7 @@ const DashboardPage: React.FC = () => {
               type="line"
               color="#3b82f6"
               currentFilter={timeFilters.tempo}
-              onFilterChange={(filter) => handleTimeFilterChange('tempo', filter)}
+              onFilterChange={handleTempoFilterChange}
             />
 
             {/* Gráfico de Ocorrências por Tipo */}
@@ -61,7 +78,7 @@ const DashboardPage: React.FC = () => {
               title="Ocorrências por Tipo"
               type="pie"
               currentFilter={timeFilters.tipo}
-              onFilterChange={(filter) => handleTimeFilterChange('tipo', filter)}
+              onFilterChange={handleTipoFilterChange}
             />
 
             {/* Gráfico de Ocorrências por Status */}
@@ -71,7 +88,7 @@ const DashboardPage: React.FC = () => {
               type="bar"
               color="status"
               currentFilter={timeFilters.status}
-              onFilterChange={(filter) => handleTimeFilterChange('status', filter)}
+              onFilterChange={handleStatusFilterChange}
             />
 
             {/* Gráfico de Ocorrências por Severidade */}
@@ -81,7 +98,7 @@ const DashboardPage: React.FC = () => {
               type="bar"
               color="severidade"
               currentFilter={timeFilters.severidade}
-              onFilterChange={(filter) => handleTimeFilterChange('severidade', filter)}
+              onFilterChange={handleSeveridadeFilterChange}
             />
           </div>
         )}

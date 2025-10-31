@@ -21,6 +21,12 @@ const TimeFilterComponent: React.FC<TimeFilterProps> = ({
   onFilterChange,
   compact = false 
 }) => {
+  const handleFilterClick = (event: React.MouseEvent<HTMLButtonElement>, filter: TimeFilter) => {
+    event.preventDefault();
+    event.stopPropagation();
+    onFilterChange(filter);
+  };
+
   return (
     <div className={`${styles.filterContainer} ${compact ? styles.compact : ''}`}>
       {!compact && <span className={styles.filterLabel}>Período:</span>}
@@ -28,10 +34,11 @@ const TimeFilterComponent: React.FC<TimeFilterProps> = ({
         {timeFilterOptions.map((option) => (
           <button
             key={option.value}
+            type="button"
             className={`${styles.filterButton} ${
               currentFilter === option.value ? styles.active : ''
             }`}
-            onClick={() => onFilterChange(option.value)}
+            onClick={(e) => handleFilterClick(e, option.value)}
           >
             {option.label}
           </button>

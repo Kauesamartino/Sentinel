@@ -62,24 +62,12 @@ export function useDashboard() {
       const allOcorrencias = dashboardData?.ocorrencias || [];
       console.log('Dados recebidos com sucesso:', allOcorrencias.length, 'ocorrências');
 
-      // Processar dados usando os filtros individuais
-      const updateData = () => {
-        const tempoFiltered = filterOcorrenciasByTime(allOcorrencias, timeFilters.tempo);
-        const tipoFiltered = filterOcorrenciasByTime(allOcorrencias, timeFilters.tipo);
-        const statusFiltered = filterOcorrenciasByTime(allOcorrencias, timeFilters.status);
-        const severidadeFiltered = filterOcorrenciasByTime(allOcorrencias, timeFilters.severidade);
-
-        setData({
-          ocorrenciasPorTempo: processOcorrenciasPorTempo(tempoFiltered, timeFilters.tempo),
-          ocorrenciasPorTipo: processOcorrenciasPorTipo(tipoFiltered),
-          ocorrenciasPorStatus: processOcorrenciasPorStatus(statusFiltered),
-          ocorrenciasPorSeveridade: processOcorrenciasPorSeveridade(severidadeFiltered),
-          totalOcorrencias: allOcorrencias.length,
-          rawOcorrencias: allOcorrencias,
-        });
-      };
-
-      updateData();
+      // Armazenar apenas os dados brutos - o processamento será feito no useEffect
+      setData(prev => ({
+        ...prev,
+        totalOcorrencias: allOcorrencias.length,
+        rawOcorrencias: allOcorrencias,
+      }));
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Erro ao carregar dados do dashboard';
       console.error('Erro completo no hook:', err);
@@ -105,14 +93,11 @@ export function useDashboard() {
             }
           ];
           
-          setData({
-            ocorrenciasPorTempo: processOcorrenciasPorTempo(mockOcorrencias, timeFilters.tempo),
-            ocorrenciasPorTipo: processOcorrenciasPorTipo(mockOcorrencias),
-            ocorrenciasPorStatus: processOcorrenciasPorStatus(mockOcorrencias),
-            ocorrenciasPorSeveridade: processOcorrenciasPorSeveridade(mockOcorrencias),
+          setData(prev => ({
+            ...prev,
             totalOcorrencias: mockOcorrencias.length,
             rawOcorrencias: mockOcorrencias,
-          });
+          }));
           
           setError('Usando dados de exemplo (API indisponível)');
         } catch (mockError) {
@@ -122,7 +107,7 @@ export function useDashboard() {
     } finally {
       setLoading(false);
     }
-  }, [timeFilters]);
+  }, []); // Remover dependência timeFilters
 
   // Recalcular dados quando os filtros mudam
   useEffect(() => {
@@ -142,20 +127,21 @@ export function useDashboard() {
     }
   }, [timeFilters, data.rawOcorrencias]);
 
+  // Executar fetchDashboardData apenas uma vez na montagem do componente
   useEffect(() => {
     fetchDashboardData();
-  }, [fetchDashboardData]);
+  }, []); // Sem dependências
 
-  const handleTimeFilterChange = (chartType: keyof TimeFilters, newFilter: TimeFilter) => {
+  const handleTimeFilterChange = useCallback((chartType: keyof TimeFilters, newFilter: TimeFilter) => {
     setTimeFilters(prev => ({
       ...prev,
       [chartType]: newFilter,
     }));
-  };
+  }, []);
 
-  const refreshData = () => {
+  const refreshData = useCallback(() => {
     fetchDashboardData();
-  };
+  }, [fetchDashboardData]);
 
   return {
     data,
