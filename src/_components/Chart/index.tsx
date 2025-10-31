@@ -74,75 +74,149 @@ const Chart: React.FC<ChartProps> = ({
 
   if (type === 'line') {
     return (
-      <div className={styles.chartContainer}>
-        <h3 className={styles.title}>{title}</h3>
-        <div className={styles.lineChart}>
-          <svg className={styles.lineSvg} viewBox="0 0 800 400" preserveAspectRatio="xMidYMid meet">
-            {/* Grid lines */}
-            {[0, 1, 2, 3, 4, 5].map(i => (
+      <div className={styles.lineChart}>
+        <svg className={styles.lineSvg} viewBox="0 0 1000 400" preserveAspectRatio="xMidYMid meet">
+            {/* Background gradient */}
+            <defs>
+              <linearGradient id="areaGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stopColor={color} stopOpacity="0.3"/>
+                <stop offset="100%" stopColor={color} stopOpacity="0.05"/>
+              </linearGradient>
+              <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor={color}/>
+                <stop offset="100%" stopColor={`${color}cc`}/>
+              </linearGradient>
+              <filter id="glow">
+                <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                <feMerge> 
+                  <feMergeNode in="coloredBlur"/>
+                  <feMergeNode in="SourceGraphic"/>
+                </feMerge>
+              </filter>
+            </defs>
+
+            {/* Grid lines horizontais */}
+            {[0, 1, 2, 3, 4, 5, 6].map(i => (
               <line
-                key={`grid-${i}`}
-                x1="80"
-                y1={60 + (i * 50)}
-                x2="720"
-                y2={60 + (i * 50)}
-                stroke="#e5e7eb"
+                key={`grid-h-${i}`}
+                x1="50"
+                y1={30 + (i * 50)}
+                x2="950"
+                y2={30 + (i * 50)}
+                stroke="#f1f5f9"
                 strokeWidth="1"
+                strokeDasharray="2,4"
               />
             ))}
+
+            {/* Grid lines verticais */}
+            {data.map((_, index) => {
+              const x = 50 + (index * (900 / Math.max(data.length - 1, 1)));
+              return (
+                <line
+                  key={`grid-v-${index}`}
+                  x1={x}
+                  y1="30"
+                  x2={x}
+                  y2="330"
+                  stroke="#f8fafc"
+                  strokeWidth="1"
+                  strokeDasharray="2,4"
+                />
+              );
+            })}
+            
+            {/* Y-axis */}
+            <line x1="50" y1="30" x2="50" y2="330" stroke="#cbd5e1" strokeWidth="2"/>
+            
+            {/* X-axis */}
+            <line x1="50" y1="330" x2="950" y2="330" stroke="#cbd5e1" strokeWidth="2"/>
             
             {/* Y-axis labels */}
-            {[0, 1, 2, 3, 4, 5].map(i => {
-              const value = Math.round(maxValue - (i * maxValue / 5));
+            {[0, 1, 2, 3, 4, 5, 6].map(i => {
+              const value = Math.round(maxValue - (i * maxValue / 6));
               return (
                 <text
                   key={`y-label-${i}`}
-                  x="70"
-                  y={65 + (i * 50)}
+                  x="40"
+                  y={35 + (i * 50)}
                   fontSize="14"
-                  fill="#6b7280"
+                  fill="#64748b"
                   textAnchor="end"
+                  fontWeight="500"
                 >
                   {value}
                 </text>
               );
             })}
 
-            {/* Line path */}
+            {/* Area under the line */}
+            {data.length > 1 && (
+              <path
+                d={[
+                  `M 50 330`,
+                  ...data.map((item, index) => {
+                    const x = 50 + (index * (900 / (data.length - 1)));
+                    const y = 330 - ((item.value / maxValue) * 300);
+                    return `L ${x} ${y}`;
+                  }),
+                  `L ${50 + ((data.length - 1) * (900 / (data.length - 1)))} 330`,
+                  'Z'
+                ].join(' ')}
+                fill="url(#areaGradient)"
+              />
+            )}
+
+            {/* Main line */}
             {data.length > 1 && (
               <path
                 d={data.map((item, index) => {
-                  const x = 80 + (index * (640 / (data.length - 1)));
-                  const y = 310 - ((item.value / maxValue) * 250);
+                  const x = 50 + (index * (900 / (data.length - 1)));
+                  const y = 330 - ((item.value / maxValue) * 300);
                   return `${index === 0 ? 'M' : 'L'} ${x} ${y}`;
                 }).join(' ')}
-                stroke={color}
-                strokeWidth="3"
+                stroke="url(#lineGradient)"
+                strokeWidth="4"
                 fill="none"
+                filter="url(#glow)"
+                className={styles.animatedLine}
               />
             )}
 
             {/* Data points */}
             {data.map((item, index) => {
-              const x = 80 + (index * (640 / Math.max(data.length - 1, 1)));
-              const y = 310 - ((item.value / maxValue) * 250);
+              const x = 50 + (index * (900 / Math.max(data.length - 1, 1)));
+              const y = 330 - ((item.value / maxValue) * 300);
               return (
-                <g key={index}>
+                <g key={index} className={styles.dataPoint}>
+                  {/* Outer ring */}
                   <circle
                     cx={x}
                     cy={y}
-                    r="6"
+                    r="12"
                     fill={color}
-                    stroke="#fff"
-                    strokeWidth="2"
+                    fillOpacity="0.2"
+                    className={styles.pulseRing}
                   />
+                  {/* Main point */}
+                  <circle
+                    cx={x}
+                    cy={y}
+                    r="7"
+                    fill={color}
+                    stroke="#ffffff"
+                    strokeWidth="3"
+                    className={styles.dataPointCircle}
+                  />
+                  {/* Value label */}
                   <text
                     x={x}
-                    y={y - 15}
-                    fontSize="12"
+                    y={y - 20}
+                    fontSize="13"
                     fill={color}
                     textAnchor="middle"
-                    fontWeight="600"
+                    fontWeight="700"
+                    className={styles.valueLabel}
                   >
                     {item.value}
                   </text>
@@ -152,23 +226,35 @@ const Chart: React.FC<ChartProps> = ({
 
             {/* X-axis labels */}
             {data.map((item, index) => {
-              const x = 80 + (index * (640 / Math.max(data.length - 1, 1)));
+              const x = 50 + (index * (900 / Math.max(data.length - 1, 1)));
               return (
                 <text
                   key={`x-label-${index}`}
                   x={x}
-                  y={340}
-                  fontSize="12"
-                  fill="#6b7280"
+                  y={355}
+                  fontSize="14"
+                  fill="#64748b"
                   textAnchor="middle"
-                  transform={`rotate(-45 ${x} 340)`}
+                  fontWeight="500"
+                  transform={data.length > 4 ? `rotate(-35 ${x} 355)` : undefined}
                 >
                   {item.label}
                 </text>
               );
             })}
+
+            {/* Chart title in SVG */}
+            <text
+              x="500"
+              y="20"
+              fontSize="16"
+              fill="#1e293b"
+              textAnchor="middle"
+              fontWeight="600"
+            >
+              Tendência no Período
+            </text>
           </svg>
-        </div>
       </div>
     );
   }

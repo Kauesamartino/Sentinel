@@ -328,30 +328,104 @@
 .lineChart {
   display: flex;
   flex-direction: column;
-  height: 350px;
-  padding: 20px 0;
+  flex: 1;
+  height: 100%;
+  min-height: 450px;
+  padding: 0;
+  margin: 0;
 }
 
 .lineSvg {
   width: 100%;
   height: 100%;
-  background: #fafbfc;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
+  flex: 1;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
 }
 
 .lineSvg text {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
-.lineSvg circle:hover {
-  r: 6;
-  transition: r 0.2s ease;
+/* Line Chart Animations */
+.animatedLine {
+  stroke-dasharray: 2000;
+  stroke-dashoffset: 2000;
+  animation: drawLine 2s ease-in-out forwards;
 }
 
-.lineSvg path:hover {
-  stroke-width: 3;
-  transition: stroke-width 0.2s ease;
+@keyframes drawLine {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.dataPoint {
+  opacity: 0;
+  animation: fadeInPoint 0.5s ease-out forwards;
+}
+
+.dataPoint:nth-child(1) { animation-delay: 0.2s; }
+.dataPoint:nth-child(2) { animation-delay: 0.4s; }
+.dataPoint:nth-child(3) { animation-delay: 0.6s; }
+.dataPoint:nth-child(4) { animation-delay: 0.8s; }
+.dataPoint:nth-child(5) { animation-delay: 1.0s; }
+.dataPoint:nth-child(6) { animation-delay: 1.2s; }
+.dataPoint:nth-child(7) { animation-delay: 1.4s; }
+
+@keyframes fadeInPoint {
+  0% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.dataPointCircle {
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.dataPoint:hover .dataPointCircle {
+  r: 9;
+  stroke-width: 4;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+}
+
+.pulseRing {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    r: 8;
+    fill-opacity: 0.4;
+  }
+  50% {
+    r: 15;
+    fill-opacity: 0.1;
+  }
+  100% {
+    r: 8;
+    fill-opacity: 0.4;
+  }
+}
+
+.valueLabel {
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.dataPoint:hover .valueLabel {
+  opacity: 1;
+  transform: translateY(-5px);
 }
 
 /* Empty state */
@@ -374,7 +448,45 @@
 /* Responsive for line charts */
 @media (max-width: 768px) {
   .lineChart {
-    height: 250px;
-    padding: 16px 0;
+    min-height: 280px;
+    padding: 0;
+  }
+
+  .lineSvg {
+    background: #ffffff;
+    border: none;
+  }
+
+  .animatedLine {
+    stroke-width: 3;
+  }
+
+  .dataPointCircle {
+    r: 5;
+    stroke-width: 2;
+  }
+
+  .dataPoint:hover .dataPointCircle {
+    r: 7;
+    stroke-width: 3;
+  }
+
+  .pulseRing {
+    r: 6;
+  }
+
+  @keyframes pulse {
+    0% {
+      r: 6;
+      fill-opacity: 0.4;
+    }
+    50% {
+      r: 12;
+      fill-opacity: 0.1;
+    }
+    100% {
+      r: 6;
+      fill-opacity: 0.4;
+    }
   }
 }
