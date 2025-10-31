@@ -130,7 +130,8 @@ export function useDashboard() {
   // Executar fetchDashboardData apenas uma vez na montagem do componente
   useEffect(() => {
     fetchDashboardData();
-  }, []); // Sem dependências
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Sem dependências - queremos executar apenas uma vez
 
   const handleTimeFilterChange = useCallback((chartType: keyof TimeFilters, newFilter: TimeFilter) => {
     setTimeFilters(prev => ({

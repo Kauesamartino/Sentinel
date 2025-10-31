@@ -23,7 +23,7 @@ const Chart: React.FC<ChartProps> = ({
   const totalValue = data.reduce((sum, d) => sum + d.value, 0);
 
   // Função para obter cores baseadas no tipo de dado
-  const getBarColor = (label: string, index: number) => {
+  const getBarColor = (label: string) => {
     if (color === 'status') {
       const statusColors: { [key: string]: string } = {
         'ABERTO': '#f59e0b', // Laranja - aguardando ação
@@ -296,7 +296,7 @@ const Chart: React.FC<ChartProps> = ({
         {data.map((item, index) => {
           const height = maxValue > 0 ? (item.value / maxValue) * 100 : 0;
           const displayHeight = Math.max(height, item.value === 0 ? 2 : height); // Altura mínima de 2% para barras vazias
-          const barColor = getBarColor(item.label, index);
+          const barColor = getBarColor(item.label);
           const barOpacity = item.value === 0 ? 0.3 : 1; // Transparência para barras vazias
           
           return (

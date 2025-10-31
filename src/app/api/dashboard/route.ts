@@ -119,7 +119,7 @@ export async function GET(request: NextRequest) {
 }
 
 // Função auxiliar para filtrar dados por tempo (mesma do arquivo anterior)
-function filterDataByTime(data: any[], timeFilter: string) {
+function filterDataByTime(data: Array<{ data: string; [key: string]: unknown }>, timeFilter: string) {
   const now = new Date();
   let cutoffTime: Date;
 
@@ -147,7 +147,7 @@ function filterDataByTime(data: any[], timeFilter: string) {
 }
 
 // Adicionar suporte para OPTIONS (preflight)
-export async function OPTIONS(request: NextRequest) {
+export async function OPTIONS() {
   return new NextResponse(null, {
     status: 200,
     headers: {

@@ -4,6 +4,7 @@ import React, { useCallback } from 'react';
 import styles from './dashboards.module.scss';
 import { useDashboard } from '@/hooks/useDashboard';
 import ChartWithFilter from '@/_components/ChartWithFilter';
+import { TimeFilter } from '@/services/dashboardService';
 
 const DashboardPage: React.FC = () => {
   const {
@@ -16,20 +17,20 @@ const DashboardPage: React.FC = () => {
   } = useDashboard();
 
   // Memoizar as funções de callback para evitar re-renders
-  const handleTempoFilterChange = useCallback((filter: string) => {
-    handleTimeFilterChange('tempo', filter as any);
+  const handleTempoFilterChange = useCallback((filter: TimeFilter) => {
+    handleTimeFilterChange('tempo', filter);
   }, [handleTimeFilterChange]);
 
-  const handleTipoFilterChange = useCallback((filter: string) => {
-    handleTimeFilterChange('tipo', filter as any);
+  const handleTipoFilterChange = useCallback((filter: TimeFilter) => {
+    handleTimeFilterChange('tipo', filter);
   }, [handleTimeFilterChange]);
 
-  const handleStatusFilterChange = useCallback((filter: string) => {
-    handleTimeFilterChange('status', filter as any);
+  const handleStatusFilterChange = useCallback((filter: TimeFilter) => {
+    handleTimeFilterChange('status', filter);
   }, [handleTimeFilterChange]);
 
-  const handleSeveridadeFilterChange = useCallback((filter: string) => {
-    handleTimeFilterChange('severidade', filter as any);
+  const handleSeveridadeFilterChange = useCallback((filter: TimeFilter) => {
+    handleTimeFilterChange('severidade', filter);
   }, [handleTimeFilterChange]);
 
   return (
