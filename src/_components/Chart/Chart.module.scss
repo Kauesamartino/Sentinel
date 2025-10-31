@@ -1,0 +1,380 @@
+.chartContainer {
+  background: transparent;
+  border-radius: 0;
+  padding: 0;
+  box-shadow: none;
+  border: none;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  margin: 0 0 20px 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #1f2937;
+  text-align: center;
+}
+
+/* Bar Chart Styles */
+.barChart {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-evenly;
+  flex: 1;
+  height: 320px;
+  padding: 10px 20px 20px 20px;
+  border-bottom: 2px solid #e5e7eb;
+  position: relative;
+  overflow: visible;
+}
+
+.barItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  max-width: 90px;
+  min-width: 50px;
+  margin: 0 2px;
+  cursor: pointer;
+}
+
+.barContainer {
+  position: relative;
+  width: 45px;
+  height: 260px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.bar {
+  width: 100%;
+  min-height: 8px;
+  border-radius: 8px 8px 0 0;
+  transition: all 0.3s ease;
+  position: relative;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.bar:hover {
+  opacity: 0.85;
+  transform: scaleX(1.05) scaleY(1.02);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.barItem:hover .barTooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(-50%) translateX(0px) scale(1);
+}
+
+.barItem:hover .bar {
+  opacity: 0.85;
+  transform: scaleX(1.05) scaleY(1.02);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Tooltip Styles */
+.barTooltip {
+  position: absolute;
+  left: calc(100% + 15px);
+  transform: translateY(-50%) translateX(10px) scale(0.9);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 10;
+  pointer-events: none;
+}
+
+.tooltipContent {
+  background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  min-width: 140px;
+  backdrop-filter: blur(10px);
+}
+
+.tooltipHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.tooltipIndicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+}
+
+.tooltipTitle {
+  font-size: 12px;
+  font-weight: 600;
+  color: #f9fafb;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.tooltipBody {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.tooltipValue {
+  font-size: 24px;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1;
+}
+
+.tooltipLabel {
+  font-size: 10px;
+  color: #d1d5db;
+  font-weight: 500;
+  text-transform: lowercase;
+}
+
+.tooltipArrow {
+  position: absolute;
+  top: 50%;
+  left: -6px;
+  transform: translateY(-50%) rotate(45deg);
+  width: 12px;
+  height: 12px;
+  background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: none;
+  border-right: none;
+}
+
+/* Tooltip à esquerda */
+.tooltipLeft {
+  left: calc(-100% - 15px) !important;
+  transform: translateY(-50%) translateX(-10px) scale(0.9) !important;
+}
+
+.tooltipLeft .tooltipArrow {
+  left: auto;
+  right: -6px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: none;
+  border-left: none;
+}
+
+.barItem:hover .tooltipLeft {
+  transform: translateY(-50%) translateX(0px) scale(1) !important;
+}
+
+.barLabel {
+  font-size: 10px;
+  color: #374151;
+  font-weight: 600;
+  margin-top: 8px;
+  text-align: center;
+  word-break: break-word;
+  line-height: 1.2;
+  text-transform: capitalize;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Pie Chart Styles */
+.pieChart {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  height: 350px;
+  overflow-y: auto;
+  padding: 20px 0;
+}
+
+.pieItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.pieBar {
+  height: 32px;
+  border-radius: 16px;
+  min-width: 30px;
+  transition: all 0.3s ease;
+}
+
+.pieBar:hover {
+  opacity: 0.8;
+}
+
+.pieLabel {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.labelText {
+  font-size: 16px;
+  font-weight: 500;
+  color: #374151;
+}
+
+.labelValue {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .chartContainer {
+    padding: 16px;
+    height: 350px;
+  }
+  
+  .title {
+    font-size: 16px;
+    margin-bottom: 16px;
+  }
+  
+  .barChart {
+    height: 200px;
+    padding: 10px 10px 15px 10px;
+  }
+  
+  .barItem {
+    max-width: 60px;
+    min-width: 40px;
+    margin: 0 1px;
+  }
+  
+  .barContainer {
+    height: 140px;
+    width: 35px;
+  }
+  
+  .barLabel {
+    font-size: 9px;
+    margin-top: 6px;
+    line-height: 1.1;
+  }
+  
+  .barTooltip {
+    left: calc(100% + 8px);
+  }
+
+  .tooltipLeft {
+    left: calc(-100% - 8px) !important;
+  }
+
+  .tooltipContent {
+    padding: 10px;
+    min-width: 100px;
+  }
+
+  .tooltipValue {
+    font-size: 18px;
+  }
+
+  .tooltipTitle {
+    font-size: 10px;
+  }
+
+  .tooltipLabel {
+    font-size: 8px;
+  }
+
+  .barItem:hover .barTooltip {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(-50%) translateX(0px) scale(1);
+  }
+
+  .barItem:hover .tooltipLeft {
+    transform: translateY(-50%) translateX(0px) scale(1) !important;
+  }
+
+  .barItem:hover .bar {
+    opacity: 0.85;
+    transform: scaleX(1.05) scaleY(1.02);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  /* Para dispositivos touch, mostrar tooltip ao tocar */
+  .barItem:active .barTooltip {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(-50%) translateX(0px) scale(1);
+  }
+
+  .barItem:active .tooltipLeft {
+    transform: translateY(-50%) translateX(0px) scale(1) !important;
+  }
+  
+  .pieChart {
+    height: 250px;
+  }
+}
+
+/* Line Chart Styles */
+.lineChart {
+  display: flex;
+  flex-direction: column;
+  height: 350px;
+  padding: 20px 0;
+}
+
+.lineSvg {
+  width: 100%;
+  height: 100%;
+  background: #fafbfc;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+}
+
+.lineSvg text {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.lineSvg circle:hover {
+  r: 6;
+  transition: r 0.2s ease;
+}
+
+.lineSvg path:hover {
+  stroke-width: 3;
+  transition: stroke-width 0.2s ease;
+}
+
+/* Empty state */
+.chartContainer:has(.barChart:empty),
+.chartContainer:has(.pieChart:empty),
+.chartContainer:has(.lineChart:empty) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chartContainer:has(.barChart:empty)::after,
+.chartContainer:has(.pieChart:empty)::after,
+.chartContainer:has(.lineChart:empty)::after {
+  content: "Nenhum dado disponível";
+  color: #9ca3af;
+  font-style: italic;
+}
+
+/* Responsive for line charts */
+@media (max-width: 768px) {
+  .lineChart {
+    height: 250px;
+    padding: 16px 0;
+  }
+}

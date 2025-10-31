@@ -15,6 +15,9 @@ export const Menu = () => {
     }, {
         label: 'Integrantes',
         to: '/integrantes'
+    },{
+        label: 'Dashboards',
+        to: '/dashboards'
     }]
 
     return (

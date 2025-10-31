@@ -1,0 +1,93 @@
+.filterContainer {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+  padding: 16px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e7eb;
+}
+
+.filterLabel {
+  font-weight: 600;
+  color: #374151;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.filterButtons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.filterButton {
+  padding: 8px 16px;
+  border: 2px solid #e5e7eb;
+  background: #fff;
+  color: #6b7280;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.filterButton:hover {
+  border-color: #3b82f6;
+  color: #3b82f6;
+  background: #f0f9ff;
+}
+
+.filterButton.active {
+  background: #3b82f6;
+  border-color: #3b82f6;
+  color: #fff;
+}
+
+.filterButton.active:hover {
+  background: #2563eb;
+  border-color: #2563eb;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .filterContainer {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    padding: 12px;
+  }
+  
+  .filterLabel {
+    text-align: center;
+  }
+  
+  .filterButtons {
+    justify-content: center;
+  }
+  
+  .filterButton {
+    flex: 1;
+    min-width: 60px;
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+}
+
+.compact {
+  margin-bottom: 0;
+  padding: 8px;
+  
+  .filterButtons {
+    gap: 4px;
+  }
+  
+  .filterButton {
+    padding: 4px 8px;
+    font-size: 11px;
+  }
+}
