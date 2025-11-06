@@ -24,7 +24,7 @@ type Relatorio = {
   id: number;
   titulo: string;
   descricao: string;
-  tipoOcorrencia?: 'ACIDENTE' | 'FALHA_TECNICA' | 'INCIDENTE' | 'OUTROS' | string;
+  tipoOcorrencia?: 'ASSEDIO' | 'AGRESSAO' | 'VENDEDOR_AMBULANTE' | 'FURTO' | 'PERTURBACAO' | 'OBJETOS_SUSPEITOS' | 'OUTROS' | string;
   dataInicio: string;
   dataFim: string;
 };
@@ -32,7 +32,7 @@ type Relatorio = {
 type RelatorioFormState = {
   titulo: string;
   descricao: string;
-  tipoOcorrencia?: 'ACIDENTE' | 'FALHA_TECNICA' | 'INCIDENTE' | 'OUTROS' | '';
+  tipoOcorrencia?: 'ASSEDIO' | 'AGRESSAO' | 'VENDEDOR_AMBULANTE' | 'FURTO' | 'PERTURBACAO' | 'OBJETOS_SUSPEITOS' | 'OUTROS' | '';
   dataInicio: string;
   dataFim: string;
 };
@@ -178,10 +178,13 @@ export default function RelatoriosPage() {
             <label className={styles.label}>Tipo de Ocorrência (opcional)</label>
             <select className={styles.select} value={form.tipoOcorrencia} onChange={(e) => setForm((p) => ({ ...p, tipoOcorrencia: e.target.value as RelatorioFormState['tipoOcorrencia'] }))}>
               <option value="">Todos</option>
-              <option value="ACIDENTE">ACIDENTE</option>
-              <option value="FALHA_TECNICA">FALHA_TECNICA</option>
-              <option value="INCIDENTE">INCIDENTE</option>
-              <option value="OUTROS">OUTROS</option>
+              <option value="ASSEDIO">Assédio</option>
+              <option value="AGRESSAO">Agressão</option>
+              <option value="VENDEDOR_AMBULANTE">Vendedor Ambulante</option>
+              <option value="FURTO">Furto</option>
+              <option value="PERTURBACAO">Perturbação</option>
+              <option value="OBJETOS_SUSPEITOS">Objetos Suspeitos</option>
+              <option value="OUTROS">Outros</option>
             </select>
           </div>
           <div className={styles.dateRow}>

@@ -8,7 +8,7 @@ export type OcorrenciaPayload = {
   titulo: string;
   descricao: string;
   severidade: 'BAIXA' | 'MEDIA' | 'ALTA';
-  tipoOcorrencia: 'ACIDENTE' | 'FALHA_TECNICA' | 'INCIDENTE' | 'OUTROS';
+  tipoOcorrencia: 'ASSEDIO' | 'AGRESSAO' | 'VENDEDOR_AMBULANTE' | 'FURTO' | 'PERTURBACAO' | 'OBJETOS_SUSPEITOS' | 'OUTROS';
   idEstacao: number;
 };
 
@@ -32,7 +32,7 @@ export default function OcorrenciaForm({ initial, onSubmit, submitLabel = 'Salva
     descricao: initial?.descricao ?? '',
     severidade: (initial?.severidade as 'BAIXA' | 'MEDIA' | 'ALTA') ?? 'BAIXA',
     status: (initial?.status as 'ABERTO' | 'EM_ANDAMENTO' | 'CONCLUIDO' | string) ?? 'ABERTO',
-    tipoOcorrencia: (initial?.tipoOcorrencia as 'ACIDENTE' | 'FALHA_TECNICA' | 'INCIDENTE' | 'OUTROS') ?? 'INCIDENTE',
+    tipoOcorrencia: (initial?.tipoOcorrencia as 'ASSEDIO' | 'AGRESSAO' | 'VENDEDOR_AMBULANTE' | 'FURTO' | 'PERTURBACAO' | 'OBJETOS_SUSPEITOS' | 'OUTROS') ?? 'OUTROS',
     idEstacao: (initial as { idEstacao?: number })?.idEstacao ?? 0,
   });
 
@@ -199,9 +199,12 @@ export default function OcorrenciaForm({ initial, onSubmit, submitLabel = 'Salva
           onChange={handleChange}
           className={styles.select}
         >
-          <option value="ACIDENTE">Acidente</option>
-          <option value="FALHA_TECNICA">Falha técnica</option>
-          <option value="INCIDENTE">Incidente</option>
+          <option value="ASSEDIO">Assédio</option>
+          <option value="AGRESSAO">Agressão</option>
+          <option value="VENDEDOR_AMBULANTE">Vendedor Ambulante</option>
+          <option value="FURTO">Furto</option>
+          <option value="PERTURBACAO">Perturbação</option>
+          <option value="OBJETOS_SUSPEITOS">Objetos Suspeitos</option>
           <option value="OUTROS">Outros</option>
         </select>
       </div>

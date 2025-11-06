@@ -3,7 +3,7 @@ export type Pageable = { page?: number; size?: number; sort?: string };
 export type RelatorioCreate = {
   titulo: string;
   descricao: string;
-  tipoOcorrencia?: 'ACIDENTE' | 'FALHA_TECNICA' | 'INCIDENTE' | 'OUTROS';
+  tipoOcorrencia?: 'ASSEDIO' | 'AGRESSAO' | 'VENDEDOR_AMBULANTE' | 'FURTO' | 'PERTURBACAO' | 'OBJETOS_SUSPEITOS' | 'OUTROS';
   dataInicio: string; // ISO
   dataFim: string;    // ISO
 };

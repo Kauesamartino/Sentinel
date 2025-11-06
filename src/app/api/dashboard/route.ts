@@ -41,20 +41,20 @@ export async function GET(request: NextRequest) {
             data: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString() // 2 horas atrás
           },
           {
-            titulo: "Vandalismo no banheiro",
-            tipoOcorrencia: "VANDALISMO",
+            titulo: "Agressão no vagão",
+            tipoOcorrencia: "AGRESSAO",
             status: "RESOLVIDO",
             data: new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString() // 1 dia atrás
           },
           {
-            titulo: "Suspeita de atividade irregular",
-            tipoOcorrencia: "SUSPEITA",
+            titulo: "Vendedor ambulante na plataforma",
+            tipoOcorrencia: "VENDEDOR_AMBULANTE",
             status: "ABERTO",
             data: new Date(Date.now() - 1000 * 60 * 60 * 24 * 3).toISOString() // 3 dias atrás
           },
           {
-            titulo: "Incidente de violência reportado",
-            tipoOcorrencia: "VIOLENCIA",
+            titulo: "Perturbação do sossego",
+            tipoOcorrencia: "PERTURBACAO",
             status: "EM_ANDAMENTO",
             data: new Date(Date.now() - 1000 * 60 * 60 * 24 * 7).toISOString() // 7 dias atrás
           },
@@ -71,8 +71,8 @@ export async function GET(request: NextRequest) {
             data: new Date(Date.now() - 1000 * 60 * 60 * 24 * 20).toISOString() // 20 dias atrás
           },
           {
-            titulo: "Danos à propriedade",
-            tipoOcorrencia: "VANDALISMO",
+            titulo: "Objetos suspeitos encontrados",
+            tipoOcorrencia: "OBJETOS_SUSPEITOS",
             status: "EM_ANDAMENTO",
             data: new Date(Date.now() - 1000 * 60 * 60 * 24 * 45).toISOString() // 45 dias atrás
           }

@@ -24,10 +24,16 @@ export const getOcorrenciaById = async (id: number) => {
 };
 
 export async function createOcorrencia(payload: Record<string, unknown>) {
+  // Garantir que sempre enviamos ativo: true para novas ocorrências
+  const payloadWithAtivo = {
+    ...payload,
+    ativo: true
+  };
+
   const res = await fetch('/api/ocorrencias', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload),
+    body: JSON.stringify(payloadWithAtivo),
   });
   if (!res.ok) {
     const errorBody = await res.json().catch(() => ({}));
@@ -38,10 +44,17 @@ export async function createOcorrencia(payload: Record<string, unknown>) {
 
 export const updateOcorrencia = async (id: number, payload: Record<string, unknown>) => {
   try {
+    // Garantir que não removemos o campo ativo em atualizações
+    // Se não estiver presente, assumimos true (para manter compatibilidade)
+    const payloadWithAtivo = {
+      ...payload,
+      ativo: payload.ativo !== undefined ? payload.ativo : true
+    };
+
     const response = await fetch(`/api/ocorrencias/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
+      body: JSON.stringify(payloadWithAtivo),
     });
     const text = await response.text();
     const body = text ? (() => { try { return JSON.parse(text) } catch { return { raw: text } } })() : {};
