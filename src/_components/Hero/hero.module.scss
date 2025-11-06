@@ -1,0 +1,25 @@
+.bgc {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    text-align: left;
+}
+
+.content {
+    margin: 0 0 0 250px;
+    max-width: 680px;
+}
+
+.text {
+    .title {
+        font-size: 3rem;
+        color: #fff;
+        margin-bottom: 16px;
+    }
+
+    .subtitle {
+        font-size: 1.5rem;
+        color: #f4f4f4;
+        margin-bottom: 0;
+    }
+}

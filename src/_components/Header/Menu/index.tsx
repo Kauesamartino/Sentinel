@@ -13,11 +13,11 @@ export const Menu = () => {
         label: 'Relatórios',
         to: '/relatorios'
     }, {
-        label: 'Integrantes',
-        to: '/integrantes'
-    },{
         label: 'Dashboards',
         to: '/dashboards'
+    }, {
+        label: 'Integrantes',
+        to: '/integrantes'
     }]
 
     return (
