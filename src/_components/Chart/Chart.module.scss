@@ -86,6 +86,118 @@
   text-overflow: ellipsis;
 }
 
+/* Modern Tooltip Styles */
+.modernTooltip {
+  position: absolute;
+  bottom: calc(100% + 12px);
+  left: 50%;
+  transform: translateX(-50%) translateY(-8px) scale(0.9);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 15;
+  pointer-events: none;
+}
+
+.barItem:hover .modernTooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0) scale(1);
+}
+
+.tooltipCard {
+  background: rgba(17, 24, 39, 0.95);
+  backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 16px 20px;
+  box-shadow: 
+    0 20px 25px -5px rgba(0, 0, 0, 0.3),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04),
+    0 0 0 1px rgba(255, 255, 255, 0.05);
+  min-width: 160px;
+  text-align: center;
+}
+
+.tooltipHeader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.tooltipColorDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+  flex-shrink: 0;
+}
+
+.tooltipTitle {
+  font-size: 13px;
+  font-weight: 600;
+  color: #f9fafb;
+  letter-spacing: 0.025em;
+  text-transform: capitalize;
+}
+
+.tooltipDivider {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.2) 50%,
+    transparent 100%
+  );
+  margin: 12px 0;
+}
+
+.tooltipValue {
+  font-size: 28px;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  margin-bottom: 6px;
+}
+
+.tooltipLabel {
+  font-size: 11px;
+  font-weight: 500;
+  color: #d1d5db;
+  text-transform: lowercase;
+  opacity: 0.9;
+}
+
+.tooltipArrow {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 8px solid rgba(17, 24, 39, 0.95);
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.tooltipArrow::before {
+  content: '';
+  position: absolute;
+  top: -9px;
+  left: -8px;
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 8px solid rgba(255, 255, 255, 0.1);
+}
+
 /* Pie Chart Styles */
 .pieChart {
   display: flex;
@@ -330,6 +442,43 @@
     opacity: 0.85;
     transform: scaleX(1.05) scaleY(1.02);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  /* Responsive tooltip styles */
+  .modernTooltip {
+    bottom: calc(100% + 8px);
+  }
+
+  .tooltipCard {
+    padding: 12px 16px;
+    min-width: 120px;
+    border-radius: 12px;
+  }
+
+  .tooltipValue {
+    font-size: 22px;
+  }
+
+  .tooltipTitle {
+    font-size: 11px;
+  }
+
+  .tooltipLabel {
+    font-size: 9px;
+  }
+
+  .tooltipArrow {
+    border-left-width: 6px;
+    border-right-width: 6px;
+    border-top-width: 6px;
+  }
+
+  .tooltipArrow::before {
+    top: -7px;
+    left: -6px;
+    border-left-width: 6px;
+    border-right-width: 6px;
+    border-top-width: 6px;
   }
   
   .pieChart {

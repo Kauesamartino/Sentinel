@@ -460,7 +460,29 @@ const Chart: React.FC<ChartProps> = ({
                     opacity: barOpacity
                   }}
                 />
-
+                
+                {/* Modern Tooltip */}
+                <div className={styles.modernTooltip}>
+                  <div className={styles.tooltipCard}>
+                    <div className={styles.tooltipHeader}>
+                      <div 
+                        className={styles.tooltipColorDot}
+                        style={{ backgroundColor: barColor }}
+                      />
+                      <span className={styles.tooltipTitle}>
+                        {formatFullLabel(item.label)}
+                      </span>
+                    </div>
+                    
+                    <div className={styles.tooltipDivider} />
+                    
+                    <div className={styles.tooltipValue}>{item.value}</div>
+                    <div className={styles.tooltipLabel}>
+                      {item.value === 1 ? 'ocorrência' : 'ocorrências'}
+                    </div>
+                  </div>
+                  <div className={styles.tooltipArrow} />
+                </div>
               </div>
               <span className={styles.barLabel}>{formatLabel(item.label)}</span>
             </div>
