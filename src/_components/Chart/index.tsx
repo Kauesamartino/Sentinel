@@ -443,7 +443,7 @@ const Chart: React.FC<ChartProps> = ({
     <div className={styles.chartContainer}>
       <h3 className={styles.title}>{title}</h3>
       <div className={styles.barChart}>
-        {data.map((item, index) => {
+        {data.map((item) => {
           const height = maxValue > 0 ? (item.value / maxValue) * 100 : 0;
           const displayHeight = Math.max(height, item.value === 0 ? 2 : height); // Altura mínima de 2% para barras vazias
           const barColor = getBarColor(item.label);
