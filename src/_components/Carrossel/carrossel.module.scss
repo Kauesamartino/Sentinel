@@ -1,0 +1,117 @@
+.section {
+    position: relative;
+    overflow: hidden;
+}
+
+.carrosselContainer {
+    position: relative;
+    width: 100%;
+    height: 60vh;
+}
+
+.carrosselTrack {
+    display: flex;
+    width: 500%; /* 5 items × 100% */
+    height: 100%;
+    transition: transform 0.8s ease-in-out;
+    will-change: transform; /* Otimização para animações */
+}
+
+.card {
+    flex: 0 0 20%; /* 100% / 5 items = 20% cada */
+    width: 20%; /* Garantir largura fixa */
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 250px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    box-sizing: border-box; /* Incluir padding no cálculo da largura */
+
+    .container {
+        width: 500px;
+
+        .title {
+            font-size: 2.42rem;
+            font-weight: inherit;
+            color: #fff;
+        }
+
+        .description {
+            font-size: 1.2rem;
+            color: #fff;
+            margin-bottom: 0;
+            font-weight: inherit;
+        }
+
+        .accessButton {
+            margin-top: 14px;
+            background: #8ae0db;
+            color: #000;
+            border: none;
+            border-radius: 0%;
+            width: 100%;
+        }
+    }
+}
+
+/* Indicadores de posição */
+.indicators {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    z-index: 10;
+}
+
+.indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.7);
+    }
+
+    &.active {
+        background: #8ae0db;
+        border-color: #8ae0db;
+    }
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .card {
+        padding: 0 50px;
+        
+        .container {
+            width: 100%;
+            max-width: 400px;
+
+            .title {
+                font-size: 1.8rem;
+            }
+
+            .description {
+                font-size: 1rem;
+            }
+        }
+    }
+
+    .indicators {
+        bottom: 15px;
+    }
+
+    .indicator {
+        width: 10px;
+        height: 10px;
+    }
+}
