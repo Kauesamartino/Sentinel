@@ -4,7 +4,9 @@ import { useEffect, useMemo, useState } from 'react';
 import styles from './relatoriospage.module.scss';
 import Button from '@/_components/Button';
 import Modal from '@/_components/Modal';
+import OcorrenciaViewModal from '@/_components/Ocorrencias/OcorrenciaViewModal';
 import { createRelatorio, listOcorrenciasByRelatorio, listRelatorios, RelatorioCreate } from '@/services/relatoriosService';
+import { getOcorrenciaById } from '@/services/ocorrenciasService';
 import { formatEnumValue } from '../../utils/formatEnumValue';
 
 function formatDate(value: string): string {
@@ -67,6 +69,11 @@ export default function RelatoriosPage() {
   };
   const [viewData, setViewData] = useState<{ content: OcorrenciaView[]; totalElements: number } | null>(null);
 
+  // Estados para o modal de detalhes da ocorrência
+  const [ocorrenciaModalOpen, setOcorrenciaModalOpen] = useState(false);
+  const [selectedOcorrenciaId, setSelectedOcorrenciaId] = useState<number | null>(null);
+  const [ocorrenciaDetails, setOcorrenciaDetails] = useState<any>(null);
+
   const refreshList = async () => {
     setLoading(true);
     setError(null);
@@ -118,6 +125,22 @@ export default function RelatoriosPage() {
     }
   };
 
+  // Função para abrir o modal de detalhes da ocorrência
+  const handleOcorrenciaClick = async (ocorrenciaId: number) => {
+    try {
+      setSelectedOcorrenciaId(ocorrenciaId);
+      setOcorrenciaModalOpen(true);
+      setOcorrenciaDetails(null); // Reset dos detalhes
+      
+      // Buscar detalhes da ocorrência
+      const details = await getOcorrenciaById(ocorrenciaId);
+      setOcorrenciaDetails(details);
+    } catch (error) {
+      console.error('Erro ao buscar detalhes da ocorrência:', error);
+      setError('Erro ao carregar detalhes da ocorrência');
+    }
+  };
+
   return (
     <main className={styles.main}>
       <div className={styles.container}>
@@ -138,7 +161,7 @@ export default function RelatoriosPage() {
               <th className={styles.cell}>Tipo</th>
               <th className={styles.cell}>Início</th>
               <th className={styles.cell}>Fim</th>
-              <th className={styles.cell}>Ações</th>
+              <th className={styles.cell}></th>
             </tr>
           </thead>
           <tbody className={styles.tbody}>
@@ -222,7 +245,12 @@ export default function RelatoriosPage() {
               </thead>
               <tbody className={styles.tbody}>
                 {(viewData.content || []).map((o) => (
-                  <tr className={styles.tr} key={o.id}>
+                  <tr 
+                    className={`${styles.tr} ${styles.clickableRow}`} 
+                    key={o.id}
+                    onClick={() => handleOcorrenciaClick(o.id)}
+                    style={{ cursor: 'pointer' }}
+                  >
                     <td className={styles.cell}>{o.id}</td>
                     <td className={styles.cell}>{o.titulo}</td>
                     <td className={styles.cell}>{formatEnumValue(o.tipoOcorrencia ?? '')}</td>
@@ -237,6 +265,14 @@ export default function RelatoriosPage() {
           </div>
         )}
       </Modal>
+
+      {/* Modal de detalhes da ocorrência */}
+      <OcorrenciaViewModal
+        open={ocorrenciaModalOpen}
+        onClose={() => setOcorrenciaModalOpen(false)}
+        viewData={ocorrenciaDetails}
+        formatDate={formatDate}
+      />
     </main>
   );
 }

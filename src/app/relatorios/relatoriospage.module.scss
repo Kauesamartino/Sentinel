@@ -72,6 +72,20 @@
   }
 }
 
+/* Estilo para linha clicável */
+.clickableRow {
+  transition: background-color 0.2s ease;
+  
+  &:hover {
+    background-color: #f9fafb !important;
+    cursor: pointer;
+  }
+  
+  &:active {
+    background-color: #f3f4f6 !important;
+  }
+}
+
 .actions {
   display: flex;
   gap: 8px;
