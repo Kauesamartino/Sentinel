@@ -1,12 +1,26 @@
 .section {
     margin-top: 90px;
     padding: 0 250px;
-    min-height: 100vh;
+    margin-bottom: 120px;
 
     .title {
         font-size: 2.42rem;
         font-weight: inherit;
         color: #000;
         margin-bottom: 16px;
+    }
+
+    .cardsContainer {
+        margin-top: 90px;
+        display: flex;
+        justify-content: space-around;
+
+        .card {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            width: 25%;
+        }
+
     }
 }
