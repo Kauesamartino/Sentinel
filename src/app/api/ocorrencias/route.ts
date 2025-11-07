@@ -115,7 +115,20 @@ export async function GET(request: Request) {
       evidence: '',
     }));
 
-        return NextResponse.json(mapped);
+    // Retornar estrutura completa de paginação
+    const response = {
+      content: mapped,
+      totalPages: pageableData.totalPages || 1,
+      totalElements: pageableData.totalElements || mapped.length,
+      size: pageableData.size || parseInt(pageSize),
+      number: pageableData.number || parseInt(pageNumber),
+      numberOfElements: pageableData.numberOfElements || mapped.length,
+      first: pageableData.first ?? (parseInt(pageNumber) === 0),
+      last: pageableData.last ?? (parseInt(pageNumber) >= (pageableData.totalPages || 1) - 1),
+      empty: pageableData.empty ?? (mapped.length === 0)
+    };
+
+    return NextResponse.json(response);
       } catch (error) {
         console.error('Erro na API GET /api/ocorrencias:', error);
         return NextResponse.json({ error: 'Erro interno ao consultar ocorrências' }, { status: 500 });

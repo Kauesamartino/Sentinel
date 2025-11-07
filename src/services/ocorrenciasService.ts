@@ -1,4 +1,4 @@
-export async function getOcorrencias(page: number = 0, pageSize: number = 20) {
+export async function getOcorrencias(page: number = 0, pageSize: number = 50) {
   const params = new URLSearchParams({
     pageNumber: page.toString(),
     pageSize: pageSize.toString(),

@@ -12,7 +12,7 @@ export function useOcorrencias() {
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
   const [totalElements, setTotalElements] = useState(0);
-  const [pageSize] = useState(10);
+  const [pageSize] = useState(50);
 
   const [viewOpen, setViewOpen] = useState<boolean>(false);
   const [viewData, setViewData] = useState<OcorrenciaDetalhe | null>(null);
@@ -27,6 +27,9 @@ export function useOcorrencias() {
     try {
       const data = await getOcorrencias(pageToFetch, pageSize);
       const ocorrenciasList = Array.isArray(data) ? data : (data.content || []);
+      
+      console.log('Dados recebidos da API:', data);
+      console.log('Lista de ocorrências:', ocorrenciasList);
       
       // Buscar evidências para cada ocorrência
       const ocorrenciasComEvidencias = await Promise.all(
@@ -55,6 +58,12 @@ export function useOcorrencias() {
         // API Spring Boot com estrutura de paginação padrão
         setTotalPages(data.totalPages || 1);
         setTotalElements(data.totalElements || 0);
+        console.log('Dados de paginação:', {
+          totalPages: data.totalPages,
+          totalElements: data.totalElements,
+          currentPage: pageToFetch,
+          size: data.size
+        });
       }
     } catch (e: unknown) {
       const errorMessage = e instanceof Error ? e.message : 'Erro ao carregar ocorrências';
