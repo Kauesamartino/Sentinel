@@ -10,34 +10,73 @@
 	gap: 16px;
 }
 
-.field {
-	display: grid;
-	gap: 6px;
-}
-
 .label {
 	font-weight: 600;
-	color: #64748b;
-	font-size: 12px;
-	text-transform: uppercase;
-	letter-spacing: 0.05em;
+	color: #374151;
+	margin-bottom: 4px;
+	font-size: 14px;
 }
 
-.value {
-	font-size: 16px;
-	color: #1e293b;
-	padding: 12px 16px;
-	background-color: #f8fafc;
-	border: 1px solid #e2e8f0;
-	border-radius: 8px;
+.fields h3 {
+	margin-top: 10px;
+	font-size: 1.25rem;
 	font-weight: 500;
+	color: #000;
+	border-bottom: 2px solid #e5e7eb;
+	margin-bottom: 20px;
 }
 
-.description {
-	@extend .value;
-	white-space: pre-wrap;
-	min-height: 60px;
-	line-height: 1.5;
+.fieldDesc {
+	font-size: 16px;
+	color: #000;
+}
+
+.infos {
+	margin-top: 10px;
+	display: flex;
+	gap: 70px;
+	align-items: flex-start;
+}
+
+/* Containers dos campos para alinhamento */
+.fieldSeveridade,
+.fieldStatus,
+.fieldTipoOcorrencia {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: flex-start;
+	min-height: 60px; /* Altura mínima consistente */
+}
+
+/* Labels com altura fixa */
+.fieldSeveridade .label,
+.fieldStatus .label,
+.fieldTipoOcorrencia .label {
+	margin-bottom: 8px;
+	height: 20px; 
+	display: flex;
+	align-items: center;
+	flex-shrink: 0; /* Não encolher */
+}
+
+/* Área dos valores com altura consistente */
+.valueSeveridade,
+.valueStatus,
+.valueTipoOcorrencia {
+	display: flex;
+	align-items: center;
+	min-height: 32px; /* Altura mínima igual para todos */
+	margin: 0;
+}
+
+/* Estilos específicos para Status e Tipo */
+.valueStatus,
+.valueTipoOcorrencia {
+	font-size: 14px;
+	color: #374151;
+	font-weight: 500;
+	padding: 6px 0; /* Padding para alinhamento visual */
 }
 
 .stationInfo {
@@ -62,6 +101,53 @@
 	gap: 8px;
 	font-size: 14px;
 	color: #0c4a6e;
+}
+
+/* Estilos de severidade - iguais aos da tabela */
+.valueSeveridade {
+	text-align: center;
+	font-weight: 600;
+	font-size: 12px;
+	padding: 6px 12px;
+	border-radius: 7px;
+	border: none;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+	margin: 0;
+	display: inline-block;
+	min-width: 70px;
+	
+	/* Severidade BAIXA - Verde */
+	&.baixa {
+		background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+		color: #047857;
+		border: 1px solid #6ee7b7;
+		box-shadow: 0 1px 3px rgba(16, 185, 129, 0.1);
+	}
+	
+	/* Severidade MÉDIA - Amarelo/Laranja */
+	&.media {
+		background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+		color: #d97706;
+		border: 1px solid #fbbf24;
+		box-shadow: 0 1px 3px rgba(217, 119, 6, 0.1);
+	}
+	
+	/* Severidade ALTA - Vermelho */
+	&.alta {
+		background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+		color: #dc2626;
+		border: 1px solid #f87171;
+		box-shadow: 0 1px 3px rgba(220, 38, 38, 0.1);
+	}
+	
+	/* Severidade CRÍTICA - Vermelho escuro */
+	&.critica {
+		background: linear-gradient(135deg, #fecaca 0%, #fee2e2 100%);
+		color: #991b1b;
+		border: 1px solid #dc2626;
+		box-shadow: 0 1px 3px rgba(153, 27, 27, 0.15);
+	}
 }
 
 @media (max-width: 768px) {

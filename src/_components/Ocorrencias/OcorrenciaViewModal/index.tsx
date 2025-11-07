@@ -16,19 +16,14 @@ export type OcorrenciaDetalhe = {
 		id: number;
 		nome: string;
 		linha?: string;
-		dadosControle?: {
+		ccoOutDto?: {
 			id: number;
 			nome: string;
 		};
-		endereco?: {
-			logradouro: string;
-			bairro: string;
-			cep: string;
-			numero: string;
-			complemento: string;
-			cidade: string;
-			uf: string;
-		};
+	};
+	cameraOutDto?: {
+		id: number;
+		nome: string;
 	};
 };
 
@@ -39,48 +34,81 @@ interface OcorrenciaViewModalProps {
 	formatDate: (value: string) => string;
 }
 
-const OcorrenciaViewModal: React.FC<OcorrenciaViewModalProps> = ({ open, onClose, viewData, formatDate }) => (
-	<Modal open={open} title="Ocorrência" onClose={onClose} width={600}>
+const OcorrenciaViewModal: React.FC<OcorrenciaViewModalProps> = ({ open, onClose, viewData, formatDate }) => {
+	// Função para obter a classe CSS baseada na severidade
+	const getSeveridadeClass = (severidade: string): string => {
+		const severidadeLower = severidade.toLowerCase();
+		switch (severidadeLower) {
+			case 'baixa':
+				return viewStyles.baixa;
+			case 'media':
+			case 'média':
+				return viewStyles.media;
+			case 'alta':
+				return viewStyles.alta;
+			case 'critica':
+			case 'crítica':
+				return viewStyles.critica;
+			default:
+				return viewStyles.baixa; // fallback para baixa
+		}
+	};
+
+	return (
+		<Modal open={open} title={`Ocorrência ${viewData?.id}${viewData?.cameraOutDto?.id ? ` - Camera: ${viewData.cameraOutDto.id}` : ''}`} onClose={onClose} width={600}>
 		{!viewData ? (
 			<div>Carregando...</div>
 		) : (
 			<div className={viewStyles.viewContainer}>
 				<div className={viewStyles.fields}>
-				<div className={viewStyles.field}>
-					<span className={viewStyles.label}>Título</span>
-					<div className={viewStyles.value}>{viewData.titulo}</div>
-				</div>
-				<div className={viewStyles.field}>
-					<span className={viewStyles.label}>Descrição</span>
-					<div className={viewStyles.description}>{viewData.descricao || 'Sem descrição'}</div>
-				</div>
-				<div className={viewStyles.field}>
-					<span className={viewStyles.label}>Data</span>
-					<div className={viewStyles.value}>{formatDate(viewData.data)}</div>
-				</div>
-				<div className={viewStyles.field}>
-					<span className={viewStyles.label}>Severidade</span>
-					<div className={viewStyles.value}>{formatEnumValue(viewData.severidade)}</div>
-				</div>
-				<div className={viewStyles.field}>
-					<span className={viewStyles.label}>Status</span>
-					<div className={viewStyles.value}>{formatEnumValue(viewData.status)}</div>
-				</div>
-				<div className={viewStyles.field}>
-					<span className={viewStyles.label}>Tipo</span>
-					<div className={viewStyles.value}>{formatEnumValue(viewData.tipoOcorrencia)}</div>
-				</div>
+					<h3>{viewData.titulo}</h3>
+
+					<div className={viewStyles.fieldDesc}>
+						<div className={viewStyles.label}>Descrição</div>
+						{viewData.descricao}
+					</div>
+
+					<div className={viewStyles.infos}>
+						{/* Data */}
+						<div className={viewStyles.fieldSeveridade}>
+							<div className={viewStyles.label}>Severidade</div>
+							<p className={`${viewStyles.valueSeveridade} ${getSeveridadeClass(viewData.severidade)}`}>
+								{formatEnumValue(viewData.severidade)}
+							</p>
+						</div>
+
+						<div className={viewStyles.fieldStatus}>
+							<div className={viewStyles.label}>Status</div>
+							<div className={viewStyles.valueStatus}>
+								{formatEnumValue(viewData.status)}
+							</div>
+						</div>
+
+						<div className={viewStyles.fieldTipoOcorrencia}>
+							<div className={viewStyles.label}>Tipo de Ocorrência</div>
+							<div className={viewStyles.valueTipoOcorrencia}>
+								{formatEnumValue(viewData.tipoOcorrencia)}
+							</div>
+						</div>
+					</div>
+
+					<div className={viewStyles.fieldData}>
+						<div className={viewStyles.label}>Data</div>
+						<div className={viewStyles.valueData}>
+							{formatDate(viewData.data)}
+						</div>
+					</div>
 				</div>
 				{viewData?.estacaoOutDto && (
 					<div className={viewStyles.stationInfo}>
 						<h4 className={viewStyles.stationTitle}>Informações da Estação</h4>
 						<div className={viewStyles.stationDetails}>
-							<div><strong>Nome:</strong> {viewData.estacaoOutDto?.nome}</div>
+							<div><strong>Nome: </strong>Estação {viewData.estacaoOutDto?.nome}</div>
 							{viewData.estacaoOutDto?.linha && (
 								<div><strong>Linha: </strong>{formatEnumValue(viewData.estacaoOutDto.linha)}</div>
 							)}
-							{viewData.estacaoOutDto?.dadosControle && (
-								<div><strong>Centro de Controle:</strong> {viewData.estacaoOutDto.dadosControle.nome}</div>
+							{viewData.estacaoOutDto?.ccoOutDto && (
+								<div>{viewData.estacaoOutDto.ccoOutDto.nome}</div>
 							)}
 						</div>
 					</div>
@@ -88,6 +116,7 @@ const OcorrenciaViewModal: React.FC<OcorrenciaViewModalProps> = ({ open, onClose
 			</div>
 		)}
 	</Modal>
-);
+	);
+};
 
 export default OcorrenciaViewModal;
