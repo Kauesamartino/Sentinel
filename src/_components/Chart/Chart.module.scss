@@ -66,113 +66,10 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
-.barItem:hover .barTooltip {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(-50%) translateX(0px) scale(1);
-}
-
 .barItem:hover .bar {
   opacity: 0.85;
   transform: scaleX(1.05) scaleY(1.02);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-}
-
-/* Tooltip Styles */
-.barTooltip {
-  position: absolute;
-  left: calc(100% + 15px);
-  transform: translateY(-50%) translateX(10px) scale(0.9);
-  opacity: 0;
-  visibility: hidden;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  z-index: 10;
-  pointer-events: none;
-}
-
-.tooltipContent {
-  background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
-  border-radius: 12px;
-  padding: 16px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  min-width: 140px;
-  backdrop-filter: blur(10px);
-}
-
-.tooltipHeader {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 8px;
-}
-
-.tooltipIndicator {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
-}
-
-.tooltipTitle {
-  font-size: 12px;
-  font-weight: 600;
-  color: #f9fafb;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.tooltipBody {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2px;
-}
-
-.tooltipValue {
-  font-size: 24px;
-  font-weight: 800;
-  color: #ffffff;
-  line-height: 1;
-}
-
-.tooltipLabel {
-  font-size: 10px;
-  color: #d1d5db;
-  font-weight: 500;
-  text-transform: lowercase;
-}
-
-.tooltipArrow {
-  position: absolute;
-  top: 50%;
-  left: -6px;
-  transform: translateY(-50%) rotate(45deg);
-  width: 12px;
-  height: 12px;
-  background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-top: none;
-  border-right: none;
-}
-
-/* Tooltip à esquerda */
-.tooltipLeft {
-  left: calc(-100% - 15px) !important;
-  transform: translateY(-50%) translateX(-10px) scale(0.9) !important;
-}
-
-.tooltipLeft .tooltipArrow {
-  left: auto;
-  right: -6px;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  border-right: 1px solid rgba(255, 255, 255, 0.1);
-  border-bottom: none;
-  border-left: none;
-}
-
-.barItem:hover .tooltipLeft {
-  transform: translateY(-50%) translateX(0px) scale(1) !important;
 }
 
 .barLabel {
@@ -429,56 +326,10 @@
     line-height: 1.1;
   }
   
-  .barTooltip {
-    left: calc(100% + 8px);
-  }
-
-  .tooltipLeft {
-    left: calc(-100% - 8px) !important;
-  }
-
-  .tooltipContent {
-    padding: 10px;
-    min-width: 100px;
-  }
-
-  .tooltipValue {
-    font-size: 18px;
-  }
-
-  .tooltipTitle {
-    font-size: 10px;
-  }
-
-  .tooltipLabel {
-    font-size: 8px;
-  }
-
-  .barItem:hover .barTooltip {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(-50%) translateX(0px) scale(1);
-  }
-
-  .barItem:hover .tooltipLeft {
-    transform: translateY(-50%) translateX(0px) scale(1) !important;
-  }
-
   .barItem:hover .bar {
     opacity: 0.85;
     transform: scaleX(1.05) scaleY(1.02);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-  }
-
-  /* Para dispositivos touch, mostrar tooltip ao tocar */
-  .barItem:active .barTooltip {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(-50%) translateX(0px) scale(1);
-  }
-
-  .barItem:active .tooltipLeft {
-    transform: translateY(-50%) translateX(0px) scale(1) !important;
   }
   
   .pieChart {

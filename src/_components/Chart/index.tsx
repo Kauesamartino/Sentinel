@@ -460,33 +460,7 @@ const Chart: React.FC<ChartProps> = ({
                     opacity: barOpacity
                   }}
                 />
-                <div 
-                  className={`${styles.barTooltip} ${
-                    data.length <= 2 ? (index === 1 ? styles.tooltipLeft : '') :
-                    data.length <= 4 ? (index >= 2 ? styles.tooltipLeft : '') :
-                    (index >= Math.ceil(data.length / 2) ? styles.tooltipLeft : '')
-                  }`}
-                  style={{
-                    bottom: `${Math.max(height > 0 ? height * 0.5 : 10, 20)}%`
-                  }}
-                >
-                  <div className={styles.tooltipContent}>
-                    <div className={styles.tooltipHeader}>
-                      <div 
-                        className={styles.tooltipIndicator}
-                        style={{ backgroundColor: barColor }}
-                      />
-                      <span className={styles.tooltipTitle}>{formatFullLabel(item.label)}</span>
-                    </div>
-                    <div className={styles.tooltipBody}>
-                      <span className={styles.tooltipValue}>{item.value}</span>
-                      <span className={styles.tooltipLabel}>
-                        {item.value === 1 ? 'ocorrência' : 'ocorrências'}
-                      </span>
-                    </div>
-                    <div className={styles.tooltipArrow}></div>
-                  </div>
-                </div>
+
               </div>
               <span className={styles.barLabel}>{formatLabel(item.label)}</span>
             </div>
