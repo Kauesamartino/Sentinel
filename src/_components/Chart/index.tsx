@@ -12,13 +12,15 @@ interface ChartProps {
   title: string;
   type?: 'bar' | 'pie' | 'line' | 'pizza';
   color?: string;
+  tall?: boolean;
 }
 
 const Chart: React.FC<ChartProps> = ({ 
   data, 
   title, 
   type = 'bar',
-  color = '#3b82f6'
+  color = '#3b82f6',
+  tall = false
 }) => {
   const maxValue = Math.max(...data.map(d => d.value), 1);
   const totalValue = data.reduce((sum, d) => sum + d.value, 0);
@@ -261,7 +263,7 @@ const Chart: React.FC<ChartProps> = ({
     return (
       <div className={styles.chartContainer}>
         <h3 className={styles.title}>{title}</h3>
-        <div className={styles.pieChart}>
+        <div className={tall ? styles.pieChartTaller : styles.pieChart}>
           {data.map((item, index) => {
             const percentage = totalValue > 0 ? (item.value / totalValue) * 100 : 0;
             // Usar getBarColor apenas se color for 'status' ou 'severidade', senão usar cores HSL

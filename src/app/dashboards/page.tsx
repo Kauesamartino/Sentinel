@@ -105,6 +105,7 @@ const DashboardPage: React.FC = () => {
               data={data.ocorrenciasPorTipo}
               title="Ocorrências por Tipo"
               type="pie"
+              tall={true}
             />
           </div>
         )}

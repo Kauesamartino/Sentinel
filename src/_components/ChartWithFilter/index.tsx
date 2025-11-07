@@ -12,13 +12,15 @@ interface ChartWithFilterProps {
   title: string;
   type?: 'bar' | 'pie' | 'line' | 'pizza';
   color?: string;
+  tall?: boolean;
 }
 
 const ChartWithFilter: React.FC<ChartWithFilterProps> = ({ 
   data, 
   title, 
   type = 'bar',
-  color = '#3b82f6'
+  color = '#3b82f6',
+  tall = false
 }) => {
   return (
     <div className={styles.chartWithFilterContainer}>
@@ -28,6 +30,7 @@ const ChartWithFilter: React.FC<ChartWithFilterProps> = ({
         title=""
         type={type}
         color={color}
+        tall={tall}
       />
     </div>
   );
