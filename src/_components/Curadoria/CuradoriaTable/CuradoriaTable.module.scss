@@ -24,6 +24,40 @@
     background: #ef4444 !important;
     color: #fff !important;
 }
+
+.llmButton {
+    gap: 8px;
+    background: rgba(147, 51, 234, 0.08) !important;
+    color: #9333ea !important;
+    border-radius: 4px;
+    transition: background 0.2s;
+    display: flex;
+    align-items: center;
+}
+
+.llmButton:hover:not(:disabled) {
+    background: #9333ea !important;
+    color: #fff !important;
+}
+
+.llmButton:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.spinner {
+    width: 14px;
+    height: 14px;
+    border: 2px solid transparent;
+    border-left: 2px solid currentColor;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
 .tableScrollContainer {
     overflow-x: auto;
     overflow-y: auto;

@@ -28,6 +28,8 @@ interface CuradoriaTableProps {
     onAprovar: (id: number) => void;
     formatDate: (date: string) => string;
     onDesaprovar: (id: number) => void;
+    onAnalyzeLLM: (id: number) => void;
+    isAnalyzingLLM?: (id: number) => boolean;
 }
 
 const CuradoriaTable: React.FC<CuradoriaTableProps> = ({
@@ -39,6 +41,8 @@ const CuradoriaTable: React.FC<CuradoriaTableProps> = ({
     onAprovar,
     formatDate,
     onDesaprovar,
+    onAnalyzeLLM,
+    isAnalyzingLLM = () => false,
 }) => {
     return (
         <div className={styles.tableScrollContainer}>
@@ -94,6 +98,25 @@ const CuradoriaTable: React.FC<CuradoriaTableProps> = ({
                                         >
                                             Detalhes
                                         </Button>
+                                        
+                                        {/* Botão Analisar com LLM */}
+                                        <Button
+                                            onClick={() => onAnalyzeLLM(curadoria.id)}
+                                            variant="transparent"
+                                            size="small"
+                                            className={styles.llmButton}
+                                            disabled={isAnalyzingLLM(curadoria.id)}
+                                        >
+                                            {isAnalyzingLLM(curadoria.id) ? (
+                                                <>
+                                                    <div className={styles.spinner}></div>
+                                                    Analisando...
+                                                </>
+                                            ) : (
+                                                'Analisar com LLM'
+                                            )}
+                                        </Button>
+
                                         <div className={styles.separator}>
                                             <Button
                                                 onClick={() => onAprovar(curadoria.id)}

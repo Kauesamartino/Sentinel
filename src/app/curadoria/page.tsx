@@ -5,7 +5,9 @@ import styles from "./curadoria.module.scss";
 import { CuradoriaTable, CuradoriaViewModal, Pagination } from "@/_components/Curadoria";
 import ConfirmActionModal from "@/_components/Curadoria/ConfirmActionModal";
 import EvidenceModal from "@/_components/Ocorrencias/EvidenceModal";
+import LLMResultModal from "@/_components/Curadoria/LLMResultModal";
 import { useCuradoria } from "@/hooks/useCuradoria";
+import { useLLMAnalysis } from "@/hooks/useLLMAnalysis";
 import { toast } from "react-toastify";
 
 const rows = [
@@ -59,6 +61,12 @@ const CuradoriaPage = () => {
     // Estado para modal de evidências
     const [evidenceModalOpen, setEvidenceModalOpen] = useState(false);
     const [selectedOccurrenceId, setSelectedOccurrenceId] = useState<number | null>(null);
+    
+    // Estado LLM
+    const { startAnalysis, isAnalyzing, getAnalysisState } = useLLMAnalysis();
+    const [llmResultModalOpen, setLlmResultModalOpen] = useState(false);
+    const [selectedLLMResult, setSelectedLLMResult] = useState<any>(null);
+    const [selectedLLMOccurrenceId, setSelectedLLMOccurrenceId] = useState<number | null>(null);
 
     function handleConfirm(action: "aprovar" | "desaprovar", id: number) {
         setConfirmAction(action);
@@ -71,6 +79,34 @@ const CuradoriaPage = () => {
         setSelectedOccurrenceId(id);
         setEvidenceModalOpen(true);
         console.log('Estado do modal definido para true (curadoria)');
+    };
+
+    const handleAnalyzeLLM = async (id: number) => {
+        try {
+            toast.info('Iniciando análise com LLM...', {
+                position: 'top-right',
+                autoClose: 3000
+            });
+            
+            const result = await startAnalysis(id);
+            
+            if (result) {
+                setSelectedLLMResult(result);
+                setSelectedLLMOccurrenceId(id);
+                setLlmResultModalOpen(true);
+                
+                toast.success('Análise LLM concluída!', {
+                    position: 'top-right',
+                    autoClose: 3000
+                });
+            }
+        } catch (error) {
+            console.error('Erro na análise LLM:', error);
+            toast.error(`Erro na análise LLM: ${error instanceof Error ? error.message : 'Erro desconhecido'}`, {
+                position: 'top-right',
+                autoClose: 5000
+            });
+        }
     };
 
     async function handleActionConfirm() {
@@ -108,6 +144,8 @@ const CuradoriaPage = () => {
                     onViewEvidence={handleViewEvidence}
                     onAprovar={(id: number) => handleConfirm("aprovar", id)}
                     onDesaprovar={(id: number) => handleConfirm("desaprovar", id)}
+                    onAnalyzeLLM={handleAnalyzeLLM}
+                    isAnalyzingLLM={isAnalyzing}
                 />
                 <Pagination 
                     currentPage={currentPage}
@@ -147,6 +185,18 @@ const CuradoriaPage = () => {
                     onClose={() => setEvidenceModalOpen(false)}
                     occurrenceId={selectedOccurrenceId || 0}
                 />
+                {selectedLLMResult && selectedLLMOccurrenceId && (
+                    <LLMResultModal
+                        isOpen={llmResultModalOpen}
+                        onClose={() => {
+                            setLlmResultModalOpen(false);
+                            setSelectedLLMResult(null);
+                            setSelectedLLMOccurrenceId(null);
+                        }}
+                        result={selectedLLMResult}
+                        occurrenceId={selectedLLMOccurrenceId}
+                    />
+                )}
             </div>
         </main>
     );
