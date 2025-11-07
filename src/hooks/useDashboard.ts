@@ -25,13 +25,6 @@ export interface DashboardState {
   rawOcorrencias: DashboardOcorrencia[];
 }
 
-export interface TimeFilters {
-  tempo: TimeFilter;
-  tipo: TimeFilter;
-  status: TimeFilter;
-  severidade: TimeFilter;
-}
-
 export function useDashboard() {
   const [data, setData] = useState<DashboardState>({
     ocorrenciasPorTempo: [],
@@ -43,12 +36,7 @@ export function useDashboard() {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [timeFilters, setTimeFilters] = useState<TimeFilters>({
-    tempo: '30d',
-    tipo: '30d',
-    status: '30d',
-    severidade: '30d',
-  });
+  const [globalTimeFilter, setGlobalTimeFilter] = useState<TimeFilter>('30d');
 
   const fetchDashboardData = useCallback(async () => {
     setLoading(true);
@@ -109,23 +97,20 @@ export function useDashboard() {
     }
   }, []); // Remover dependência timeFilters
 
-  // Recalcular dados quando os filtros mudam
+  // Recalcular dados quando o filtro global muda
   useEffect(() => {
     if (data.rawOcorrencias.length > 0) {
-      const tempoFiltered = filterOcorrenciasByTime(data.rawOcorrencias, timeFilters.tempo);
-      const tipoFiltered = filterOcorrenciasByTime(data.rawOcorrencias, timeFilters.tipo);
-      const statusFiltered = filterOcorrenciasByTime(data.rawOcorrencias, timeFilters.status);
-      const severidadeFiltered = filterOcorrenciasByTime(data.rawOcorrencias, timeFilters.severidade);
+      const filtered = filterOcorrenciasByTime(data.rawOcorrencias, globalTimeFilter);
 
       setData(prev => ({
         ...prev,
-        ocorrenciasPorTempo: processOcorrenciasPorTempo(tempoFiltered, timeFilters.tempo),
-        ocorrenciasPorTipo: processOcorrenciasPorTipo(tipoFiltered),
-        ocorrenciasPorStatus: processOcorrenciasPorStatus(statusFiltered),
-        ocorrenciasPorSeveridade: processOcorrenciasPorSeveridade(severidadeFiltered),
+        ocorrenciasPorTempo: processOcorrenciasPorTempo(filtered, globalTimeFilter),
+        ocorrenciasPorTipo: processOcorrenciasPorTipo(filtered),
+        ocorrenciasPorStatus: processOcorrenciasPorStatus(filtered),
+        ocorrenciasPorSeveridade: processOcorrenciasPorSeveridade(filtered),
       }));
     }
-  }, [timeFilters, data.rawOcorrencias]);
+  }, [globalTimeFilter, data.rawOcorrencias]);
 
   // Executar fetchDashboardData apenas uma vez na montagem do componente
   useEffect(() => {
@@ -133,11 +118,8 @@ export function useDashboard() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Sem dependências - queremos executar apenas uma vez
 
-  const handleTimeFilterChange = useCallback((chartType: keyof TimeFilters, newFilter: TimeFilter) => {
-    setTimeFilters(prev => ({
-      ...prev,
-      [chartType]: newFilter,
-    }));
+  const handleGlobalTimeFilterChange = useCallback((newFilter: TimeFilter) => {
+    setGlobalTimeFilter(newFilter);
   }, []);
 
   const refreshData = useCallback(() => {
@@ -148,8 +130,8 @@ export function useDashboard() {
     data,
     loading,
     error,
-    timeFilters,
-    handleTimeFilterChange,
+    globalTimeFilter,
+    handleGlobalTimeFilterChange,
     refreshData,
   };
 }

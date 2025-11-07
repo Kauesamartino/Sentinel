@@ -233,6 +233,142 @@
   color: #6b7280;
 }
 
+/* Pizza Chart Styles */
+.pizzaChart {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  height: 400px;
+  padding: 20px 0;
+}
+
+.pizzaSvg {
+  max-width: 300px;
+  height: auto;
+  transition: transform 0.3s ease;
+}
+
+.pizzaSvg:hover {
+  transform: scale(1.02) rotate(1deg);
+}
+
+.pizzaSlice {
+  cursor: pointer;
+  transition: all 0.3s ease;
+  transform-origin: center;
+}
+
+.pizzaPath {
+  transition: all 0.3s ease;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.pizzaSlice:hover .pizzaPath {
+  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.2));
+  transform: scale(1.05);
+}
+
+.pizzaSlice:hover {
+  z-index: 10;
+}
+
+/* Diminuir opacidade de outras fatias quando uma recebe hover */
+.pizzaChart:has(.pizzaSlice:hover) .pizzaSlice:not(:hover) {
+  opacity: 0.4;
+}
+
+.pizzaChart:has(.pizzaSlice:hover) .pizzaSlice:not(:hover) .pizzaPath {
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+}
+
+.pizzaTooltip {
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+
+.pizzaSlice:hover .pizzaTooltip {
+  opacity: 1;
+  visibility: visible;
+}
+
+.pizzaLegend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: center;
+  max-width: 350px;
+  padding: 0 10px;
+}
+
+.pizzaLegendItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 12px;
+  padding: 8px 12px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  min-width: 120px;
+}
+
+.pizzaLegendItem:hover {
+  background: #ffffff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+/* Destacar legenda quando fatia recebe hover */
+.pizzaChart:has([data-slice]:hover) .pizzaLegendItem {
+  opacity: 0.3;
+  transition: all 0.3s ease;
+}
+
+.pizzaChart:has([data-slice="ABERTO"]:hover) [data-legend="ABERTO"],
+.pizzaChart:has([data-slice="EM_ANDAMENTO"]:hover) [data-legend="EM_ANDAMENTO"],
+.pizzaChart:has([data-slice="RESOLVIDO"]:hover) [data-legend="RESOLVIDO"],
+.pizzaChart:has([data-slice="FECHADO"]:hover) [data-legend="FECHADO"],
+.pizzaChart:has([data-slice="BAIXA"]:hover) [data-legend="BAIXA"],
+.pizzaChart:has([data-slice="MEDIA"]:hover) [data-legend="MEDIA"],
+.pizzaChart:has([data-slice="ALTA"]:hover) [data-legend="ALTA"],
+.pizzaChart:has([data-slice="CRITICA"]:hover) [data-legend="CRITICA"] {
+  opacity: 1 !important;
+  background: #ffffff;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+  transform: translateY(-3px) scale(1.02);
+}
+
+.pizzaLegendColor {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
+}
+
+.pizzaLegendText {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.pizzaLegendLabel {
+  font-size: 12px;
+  font-weight: 600;
+  color: #374151;
+  text-transform: capitalize;
+  line-height: 1.2;
+}
+
+.pizzaLegendValue {
+  font-size: 11px;
+  color: #6b7280;
+  font-weight: 500;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .chartContainer {
@@ -321,6 +457,34 @@
   
   .pieChart {
     height: 250px;
+  }
+
+  .pizzaChart {
+    height: 320px;
+    gap: 16px;
+    padding: 16px 0;
+  }
+
+  .pizzaSvg {
+    max-width: 250px;
+  }
+
+  .pizzaLegend {
+    max-width: 280px;
+    gap: 12px;
+  }
+
+  .pizzaLegendItem {
+    min-width: 100px;
+    padding: 6px 10px;
+  }
+
+  .pizzaLegendLabel {
+    font-size: 11px;
+  }
+
+  .pizzaLegendValue {
+    font-size: 10px;
   }
 }
 

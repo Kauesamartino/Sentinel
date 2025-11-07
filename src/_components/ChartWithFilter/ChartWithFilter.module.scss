@@ -1,36 +1,16 @@
 .chartWithFilterContainer {
-  background: #fff;
-  border-radius: 12px;
-  padding: 24px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  border: 1px solid #e5e7eb;
-  height: 550px;
+  height: 570px;
   display: flex;
   flex-direction: column;
+  padding: 120px 0 24px 0;
 }
 
 .chartMainTitle {
-  margin: 0 0 20px 0;
-  font-size: 24px;
+  margin: 0 0 24px 0;
+  font-size: 20px;
   font-weight: 700;
   color: #1f2937;
   text-align: center;
-}
-
-.chartHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid #e5e7eb;
-}
-
-.chartTitle {
-  margin: 0;
-  font-size: 16px;
-  font-weight: 600;
-  color: #1f2937;
 }
 
 /* Responsive */

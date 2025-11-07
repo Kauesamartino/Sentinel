@@ -1,7 +1,5 @@
 import React from 'react';
 import Chart from '@/_components/Chart';
-import TimeFilterComponent from '@/_components/TimeFilter';
-import { TimeFilter } from '@/services/dashboardService';
 import styles from './ChartWithFilter.module.scss';
 
 export interface ChartData {
@@ -12,28 +10,19 @@ export interface ChartData {
 interface ChartWithFilterProps {
   data: ChartData[];
   title: string;
-  type?: 'bar' | 'pie' | 'line';
+  type?: 'bar' | 'pie' | 'line' | 'pizza';
   color?: string;
-  currentFilter: TimeFilter;
-  onFilterChange: (filter: TimeFilter) => void;
 }
 
 const ChartWithFilter: React.FC<ChartWithFilterProps> = ({ 
   data, 
   title, 
   type = 'bar',
-  color = '#3b82f6',
-  currentFilter,
-  onFilterChange
+  color = '#3b82f6'
 }) => {
   return (
     <div className={styles.chartWithFilterContainer}>
       <h2 className={styles.chartMainTitle}>{title}</h2>
-      <TimeFilterComponent 
-        currentFilter={currentFilter}
-        onFilterChange={onFilterChange}
-        compact={false}
-      />
       <Chart
         data={data}
         title=""

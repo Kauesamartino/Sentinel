@@ -9,7 +9,7 @@ export interface ChartData {
 interface ChartProps {
   data: ChartData[];
   title: string;
-  type?: 'bar' | 'pie' | 'line';
+  type?: 'bar' | 'pie' | 'line' | 'pizza';
   color?: string;
 }
 
@@ -284,6 +284,139 @@ const Chart: React.FC<ChartProps> = ({
               </div>
             );
           })}
+        </div>
+      </div>
+    );
+  }
+
+  if (type === 'pizza') {
+    const radius = 120;
+    const centerX = 150;
+    const centerY = 150;
+    let cumulativeAngle = 0;
+
+    return (
+      <div className={styles.chartContainer}>
+        <h3 className={styles.title}>{title}</h3>
+        <div className={styles.pizzaChart}>
+          <svg 
+            className={styles.pizzaSvg} 
+            viewBox="0 0 300 300" 
+            width="300" 
+            height="300"
+          >
+            {/* Fatias da pizza */}
+            {data.map((item, index) => {
+              const percentage = totalValue > 0 ? (item.value / totalValue) * 100 : 0;
+              const angle = (percentage / 100) * 360;
+              
+              // Coordenadas para desenhar o arco
+              const startAngle = cumulativeAngle;
+              const endAngle = cumulativeAngle + angle;
+              
+              const startX = centerX + radius * Math.cos((startAngle * Math.PI) / 180);
+              const startY = centerY + radius * Math.sin((startAngle * Math.PI) / 180);
+              const endX = centerX + radius * Math.cos((endAngle * Math.PI) / 180);
+              const endY = centerY + radius * Math.sin((endAngle * Math.PI) / 180);
+              
+              const largeArcFlag = angle > 180 ? 1 : 0;
+              
+              const pathData = [
+                `M ${centerX} ${centerY}`,
+                `L ${startX} ${startY}`,
+                `A ${radius} ${radius} 0 ${largeArcFlag} 1 ${endX} ${endY}`,
+                'Z'
+              ].join(' ');
+
+              cumulativeAngle += angle;
+
+              const sliceColor = getBarColor(item.label);
+
+              // Posição para o tooltip (meio da fatia)
+              const tooltipAngle = (startAngle + endAngle) / 2;
+              const tooltipX = centerX + (radius * 0.7) * Math.cos((tooltipAngle * Math.PI) / 180);
+              const tooltipY = centerY + (radius * 0.7) * Math.sin((tooltipAngle * Math.PI) / 180);
+
+              return (
+                <g key={item.label} className={styles.pizzaSlice} data-slice={item.label}>
+                  <path
+                    d={pathData}
+                    fill={sliceColor}
+                    className={styles.pizzaPath}
+                  />
+                  
+                  {/* Tooltip da fatia */}
+                  <g className={styles.pizzaTooltip}>
+                    <rect
+                      x={tooltipX - 35}
+                      y={tooltipY - 25}
+                      width="70"
+                      height="50"
+                      rx="8"
+                      fill="rgba(0, 0, 0, 0.8)"
+                      stroke="#fff"
+                      strokeWidth="1"
+                    />
+                    <text
+                      x={tooltipX}
+                      y={tooltipY - 8}
+                      fontSize="10"
+                      fill="#fff"
+                      textAnchor="middle"
+                      fontWeight="600"
+                    >
+                      {formatLabel(item.label)}
+                    </text>
+                    <text
+                      x={tooltipX}
+                      y={tooltipY + 6}
+                      fontSize="12"
+                      fill="#fff"
+                      textAnchor="middle"
+                      fontWeight="700"
+                    >
+                      {item.value}
+                    </text>
+                    <text
+                      x={tooltipX}
+                      y={tooltipY + 18}
+                      fontSize="8"
+                      fill="#ccc"
+                      textAnchor="middle"
+                      fontWeight="500"
+                    >
+                      ({percentage.toFixed(1)}%)
+                    </text>
+                  </g>
+                </g>
+              );
+            })}
+          </svg>
+
+          {/* Legenda da pizza */}
+          <div className={styles.pizzaLegend}>
+            {data.map((item, index) => {
+              const percentage = totalValue > 0 ? (item.value / totalValue) * 100 : 0;
+              const sliceColor = getBarColor(item.label);
+              
+              return (
+                <div key={item.label} className={styles.pizzaLegendItem} data-legend={item.label}>
+                  <div 
+                    className={styles.pizzaLegendColor}
+                    style={{ backgroundColor: sliceColor }}
+                  />
+                  <div className={styles.pizzaLegendText}>
+                    <span className={styles.pizzaLegendLabel}>
+                      {formatLabel(item.label)}
+                    </span>
+                    <span className={styles.pizzaLegendValue}>
+                      {item.value} ({percentage.toFixed(1)}%)
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
     );

@@ -4,6 +4,7 @@ import React, { useCallback } from 'react';
 import styles from './dashboards.module.scss';
 import { useDashboard } from '@/hooks/useDashboard';
 import ChartWithFilter from '@/_components/ChartWithFilter';
+import TimeFilterComponent from '@/_components/TimeFilter';
 import { TimeFilter } from '@/services/dashboardService';
 
 const DashboardPage: React.FC = () => {
@@ -11,36 +12,33 @@ const DashboardPage: React.FC = () => {
     data,
     loading,
     error,
-    timeFilters,
-    handleTimeFilterChange,
+    globalTimeFilter,
+    handleGlobalTimeFilterChange,
     refreshData
   } = useDashboard();
 
-  // Memoizar as funções de callback para evitar re-renders
-  const handleTempoFilterChange = useCallback((filter: TimeFilter) => {
-    handleTimeFilterChange('tempo', filter);
-  }, [handleTimeFilterChange]);
-
-  const handleTipoFilterChange = useCallback((filter: TimeFilter) => {
-    handleTimeFilterChange('tipo', filter);
-  }, [handleTimeFilterChange]);
-
-  const handleStatusFilterChange = useCallback((filter: TimeFilter) => {
-    handleTimeFilterChange('status', filter);
-  }, [handleTimeFilterChange]);
-
-  const handleSeveridadeFilterChange = useCallback((filter: TimeFilter) => {
-    handleTimeFilterChange('severidade', filter);
-  }, [handleTimeFilterChange]);
+  // Memoizar a função de callback para evitar re-renders
+  const handleFilterChange = useCallback((filter: TimeFilter) => {
+    handleGlobalTimeFilterChange(filter);
+  }, [handleGlobalTimeFilterChange]);
 
   return (
     <main className={styles.dashboardMain}>
       <div className={styles.container}>
         <div className={styles.header}>
-          <h1 className={styles.title}>Dashboards</h1>
-          <p className={styles.subtitle}>
-            Visualização e análise de ocorrências do sistema Sentinel
-          </p>
+          <div className={styles.headerContent}>
+            <h1 className={styles.title}>Dashboards</h1>
+            <p className={styles.subtitle}>
+              Visualização e análise de ocorrências do sistema Sentinel
+            </p>
+          </div>
+          <div className={styles.filterSection}>
+            <TimeFilterComponent 
+              currentFilter={globalTimeFilter}
+              onFilterChange={handleFilterChange}
+              compact={false}
+            />
+          </div>
         </div>
 
         {error && (
@@ -63,14 +61,29 @@ const DashboardPage: React.FC = () => {
           </div>
         ) : (
           <div className={styles.chartsContainer}>
+            
+            {/* Gráfico de Ocorrências por Severidade */}
+            <ChartWithFilter
+              data={data.ocorrenciasPorSeveridade}
+              title="Ocorrências por Severidade"
+              type="bar"
+              color="severidade"
+            />
+
+            {/* Gráfico de Ocorrências por Status */}
+            <ChartWithFilter
+              data={data.ocorrenciasPorStatus}
+              title="Ocorrências por Status"
+              type="pizza"
+              color="status"
+            />
+            
             {/* Gráfico de Ocorrências por Tempo */}
             <ChartWithFilter
               data={data.ocorrenciasPorTempo}
               title="Evolução de Ocorrências no Tempo"
               type="line"
               color="#3b82f6"
-              currentFilter={timeFilters.tempo}
-              onFilterChange={handleTempoFilterChange}
             />
 
             {/* Gráfico de Ocorrências por Tipo */}
@@ -78,28 +91,6 @@ const DashboardPage: React.FC = () => {
               data={data.ocorrenciasPorTipo}
               title="Ocorrências por Tipo"
               type="pie"
-              currentFilter={timeFilters.tipo}
-              onFilterChange={handleTipoFilterChange}
-            />
-
-            {/* Gráfico de Ocorrências por Status */}
-            <ChartWithFilter
-              data={data.ocorrenciasPorStatus}
-              title="Ocorrências por Status"
-              type="bar"
-              color="status"
-              currentFilter={timeFilters.status}
-              onFilterChange={handleStatusFilterChange}
-            />
-
-            {/* Gráfico de Ocorrências por Severidade */}
-            <ChartWithFilter
-              data={data.ocorrenciasPorSeveridade}
-              title="Ocorrências por Severidade"
-              type="bar"
-              color="severidade"
-              currentFilter={timeFilters.severidade}
-              onFilterChange={handleSeveridadeFilterChange}
             />
           </div>
         )}
