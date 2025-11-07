@@ -2,7 +2,8 @@
 
 import React, { useState } from "react";
 import styles from "./curadoria.module.scss";
-import { CuradoriaTable, CuradoriaViewModal, Pagination } from "@/_components/Curadoria";
+import { CuradoriaTable, CuradoriaViewModal } from "@/_components/Curadoria";
+import Pagination from "@/_components/Pagination";
 import ConfirmActionModal from "@/_components/Curadoria/ConfirmActionModal";
 import EvidenceModal from "@/_components/Ocorrencias/EvidenceModal";
 import LLMResultModal from "@/_components/Curadoria/LLMResultModal";

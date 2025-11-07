@@ -1,6 +1,6 @@
 import React from 'react';
 import Button from '@/_components/Button';
-import styles from './Pagination.module.scss';
+import styles from './pagination.module.scss';
 
 interface PaginationProps {
 	currentPage: number;

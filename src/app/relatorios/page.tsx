@@ -1,14 +1,17 @@
 /* eslint-disable */
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import styles from './relatoriospage.module.scss';
 import Button from '@/_components/Button';
+import Pagination from '@/_components/Pagination';
 import Modal from '@/_components/Modal';
 import OcorrenciaViewModal from '@/_components/Ocorrencias/OcorrenciaViewModal';
-import { createRelatorio, listOcorrenciasByRelatorio, listRelatorios, RelatorioCreate } from '@/services/relatoriosService';
+import { createRelatorio, RelatorioCreate } from '@/services/relatoriosService';
 import { getOcorrenciaById } from '@/services/ocorrenciasService';
 import { formatEnumValue } from '../../utils/formatEnumValue';
+import { useRelatorios } from '@/hooks/useRelatorios';
+import { useRelatorioOcorrencias } from '@/hooks/useRelatorioOcorrencias';
 
 function formatDate(value: string): string {
   if (!value) return '';
@@ -49,9 +52,36 @@ const defaultForm: RelatorioFormState = {
 };
 
 export default function RelatoriosPage() {
-  const [relatorios, setRelatorios] = useState<Relatorio[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const {
+    relatorios,
+    loading,
+    error,
+    totalPages,
+    totalElements,
+    pageSize,
+    currentPage,
+    prev,
+    next,
+    goToPrevious,
+    goToNext,
+    refreshList,
+  } = useRelatorios();
+
+  const {
+    viewData,
+    loading: viewLoading,
+    error: viewError,
+    totalPages: viewTotalPages,
+    totalElements: viewTotalElements,
+    pageSize: viewPageSize,
+    currentPage: viewCurrentPage,
+    prev: viewPrev,
+    next: viewNext,
+    loadOcorrencias,
+    goToPrevious: viewGoToPrevious,
+    goToNext: viewGoToNext,
+    resetData,
+  } = useRelatorioOcorrencias();
 
   const [createOpen, setCreateOpen] = useState(false);
   const [form, setForm] = useState<RelatorioFormState>(defaultForm);
@@ -59,53 +89,17 @@ export default function RelatoriosPage() {
 
   const [viewOpen, setViewOpen] = useState(false);
   const [viewId, setViewId] = useState<number | null>(null);
-  // const [viewPage, setViewPage] = useState(0); // Removido pois não é usado
-  type OcorrenciaView = {
-    id: number;
-    titulo: string;
-    descricao: string;
-    tipoOcorrencia?: string;
-    data: string;
-    severidade: string;
-    status?: string;
-  };
-  const [viewData, setViewData] = useState<{ content: OcorrenciaView[]; totalElements: number } | null>(null);
 
   // Estados para o modal de detalhes da ocorrência
   const [ocorrenciaModalOpen, setOcorrenciaModalOpen] = useState(false);
   const [, setSelectedOcorrenciaId] = useState<number | null>(null);
   const [ocorrenciaDetails, setOcorrenciaDetails] = useState<any>(null);
 
-  const refreshList = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const res = await listRelatorios({ page: 0, size: 10, sort: 'id' });
-      const content = Array.isArray(res?.content) ? res.content : [];
-      setRelatorios(content);
-    } catch (e: unknown) {
-      const msg = e instanceof Error ? e.message : 'Erro ao listar relatórios';
-      setError(msg);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    refreshList();
-  }, []);
-
-  const openView = async (id: number, page = 0) => {
+  const openView = async (id: number) => {
     setViewOpen(true);
     setViewId(id);
-    try {
-      const res = await listOcorrenciasByRelatorio(id, { page, size: 10, sort: 'id' });
-      setViewData(res);
-    } catch (e: unknown) {
-      const msg = e instanceof Error ? e.message : 'Falha ao carregar ocorrências do relatório';
-      setViewData({ content: [], totalElements: 0 });
-      setError(msg);
-    }
+    resetData();
+    await loadOcorrencias(id, 0);
   };
 
   const submitCreate = async () => {
@@ -123,7 +117,6 @@ export default function RelatoriosPage() {
       await refreshList();
     } catch (e: unknown) {
       const msg = e instanceof Error ? e.message : 'Falha ao criar relatório';
-      setError(msg);
     }
   };
 
@@ -139,7 +132,6 @@ export default function RelatoriosPage() {
       setOcorrenciaDetails(details);
     } catch (error) {
       console.error('Erro ao buscar detalhes da ocorrência:', error);
-      setError('Erro ao carregar detalhes da ocorrência');
     }
   };
 
@@ -187,6 +179,17 @@ export default function RelatoriosPage() {
             )}
           </tbody>
         </table>
+        
+        <Pagination 
+          currentPage={currentPage}
+          totalPages={totalPages}
+          totalElements={totalElements}
+          pageSize={pageSize}
+          prev={prev}
+          next={next}
+          onPrevious={goToPrevious}
+          onNext={goToNext}
+        />
       </div>
 
       <Modal open={createOpen} title="Gerar relatório" onClose={() => setCreateOpen(false)} width={600}>
@@ -230,10 +233,11 @@ export default function RelatoriosPage() {
       </Modal>
 
       <Modal open={viewOpen} title={viewId ? `Relatório #${viewId}` : 'Relatório'} onClose={() => setViewOpen(false)} width={800}>
-        {!viewData ? (
+        {viewLoading && !viewData ? (
           <div className={styles.loading}>Carregando...</div>
         ) : (
           <div>
+            {viewError && <div className={styles.loading}>{viewError}</div>}
             <table className={styles.table}>
               <thead className={styles.thead}>
                 <tr className={styles.tr}>
@@ -246,24 +250,44 @@ export default function RelatoriosPage() {
                 </tr>
               </thead>
               <tbody className={styles.tbody}>
-                {(viewData.content || []).map((o) => (
-                  <tr 
-                    className={`${styles.tr} ${styles.clickableRow}`} 
-                    key={o.id}
-                    onClick={() => handleOcorrenciaClick(o.id)}
-                    style={{ cursor: 'pointer' }}
-                  >
-                    <td className={styles.cell}>{o.id}</td>
-                    <td className={styles.cell}>{o.titulo}</td>
-                    <td className={styles.cell}>{formatEnumValue(o.tipoOcorrencia ?? '')}</td>
-                    <td className={styles.cell}>{formatDate(o.data)}</td>
-                    <td className={styles.cell}>{formatEnumValue(o.severidade ?? '')}</td>
-                    <td className={styles.cell}>{formatEnumValue(o.status ?? '')}</td>
+                {viewLoading ? (
+                  <tr className={styles.tr}>
+                    <td colSpan={6} className={`${styles.cell} ${styles.loading}`}>
+                      Carregando...
+                    </td>
                   </tr>
-                ))}
+                ) : (
+                  (viewData?.content || []).map((o) => (
+                    <tr 
+                      className={`${styles.tr} ${styles.clickableRow}`} 
+                      key={o.id}
+                      onClick={() => handleOcorrenciaClick(o.id)}
+                      style={{ cursor: 'pointer' }}
+                    >
+                      <td className={styles.cell}>{o.id}</td>
+                      <td className={styles.cell}>{o.titulo}</td>
+                      <td className={styles.cell}>{formatEnumValue(o.tipoOcorrencia ?? '')}</td>
+                      <td className={styles.cell}>{formatDate(o.data)}</td>
+                      <td className={styles.cell}>{formatEnumValue(o.severidade ?? '')}</td>
+                      <td className={styles.cell}>{formatEnumValue(o.status ?? '')}</td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
-            {/* Pagination controls could go here using viewPage and totalElements */}
+            
+            {viewTotalPages > 1 && viewId && (
+              <Pagination 
+                currentPage={viewCurrentPage}
+                totalPages={viewTotalPages}
+                totalElements={viewTotalElements}
+                pageSize={viewPageSize}
+                prev={viewPrev}
+                next={viewNext}
+                onPrevious={() => viewGoToPrevious(viewId)}
+                onNext={() => viewGoToNext(viewId)}
+              />
+            )}
           </div>
         )}
       </Modal>

@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import styles from './ocorrenciaspage.module.scss';
 import Button from '@/_components/Button';
 import OcorrenciasTable from '@/_components/Ocorrencias/OcorrenciasTable';
-import Pagination from '@/_components/Ocorrencias/Pagination';
+import Pagination from '@/_components/Pagination';
 import OcorrenciaViewModal from '@/_components/Ocorrencias/OcorrenciaViewModal';
 import OcorrenciaCreateModal from '@/_components/Ocorrencias/OcorrenciaCreateModal';
 import OcorrenciaEditModal from '@/_components/Ocorrencias/OcorrenciaEditModal';

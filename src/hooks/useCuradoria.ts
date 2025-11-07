@@ -20,7 +20,7 @@ export function useCuradoria() {
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
   const [totalElements, setTotalElements] = useState(0);
-  const [pageSize] = useState(10);
+  const [pageSize] = useState(50);
 
   // Modal de visualização
   const [viewOpen, setViewOpen] = useState(false);
