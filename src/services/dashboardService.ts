@@ -14,11 +14,26 @@ export interface DashboardData {
   ocorrencias: DashboardOcorrencia[];
 }
 
-export type TimeFilter = '1h' | '1d' | '7d' | '30d' | '90d';
+export type TimeFilter = '1h' | '1d' | '7d' | '30d' | '90d' | 'all' | 'custom';
 
-export async function getDashboardData(timeFilter: TimeFilter = '30d'): Promise<DashboardData> {
+export async function getDashboardData(timeFilter: TimeFilter = '30d', customStartDate?: Date, customEndDate?: Date): Promise<DashboardData> {
   try {
-    const url = `${API_BASE_URL}/api/dashboard?timeFilter=${timeFilter}`;
+    let url: string;
+    
+    // Para filtro personalizado, usar rota diferente
+    if (timeFilter === 'custom' && customStartDate && customEndDate) {
+      url = `${API_BASE_URL}/api/dashboard/custom?startDate=${customStartDate.toISOString()}&endDate=${customEndDate.toISOString()}`;
+      console.log('Service - Filtro personalizado:', {
+        timeFilter,
+        customStartDate: customStartDate.toISOString(),
+        customEndDate: customEndDate.toISOString(),
+        url
+      });
+    } else {
+      // Para filtros padrão, usar rota original
+      url = `${API_BASE_URL}/api/dashboard?timeFilter=${timeFilter}`;
+    }
+    
     console.log('Fazendo requisição para:', url);
     
     const response = await fetch(url, {
@@ -47,7 +62,7 @@ export async function getDashboardData(timeFilter: TimeFilter = '30d'): Promise<
 }
 
 // Funções utilitárias para processar os dados
-export function processOcorrenciasPorTempo(ocorrencias: DashboardOcorrencia[] = [], timeFilter: TimeFilter) {
+export function processOcorrenciasPorTempo(ocorrencias: DashboardOcorrencia[] = [], timeFilter: TimeFilter, customStartDate?: Date, customEndDate?: Date) {
   if (!Array.isArray(ocorrencias)) {
     console.warn('processOcorrenciasPorTempo: ocorrencias não é um array:', ocorrencias);
     return [];
@@ -61,6 +76,54 @@ export function processOcorrenciasPorTempo(ocorrencias: DashboardOcorrencia[] = 
     const intervals: { label: string; date: Date }[] = [];
     
     switch (timeFilter) {
+      case 'all':
+        // Para "todas", mostrar por meses dos últimos 12 meses
+        for (let i = 11; i >= 0; i--) {
+          const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
+          intervals.push({
+            label: date.toLocaleDateString('pt-BR', { month: 'short', year: '2-digit' }),
+            date: date
+          });
+        }
+        break;
+      case 'custom':
+        // Para personalizado, criar intervalos baseados no período selecionado
+        if (customStartDate && customEndDate) {
+          const diffTime = Math.abs(customEndDate.getTime() - customStartDate.getTime());
+          const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+          
+          if (diffDays <= 7) {
+            // Até 7 dias: intervalos diários
+            for (let i = 0; i < diffDays; i++) {
+              const date = new Date(customStartDate.getTime() + (i * 24 * 60 * 60 * 1000));
+              intervals.push({
+                label: date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' }),
+                date: date
+              });
+            }
+          } else if (diffDays <= 30) {
+            // Até 30 dias: intervalos de 5 dias
+            const intervalDays = Math.ceil(diffDays / 6);
+            for (let i = 0; i < 6; i++) {
+              const date = new Date(customStartDate.getTime() + (i * intervalDays * 24 * 60 * 60 * 1000));
+              intervals.push({
+                label: date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' }),
+                date: date
+              });
+            }
+          } else {
+            // Mais de 30 dias: intervalos mensais
+            const totalMonths = Math.ceil(diffDays / 30);
+            for (let i = 0; i < totalMonths; i++) {
+              const date = new Date(customStartDate.getFullYear(), customStartDate.getMonth() + i, 1);
+              intervals.push({
+                label: date.toLocaleDateString('pt-BR', { month: 'short', year: '2-digit' }),
+                date: date
+              });
+            }
+          }
+        }
+        break;
       case '1h':
         // Últimos 60 minutos, intervalos de 10 minutos
         for (let i = 6; i >= 0; i--) {
@@ -239,10 +302,21 @@ export function processOcorrenciasPorSeveridade(ocorrencias: DashboardOcorrencia
 }
 
 // Função para filtrar ocorrências por período de tempo
-export function filterOcorrenciasByTime(ocorrencias: DashboardOcorrencia[] = [], timeFilter: TimeFilter): DashboardOcorrencia[] {
+export function filterOcorrenciasByTime(ocorrencias: DashboardOcorrencia[] = [], timeFilter: TimeFilter, customStartDate?: Date, customEndDate?: Date): DashboardOcorrencia[] {
   if (!Array.isArray(ocorrencias)) {
     console.warn('filterOcorrenciasByTime: ocorrencias não é um array:', ocorrencias);
     return [];
+  }
+
+  if (timeFilter === 'all') {
+    return ocorrencias; // Retorna todas as ocorrências
+  }
+
+  if (timeFilter === 'custom' && customStartDate && customEndDate) {
+    return ocorrencias.filter(ocorrencia => {
+      const ocorrenciaDate = new Date(ocorrencia.data);
+      return ocorrenciaDate >= customStartDate && ocorrenciaDate <= customEndDate;
+    });
   }
 
   const now = new Date();

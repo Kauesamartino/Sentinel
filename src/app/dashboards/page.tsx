@@ -5,6 +5,7 @@ import styles from './dashboards.module.scss';
 import { useDashboard } from '@/hooks/useDashboard';
 import ChartWithFilter from '@/_components/ChartWithFilter';
 import TimeFilterComponent from '@/_components/TimeFilter';
+import StatisticsPanel from '@/_components/StatisticsPanel';
 import { TimeFilter } from '@/services/dashboardService';
 
 const DashboardPage: React.FC = () => {
@@ -13,13 +14,15 @@ const DashboardPage: React.FC = () => {
     loading,
     error,
     globalTimeFilter,
+    customStartDate,
+    customEndDate,
     handleGlobalTimeFilterChange,
     refreshData
   } = useDashboard();
 
   // Memoizar a função de callback para evitar re-renders
-  const handleFilterChange = useCallback((filter: TimeFilter) => {
-    handleGlobalTimeFilterChange(filter);
+  const handleFilterChange = useCallback((filter: TimeFilter, startDate?: Date, endDate?: Date) => {
+    handleGlobalTimeFilterChange(filter, startDate, endDate);
   }, [handleGlobalTimeFilterChange]);
 
   return (
@@ -37,6 +40,8 @@ const DashboardPage: React.FC = () => {
               currentFilter={globalTimeFilter}
               onFilterChange={handleFilterChange}
               compact={false}
+              customStartDate={customStartDate}
+              customEndDate={customEndDate}
             />
           </div>
         </div>
@@ -54,6 +59,15 @@ const DashboardPage: React.FC = () => {
             </button>
           </div>
         )}
+
+        {/* Painel de Estatísticas */}
+        <StatisticsPanel
+          totalOcorrencias={data.statistics.totalOcorrencias}
+          totalResolvidas={data.statistics.totalResolvidas}
+          totalEmAndamento={data.statistics.totalEmAndamento}
+          totalAbertas={data.statistics.totalAbertas}
+          loading={loading}
+        />
 
         {loading ? (
           <div className={styles.loadingContainer}>
