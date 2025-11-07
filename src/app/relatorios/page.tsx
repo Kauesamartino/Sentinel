@@ -71,7 +71,7 @@ export default function RelatoriosPage() {
 
   // Estados para o modal de detalhes da ocorrência
   const [ocorrenciaModalOpen, setOcorrenciaModalOpen] = useState(false);
-  const [selectedOcorrenciaId, setSelectedOcorrenciaId] = useState<number | null>(null);
+  const [, setSelectedOcorrenciaId] = useState<number | null>(null);
   const [ocorrenciaDetails, setOcorrenciaDetails] = useState<any>(null);
 
   const refreshList = async () => {
