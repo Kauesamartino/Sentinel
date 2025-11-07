@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from './Chart.module.scss';
+import { formatEnumValue } from '@/utils/formatEnumValue';
 
 export interface ChartData {
   label: string;
@@ -47,29 +48,26 @@ const Chart: React.FC<ChartProps> = ({
     return typeof color === 'string' ? color : '#3b82f6';
   };
 
-  // Função para formatar labels
+  // Função para formatar labels (versão abreviada para gráficos)
   const formatLabel = (label: string) => {
     if (color === 'status') {
+      // Para status, usar formatação personalizada para abreviar em gráficos menores
       const statusLabels: { [key: string]: string } = {
         'ABERTO': 'Aberto',
         'EM_ANDAMENTO': 'Em And.',
         'RESOLVIDO': 'Resolvido',
         'FECHADO': 'Fechado',
       };
-      return statusLabels[label] || statusLabels[label.toUpperCase()] || label;
+      return statusLabels[label] || statusLabels[label.toUpperCase()] || formatEnumValue(label);
     }
     
-    if (color === 'severidade') {
-      const severidadeLabels: { [key: string]: string } = {
-        'BAIXA': 'Baixa',
-        'MEDIA': 'Média',
-        'ALTA': 'Alta',
-        'CRITICA': 'Crítica',
-      };
-      return severidadeLabels[label] || severidadeLabels[label.toUpperCase()] || label;
-    }
-    
-    return label;
+    // Para severidade e tipos de ocorrência, usar formatEnumValue
+    return formatEnumValue(label);
+  };
+
+  // Função para formatar labels completos (tooltips e legendas)
+  const formatFullLabel = (label: string) => {
+    return formatEnumValue(label);
   };
 
   if (type === 'line') {
@@ -276,7 +274,7 @@ const Chart: React.FC<ChartProps> = ({
                   }}
                 />
                 <div className={styles.pieLabel}>
-                  <span className={styles.labelText}>{item.label}</span>
+                  <span className={styles.labelText}>{formatFullLabel(item.label)}</span>
                   <span className={styles.labelValue}>
                     {item.value} ({percentage.toFixed(1)}%)
                   </span>
@@ -420,7 +418,7 @@ const Chart: React.FC<ChartProps> = ({
                   />
                   <div className={styles.pizzaLegendText}>
                     <span className={styles.pizzaLegendLabel}>
-                      {formatLabel(item.label)}
+                      {formatFullLabel(item.label)}
                     </span>
                     <span className={styles.pizzaLegendValue}>
                       {item.value} ({percentage.toFixed(1)}%)
@@ -472,7 +470,7 @@ const Chart: React.FC<ChartProps> = ({
                         className={styles.tooltipIndicator}
                         style={{ backgroundColor: barColor }}
                       />
-                      <span className={styles.tooltipTitle}>{formatLabel(item.label)}</span>
+                      <span className={styles.tooltipTitle}>{formatFullLabel(item.label)}</span>
                     </div>
                     <div className={styles.tooltipBody}>
                       <span className={styles.tooltipValue}>{item.value}</span>
