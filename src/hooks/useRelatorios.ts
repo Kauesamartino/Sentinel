@@ -1,8 +1,17 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { listRelatorios } from '@/services/relatoriosService';
 
+interface Relatorio {
+  id: number;
+  titulo: string;
+  descricao: string;
+  tipoOcorrencia?: string;
+  dataInicio: string;
+  dataFim: string;
+}
+
 export function useRelatorios() {
-  const [relatorios, setRelatorios] = useState<any[]>([]);
+  const [relatorios, setRelatorios] = useState<Relatorio[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState(0);
@@ -10,7 +19,7 @@ export function useRelatorios() {
   const [totalElements, setTotalElements] = useState(0);
   const [pageSize] = useState(50);
 
-  const refreshList = async (pageToFetch = page) => {
+  const refreshList = useCallback(async (pageToFetch = page) => {
     setLoading(true);
     setError(null);
     try {
@@ -37,11 +46,11 @@ export function useRelatorios() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [page, pageSize]);
 
   useEffect(() => {
     refreshList(page);
-  }, [page]);
+  }, [page, refreshList]);
 
   // Lógica de navegação prev/next
   const currentPage = page + 1; // Converter de base 0 para base 1 para exibição

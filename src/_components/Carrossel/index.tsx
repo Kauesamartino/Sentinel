@@ -56,7 +56,7 @@ export default function Carrossel() {
             console.log('Limpando interval do carrossel');
             clearInterval(interval);
         };
-    }, []);
+    }, [currentIndex, items.length]);
 
     const goToSlide = (index: number) => {
         console.log('Navegação manual para slide:', index);

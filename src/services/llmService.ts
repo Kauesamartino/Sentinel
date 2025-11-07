@@ -27,7 +27,7 @@ export interface LLMJobStatus {
     key: string;
     size: number;
     json: boolean;
-    content?: any;
+    content?: Record<string, unknown>;
   }[];
   inferredStatus: string;
 }
@@ -153,20 +153,22 @@ class LLMService {
       );
 
       if (customOutput?.content?.inference_result) {
-        const result = customOutput.content.inference_result;
+        const result = customOutput.content.inference_result as Record<string, unknown>;
         
         // Procurar também pelo summary no standard output
         const standardOutput = jobStatus.outputs.find(output => 
           output.json && 
           output.key.includes('standard_output') && 
-          output.content?.video?.summary
+          (output.content as Record<string, unknown>)?.video
         );
 
+        const videoContent = standardOutput?.content as { video?: { summary?: string } };
+
         return {
-          seller: result.Seller || false,
-          description: result.Description || '',
-          dangerousItems: result.Dangerous_Items || false,
-          summary: standardOutput?.content?.video?.summary || ''
+          seller: Boolean(result.Seller) || false,
+          description: String(result.Description || ''),
+          dangerousItems: Boolean(result.Dangerous_Items) || false,
+          summary: videoContent?.video?.summary || ''
         };
       }
 

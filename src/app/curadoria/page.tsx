@@ -9,6 +9,7 @@ import EvidenceModal from "@/_components/Ocorrencias/EvidenceModal";
 import LLMResultModal from "@/_components/Curadoria/LLMResultModal";
 import { useCuradoria } from "@/hooks/useCuradoria";
 import { useLLMAnalysis } from "@/hooks/useLLMAnalysis";
+import { LLMAnalysisResult } from "@/services/llmService";
 import { toast } from "react-toastify";
 
 const rows = [
@@ -64,9 +65,9 @@ const CuradoriaPage = () => {
     const [selectedOccurrenceId, setSelectedOccurrenceId] = useState<number | null>(null);
     
     // Estado LLM
-    const { startAnalysis, isAnalyzing, getAnalysisState } = useLLMAnalysis();
+    const { startAnalysis, isAnalyzing } = useLLMAnalysis();
     const [llmResultModalOpen, setLlmResultModalOpen] = useState(false);
-    const [selectedLLMResult, setSelectedLLMResult] = useState<any>(null);
+    const [selectedLLMResult, setSelectedLLMResult] = useState<LLMAnalysisResult | null>(null);
     const [selectedLLMOccurrenceId, setSelectedLLMOccurrenceId] = useState<number | null>(null);
 
     function handleConfirm(action: "aprovar" | "desaprovar", id: number) {

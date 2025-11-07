@@ -1,8 +1,18 @@
 import { useState } from 'react';
 import { listOcorrenciasByRelatorio } from '@/services/relatoriosService';
 
+interface OcorrenciaView {
+  id: number;
+  titulo: string;
+  descricao: string;
+  tipoOcorrencia?: string;
+  data: string;
+  severidade: string;
+  status?: string;
+}
+
 export function useRelatorioOcorrencias() {
-  const [viewData, setViewData] = useState<{ content: any[]; totalElements: number } | null>(null);
+  const [viewData, setViewData] = useState<{ content: OcorrenciaView[]; totalElements: number } | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState(0);
