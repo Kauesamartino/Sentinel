@@ -295,6 +295,46 @@ const Chart: React.FC<ChartProps> = ({
     const centerY = 150;
     let cumulativeAngle = 0;
 
+    // Verificar se há dados válidos para exibir
+    const validData = data.filter(item => item.value > 0);
+    
+    if (validData.length === 0 || totalValue === 0) {
+      return (
+        <div className={styles.chartContainer}>
+          <h3 className={styles.title}>{title}</h3>
+          <div className={styles.pizzaChart}>
+            <div className={styles.emptyPizzaChart}>
+              <svg 
+                className={styles.pizzaSvg} 
+                viewBox="0 0 300 300" 
+                width="300" 
+                height="300"
+              >
+                <circle
+                  cx={centerX}
+                  cy={centerY}
+                  r={radius}
+                  fill="#f3f4f6"
+                  stroke="#e5e7eb"
+                  strokeWidth="2"
+                />
+                <text
+                  x={centerX}
+                  y={centerY}
+                  fontSize="14"
+                  fill="#6b7280"
+                  textAnchor="middle"
+                  fontWeight="500"
+                >
+                  Nenhum dado
+                </text>
+              </svg>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className={styles.chartContainer}>
         <h3 className={styles.title}>{title}</h3>
@@ -306,9 +346,19 @@ const Chart: React.FC<ChartProps> = ({
             height="300"
           >
             {/* Fatias da pizza */}
-            {data.map((item, index) => {
+            {data.filter(item => item.value > 0).map((item) => {
               const percentage = totalValue > 0 ? (item.value / totalValue) * 100 : 0;
-              const angle = (percentage / 100) * 360;
+              let angle = (percentage / 100) * 360;
+              
+              // Garantir ângulo mínimo para visibilidade
+              if (angle > 0 && angle < 2) {
+                angle = 2;
+              }
+              
+              // Caso especial: se há apenas um item, fazer círculo completo
+              if (data.filter(d => d.value > 0).length === 1) {
+                angle = 360;
+              }
               
               // Coordenadas para desenhar o arco
               const startAngle = cumulativeAngle;
@@ -321,21 +371,28 @@ const Chart: React.FC<ChartProps> = ({
               
               const largeArcFlag = angle > 180 ? 1 : 0;
               
-              const pathData = [
-                `M ${centerX} ${centerY}`,
-                `L ${startX} ${startY}`,
-                `A ${radius} ${radius} 0 ${largeArcFlag} 1 ${endX} ${endY}`,
-                'Z'
-              ].join(' ');
+              // Caso especial para círculo completo (360 graus)
+              let pathData;
+              if (angle >= 360) {
+                pathData = [
+                  `M ${centerX} ${centerY}`,
+                  `m -${radius}, 0`,
+                  `a ${radius},${radius} 0 1,1 ${radius * 2},0`,
+                  `a ${radius},${radius} 0 1,1 -${radius * 2},0`,
+                  'Z'
+                ].join(' ');
+              } else {
+                pathData = [
+                  `M ${centerX} ${centerY}`,
+                  `L ${startX} ${startY}`,
+                  `A ${radius} ${radius} 0 ${largeArcFlag} 1 ${endX} ${endY}`,
+                  'Z'
+                ].join(' ');
+              }
 
               cumulativeAngle += angle;
 
               const sliceColor = getBarColor(item.label);
-
-              // Posição para o tooltip (meio da fatia)
-              const tooltipAngle = (startAngle + endAngle) / 2;
-              const tooltipX = centerX + (radius * 0.7) * Math.cos((tooltipAngle * Math.PI) / 180);
-              const tooltipY = centerY + (radius * 0.7) * Math.sin((tooltipAngle * Math.PI) / 180);
 
               return (
                 <g key={item.label} className={styles.pizzaSlice} data-slice={item.label}>
@@ -344,50 +401,6 @@ const Chart: React.FC<ChartProps> = ({
                     fill={sliceColor}
                     className={styles.pizzaPath}
                   />
-                  
-                  {/* Tooltip da fatia */}
-                  <g className={styles.pizzaTooltip}>
-                    <rect
-                      x={tooltipX - 35}
-                      y={tooltipY - 25}
-                      width="70"
-                      height="50"
-                      rx="8"
-                      fill="rgba(0, 0, 0, 0.8)"
-                      stroke="#fff"
-                      strokeWidth="1"
-                    />
-                    <text
-                      x={tooltipX}
-                      y={tooltipY - 8}
-                      fontSize="10"
-                      fill="#fff"
-                      textAnchor="middle"
-                      fontWeight="600"
-                    >
-                      {formatLabel(item.label)}
-                    </text>
-                    <text
-                      x={tooltipX}
-                      y={tooltipY + 6}
-                      fontSize="12"
-                      fill="#fff"
-                      textAnchor="middle"
-                      fontWeight="700"
-                    >
-                      {item.value}
-                    </text>
-                    <text
-                      x={tooltipX}
-                      y={tooltipY + 18}
-                      fontSize="8"
-                      fill="#ccc"
-                      textAnchor="middle"
-                      fontWeight="500"
-                    >
-                      ({percentage.toFixed(1)}%)
-                    </text>
-                  </g>
                 </g>
               );
             })}
@@ -395,7 +408,7 @@ const Chart: React.FC<ChartProps> = ({
 
           {/* Legenda da pizza */}
           <div className={styles.pizzaLegend}>
-            {data.map((item, index) => {
+            {validData.map((item) => {
               const percentage = totalValue > 0 ? (item.value / totalValue) * 100 : 0;
               const sliceColor = getBarColor(item.label);
               

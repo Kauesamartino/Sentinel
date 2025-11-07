@@ -62,9 +62,10 @@ export default function RelatoriosPage() {
   type OcorrenciaView = {
     id: number;
     titulo: string;
+    descricao: string;
     tipoOcorrencia?: string;
     data: string;
-    severidade?: string;
+    severidade: string;
     status?: string;
   };
   const [viewData, setViewData] = useState<{ content: OcorrenciaView[]; totalElements: number } | null>(null);

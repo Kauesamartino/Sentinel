@@ -270,6 +270,16 @@
   transform: scale(1.05);
 }
 
+/* Caso especial para pizza com uma única fatia */
+.pizzaChart:has(.pizzaSlice:only-child) .pizzaSlice .pizzaPath {
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15));
+}
+
+.pizzaChart:has(.pizzaSlice:only-child) .pizzaSlice:hover .pizzaPath {
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.25));
+  transform: scale(1.03);
+}
+
 .pizzaSlice:hover {
   z-index: 10;
 }
@@ -367,6 +377,13 @@
   font-size: 11px;
   color: #6b7280;
   font-weight: 500;
+}
+
+.emptyPizzaChart {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0.6;
 }
 
 /* Responsive */
@@ -485,6 +502,10 @@
 
   .pizzaLegendValue {
     font-size: 10px;
+  }
+
+  .pizzaChart {
+    flex-direction: column;
   }
 }
 
