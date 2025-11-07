@@ -264,13 +264,17 @@ const Chart: React.FC<ChartProps> = ({
         <div className={styles.pieChart}>
           {data.map((item, index) => {
             const percentage = totalValue > 0 ? (item.value / totalValue) * 100 : 0;
+            // Usar getBarColor apenas se color for 'status' ou 'severidade', senão usar cores HSL
+            const barColor = (color === 'status' || color === 'severidade') 
+              ? getBarColor(item.label) 
+              : `hsl(${(index * 60) % 360}, 70%, 50%)`;
             return (
               <div key={item.label} className={styles.pieItem}>
                 <div 
                   className={styles.pieBar}
                   style={{ 
-                    width: `${percentage}%`,
-                    backgroundColor: `hsl(${(index * 60) % 360}, 70%, 50%)`
+                    width: `${Math.max(percentage, 2)}%`, // Mínimo de 2% para visibilidade
+                    backgroundColor: barColor
                   }}
                 />
                 <div className={styles.pieLabel}>
