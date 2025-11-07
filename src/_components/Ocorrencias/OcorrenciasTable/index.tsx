@@ -34,13 +34,31 @@ const OcorrenciasTable: React.FC<OcorrenciasTableProps> = ({
 	onViewEvidence,
 	formatDate,
 }) => {
+	// Função para obter a classe CSS baseada no grau
+	const getGrauClass = (grau: string): string => {
+		const grauLower = grau.toLowerCase();
+		switch (grauLower) {
+			case 'baixa':
+				return styles.baixa;
+			case 'media':
+			case 'média':
+				return styles.media;
+			case 'alta':
+				return styles.alta;
+			case 'critica':
+			case 'crítica':
+				return styles.critica;
+			default:
+				return styles.baixa; // fallback para baixa
+		}
+	};
 	return (
 		<div className={styles.tableScrollContainer}>
 			<table className={styles.table}>
 				<thead className={styles.thead}>
 					<tr className={styles.tr}>
 						{rows.map((row, index) => (
-							<th key={index} className={`${styles.headerrows} ${row.styles ? row.styles : ''} ${row.label === 'id' ? styles.idcell : ''}`}>
+							<th key={index} className={`${styles.headerrows} ${row.styles ? row.styles : ''} ${row.label === 'id' ? styles.idcell : ''} ${row.label === 'Grau' ? styles.idcell : ''}`}>
 								{row.label}
 							</th>
 						))}
@@ -61,7 +79,11 @@ const OcorrenciasTable: React.FC<OcorrenciasTableProps> = ({
 								<td className={styles.cell}>{formatEnumValue(ocorrencia.category)}</td>
 								<td className={styles.cell}>{formatDate ? formatDate(ocorrencia.date) : ocorrencia.date}</td>
 								<td className={styles.cell}>{formatEnumValue(ocorrencia.status)}</td>
-								<td className={styles.cell}>{formatEnumValue(ocorrencia.grau)}</td>
+								<td className={`${styles.cell} ${styles.grauTdCell}`}>
+									<p className={`${styles.grauCell} ${getGrauClass(ocorrencia.grau)}`}>
+										{formatEnumValue(ocorrencia.grau)}
+									</p>
+								</td>
 								<td className={styles.cell}>
 									<div className={styles.actions}>
 										{/* Botão para abrir modal de evidências */}
