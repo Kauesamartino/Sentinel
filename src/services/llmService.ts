@@ -9,7 +9,7 @@ export interface LLMJobSubmitResponse {
     fileName: string;
     dryRun: boolean;
   }[];
-  skipped: any[];
+  skipped: Record<string, unknown>[];
   dryRun: boolean;
 }
 
