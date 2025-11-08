@@ -15,6 +15,7 @@ const EvidenceModal: React.FC<EvidenceModalProps> = ({ open, onClose, occurrence
     const [evidence, setEvidence] = useState<EvidenciaResponse | null>(null);
     const [loading, setLoading] = useState(false);
     const [selectedUrl, setSelectedUrl] = useState<string>('');
+    const [useImageFallback, setUseImageFallback] = useState(false);
 
     console.log('EvidenceModal renderizado com props:', { open, occurrenceId });
 
@@ -43,6 +44,7 @@ const EvidenceModal: React.FC<EvidenceModalProps> = ({ open, onClose, occurrence
     const handleUrlSelect = (url: string) => {
         console.log('Arquivo selecionado:', url);
         setSelectedUrl(url);
+        setUseImageFallback(false); // Reset fallback state
         console.log('selectedUrl atualizado para:', url);
     };
 
@@ -118,35 +120,66 @@ const EvidenceModal: React.FC<EvidenceModalProps> = ({ open, onClose, occurrence
                                         {(() => {
                                             const selectedFile = evidence.urls.find(u => u.url === selectedUrl);
                                             const fileType = getFileType(selectedFile?.key || '');
-                                            console.log('Renderizando preview para:', selectedFile?.key, 'Tipo:', fileType);
-                                            return fileType === 'image' ? (
-                                            <div className={styles.imageContainer}>
-                                                <Image
-                                                    src={selectedUrl}
-                                                    alt="Evidência"
-                                                    fill
-                                                    className={styles.imagePreview}
-                                                    onError={(e) => {
-                                                        console.error('Erro ao carregar imagem');
-                                                        e.currentTarget.style.display = 'none';
-                                                    }}
-                                                />
-                                            </div>
-                                        ) : (
-                                            <video
-                                                src={selectedUrl}
-                                                controls
-                                                className={styles.videoPreview}
-                                                onError={() => {
-                                                    console.error('Erro ao carregar vídeo:', selectedUrl);
-                                                }}
-                                                onLoadStart={() => {
-                                                    console.log('Iniciando carregamento do vídeo:', selectedUrl);
-                                                }}
-                                            >
-                                                Seu navegador não suporta o elemento de vídeo.
-                                            </video>
-                                        );
+                                            console.log('Renderizando preview para:', selectedFile?.key, 'Tipo:', fileType, 'URL:', selectedUrl);
+                                            
+                                            if (fileType === 'image') {
+                                                return (
+                                                    <div className={styles.imageContainer}>
+                                                        {!useImageFallback ? (
+                                                            <Image
+                                                                src={selectedUrl}
+                                                                alt={`Evidência - ${getFileName(selectedFile?.key || '')}`}
+                                                                fill
+                                                                className={styles.imagePreview}
+                                                                unoptimized={true}
+                                                                onLoad={() => {
+                                                                    console.log('Imagem Next.js carregada com sucesso:', selectedUrl);
+                                                                    setUseImageFallback(false);
+                                                                }}
+                                                                onError={(e) => {
+                                                                    console.error('Erro ao carregar imagem Next.js, tentando fallback:', selectedUrl);
+                                                                    console.error('Erro detalhado:', e);
+                                                                    setUseImageFallback(true);
+                                                                }}
+                                                            />
+                                                        ) : (
+                                                            <img
+                                                                src={selectedUrl}
+                                                                alt={`Evidência - ${getFileName(selectedFile?.key || '')}`}
+                                                                className={styles.imagePreview}
+                                                                style={{ 
+                                                                    width: '100%', 
+                                                                    height: '100%', 
+                                                                    objectFit: 'contain' 
+                                                                }}
+                                                                onLoad={() => {
+                                                                    console.log('Imagem fallback carregada com sucesso:', selectedUrl);
+                                                                }}
+                                                                onError={(e) => {
+                                                                    console.error('Erro ao carregar imagem fallback:', selectedUrl);
+                                                                    console.error('Erro detalhado:', e);
+                                                                }}
+                                                            />
+                                                        )}
+                                                    </div>
+                                                );
+                                            } else {
+                                                return (
+                                                    <video
+                                                        src={selectedUrl}
+                                                        controls
+                                                        className={styles.videoPreview}
+                                                        onError={() => {
+                                                            console.error('Erro ao carregar vídeo:', selectedUrl);
+                                                        }}
+                                                        onLoadStart={() => {
+                                                            console.log('Iniciando carregamento do vídeo:', selectedUrl);
+                                                        }}
+                                                    >
+                                                        Seu navegador não suporta o elemento de vídeo.
+                                                    </video>
+                                                );
+                                            }
                                         })()}
                                         <div className={styles.actions}>
                                             <Link
