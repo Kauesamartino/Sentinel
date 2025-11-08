@@ -19,38 +19,46 @@ const LLMResultModal: React.FC<LLMResultModalProps> = ({
   occurrenceId,
   isLoading = false
 }) => {
-  const getSellerStatus = () => {
+  const getWarningCards = () => {
+    const cards = [];
+
+    // Adicionar card de vendedor apenas se detectado
     if (result.seller) {
-      return {
+      cards.push({
+        key: 'seller',
         icon: <FaExclamationTriangle className={styles.warningIcon} />,
+        title: 'Detecção de Vendedor',
         text: 'Possível vendedor detectado',
         className: styles.warning
-      };
+      });
     }
-    return {
-      icon: <FaCheckCircle className={styles.successIcon} />,
-      text: 'Nenhum vendedor detectado',
-      className: styles.success
-    };
-  };
 
-  const getDangerousItemsStatus = () => {
+    // Adicionar card de itens perigosos apenas se detectado
     if (result.dangerousItems) {
-      return {
+      cards.push({
+        key: 'dangerous',
         icon: <FaTimesCircle className={styles.dangerIcon} />,
+        title: 'Itens Perigosos',
         text: 'Itens perigosos identificados',
         className: styles.danger
-      };
+      });
     }
-    return {
-      icon: <FaCheckCircle className={styles.successIcon} />,
-      text: 'Nenhum item perigoso detectado',
-      className: styles.success
-    };
+
+    // Se nenhum problema foi detectado, mostrar card de sucesso
+    if (cards.length === 0) {
+      cards.push({
+        key: 'success',
+        icon: <FaCheckCircle className={styles.successIcon} />,
+        title: 'Análise Concluída',
+        text: 'Nenhum problema detectado pela IA',
+        className: styles.success
+      });
+    }
+
+    return cards;
   };
 
-  const sellerStatus = getSellerStatus();
-  const dangerousStatus = getDangerousItemsStatus();
+  const warningCards = getWarningCards();
 
   return (
     <Modal 
@@ -69,21 +77,15 @@ const LLMResultModal: React.FC<LLMResultModalProps> = ({
             <>
               {/* Status Cards */}
               <div className={styles.statusGrid}>
-                <div className={`${styles.statusCard} ${sellerStatus.className}`}>
-                  <div className={styles.statusHeader}>
-                    {sellerStatus.icon}
-                    <span className={styles.statusTitle}>Detecção de Vendedor</span>
+                {warningCards.map((card) => (
+                  <div key={card.key} className={`${styles.statusCard} ${card.className}`}>
+                    <div className={styles.statusHeader}>
+                      {card.icon}
+                      <span className={styles.statusTitle}>{card.title}</span>
+                    </div>
+                    <p className={styles.statusText}>{card.text}</p>
                   </div>
-                  <p className={styles.statusText}>{sellerStatus.text}</p>
-                </div>
-
-                <div className={`${styles.statusCard} ${dangerousStatus.className}`}>
-                  <div className={styles.statusHeader}>
-                    {dangerousStatus.icon}
-                    <span className={styles.statusTitle}>Itens Perigosos</span>
-                  </div>
-                  <p className={styles.statusText}>{dangerousStatus.text}</p>
-                </div>
+                ))}
               </div>
 
               {/* Descrição */}
