@@ -118,7 +118,7 @@ export function useCuradoria() {
     } else {
       fetchCuradorias(0);
     }
-  }, [sortField, sortDirection, searchId]);
+  }, [sortField, sortDirection, searchId, page, fetchCuradorias]);
 
   const handleView = async (id: number) => {
     try {

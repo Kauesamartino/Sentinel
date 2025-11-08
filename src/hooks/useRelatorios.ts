@@ -74,7 +74,7 @@ export function useRelatorios() {
     } else {
       refreshList(0);
     }
-  }, [sortField, sortDirection, searchId]);
+  }, [sortField, sortDirection, searchId, page, refreshList]);
 
   // Lógica de navegação prev/next
   const currentPage = page + 1; // Converter de base 0 para base 1 para exibição

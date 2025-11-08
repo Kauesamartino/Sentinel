@@ -179,6 +179,9 @@ const CuradoriaPage = () => {
                     onDesaprovar={(id: number) => handleConfirm("desaprovar", id)}
                     onAnalyzeLLM={handleAnalyzeLLM}
                     isAnalyzingLLM={isAnalyzing}
+                    sortField={sortField}
+                    sortDirection={sortDirection}
+                    onSort={handleSort}
                 />
                 <Pagination 
                     currentPage={currentPage}

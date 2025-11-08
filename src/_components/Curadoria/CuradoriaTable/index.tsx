@@ -47,17 +47,35 @@ const CuradoriaTable: React.FC<CuradoriaTableProps> = ({
     onDesaprovar,
     onAnalyzeLLM,
     isAnalyzingLLM = () => false,
+    sortField,
+    sortDirection,
+    onSort,
 }) => {
     return (
         <div className={styles.tableScrollContainer}>
             <table className={styles.table}>
                 <thead className={styles.thead}>
                     <tr className={styles.tr}>
-                        {rows.map((row, index) => (
-                            <th key={index} className={`${styles.headerrows} ${row.styles ? row.styles : ''} ${row.label === 'id' ? styles.idcell : ''}`}>
-                                {row.label}
-                            </th>
-                        ))}
+                        {rows.map((row, index) => {
+                            const isIdColumn = row.label === 'id';
+                            const isDateColumn = row.label === 'Data';
+                            const isSortable = (isIdColumn || isDateColumn) && onSort;
+                            
+                            return (
+                                <th 
+                                    key={index} 
+                                    className={`${styles.headerrows} ${row.styles ? row.styles : ''} ${row.label === 'id' ? styles.idcell : ''} ${isSortable ? styles.sortable : ''}`}
+                                    onClick={isSortable ? () => onSort!(isIdColumn ? 'id' : 'data') : undefined}
+                                >
+                                    {row.label}
+                                    {isSortable && sortField === (isIdColumn ? 'id' : 'data') && (
+                                        <span className={styles.sortIcon}>
+                                            {sortDirection === 'ASC' ? '↑' : '↓'}
+                                        </span>
+                                    )}
+                                </th>
+                            );
+                        })}
                     </tr>
                 </thead>
                 <tbody className={styles.tbody}>

@@ -129,6 +129,25 @@
     font-size: 13px;
 }
 
+/* Estilos para colunas ordenáveis */
+.sortable {
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.2s ease;
+    position: relative;
+
+    &:hover {
+        background-color: #e5e7eb;
+    }
+}
+
+.sortIcon {
+    margin-left: 8px;
+    font-size: 12px;
+    font-weight: bold;
+    color: #3b82f6;
+}
+
 .loadingMessage {
     text-align: center;
     color: #64748b;

@@ -118,7 +118,7 @@ export function useOcorrencias() {
     } else {
       refreshList(0);
     }
-  }, [sortField, sortDirection, searchId]);
+  }, [sortField, sortDirection, searchId, page, refreshList]);
 
 
 
