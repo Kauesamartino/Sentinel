@@ -13,6 +13,11 @@ const sora = Sora({
 export const metadata: Metadata = {
   title: "Sentinel",
   description: "Sistema de gerenciamento de riscos",
+  icons: {
+    icon: '/favicon.ico',
+    shortcut: '/favicon.ico',
+    apple: '/favicon.ico',
+  },
 };
 
 export default function RootLayout({
