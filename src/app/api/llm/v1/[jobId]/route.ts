@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-export async function POST(
+export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ jobId: string }> }
 ) {
   try {
-    console.log('=== LLM V1 API ===');
+    console.log('=== LLM V1 API - GET ===');
     const { jobId } = await params;
     console.log('JobId recebido:', jobId);
     
@@ -16,12 +16,12 @@ export async function POST(
       );
     }
 
-    // Fazer requisição direta para a API externa da AWS
+    // Fazer requisição GET para a API externa da AWS
     const awsUrl = `https://edjnqrh12m.execute-api.us-east-1.amazonaws.com/v1/jobs/${jobId}`;
-    console.log('Fazendo requisição para AWS:', awsUrl);
+    console.log('Fazendo requisição GET para AWS:', awsUrl);
     
     const response = await fetch(awsUrl, {
-      method: 'POST',
+      method: 'GET',
       headers: {
         'Content-Type': 'application/json',
       }
@@ -48,7 +48,7 @@ export async function POST(
     return NextResponse.json(data);
 
   } catch (error) {
-    console.error('Erro no proxy LLM v1:', error);
+    console.error('Erro no proxy LLM v1 GET:', error);
     return NextResponse.json(
       { 
         error: 'Erro interno do servidor',
