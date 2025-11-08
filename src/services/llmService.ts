@@ -42,6 +42,8 @@ export interface LLMAnalysisResult {
 class LLMService {
   private readonly submitUrl = '/api/llm/submit';
   private readonly statusBaseUrl = '/api/llm/status';
+  private readonly checkStatusUrl = '/api/llm/check-status';
+  private readonly v1StatusUrl = '/api/llm/v1';
 
   /**
    * Submete uma ocorrência para análise com LLM
@@ -74,24 +76,67 @@ class LLMService {
    * Verifica o status de um job do LLM
    */
   async checkJobStatus(jobId: string): Promise<LLMJobStatus> {
-    try {
-      const response = await fetch(`${this.statusBaseUrl}/${jobId}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+    console.log('LLMService - Verificando status do job:', jobId);
+    
+    // Lista de URLs para tentar
+    const urlsToTry = [
+      `${this.v1StatusUrl}/${encodeURIComponent(jobId)}`, // Nova rota correta v1
+      `${this.checkStatusUrl}?jobId=${encodeURIComponent(jobId)}`, // API diagnóstico
+      `${this.statusBaseUrl}?jobId=${encodeURIComponent(jobId)}`, // API original com query
+      this.statusBaseUrl, // API original com body
+    ];
+
+    for (let i = 0; i < urlsToTry.length; i++) {
+      const url = urlsToTry[i];
+      const isBodyRequest = i === 3; // Agora é a 4ª tentativa (índice 3)
+      
+      try {
+        console.log(`LLMService - Tentativa ${i + 1}: ${url}`);
+        
+        const requestOptions: RequestInit = {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        };
+
+        if (isBodyRequest) {
+          requestOptions.body = JSON.stringify({ jobId });
         }
-      });
 
-      if (!response.ok) {
-        throw new Error(`Erro ao verificar status: ${response.status}`);
+        const response = await fetch(url, requestOptions);
+        
+        console.log(`LLMService - Resposta tentativa ${i + 1}:`, response.status, response.statusText);
+
+        if (response.ok) {
+          const data = await response.json();
+          console.log('LLMService - Dados recebidos:', data);
+          return data;
+        }
+
+        // Se não for OK, logar o erro mas tentar próxima URL
+        const errorText = await response.text();
+        console.log(`LLMService - Erro tentativa ${i + 1}:`, response.status, errorText);
+        
+        // Se esta for a última tentativa, throw error
+        if (i === urlsToTry.length - 1) {
+          throw new Error(`Todas as tentativas falharam. Último erro: ${response.status} - ${errorText}`);
+        }
+
+      } catch (error) {
+        console.error(`LLMService - Erro na tentativa ${i + 1}:`, error);
+        
+        // Se esta for a última tentativa, re-throw
+        if (i === urlsToTry.length - 1) {
+          throw error;
+        }
+        
+        // Caso contrário, continuar para próxima tentativa
+        continue;
       }
-
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error('Erro ao verificar status do job:', error);
-      throw error;
     }
+
+    throw new Error('Todas as tentativas de verificar status falharam');
   }
 
   /**
