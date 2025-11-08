@@ -1,23 +1,31 @@
 import Image from 'next/image';
 import styles from './integrantespage.module.scss';
+import { FaGithub, FaLinkedin } from 'react-icons/fa';
+import Link from 'next/link';
 
 const lista = [
 	{
 		name: 'Kauê Samartino',
 		photo: '/kaue.jpg',
 		rm: '559317',
+		github: 'https://github.com/Kauesamartino',
+		linkedin: 'https://www.linkedin.com/in/kauesamartino/',
 		alt: 'foto de Kauê',
 	},
 	{
 		name: 'Davi Praxedes',
 		photo: '/xeds.jpg',
 		rm: '560719',
+		github: 'https://github.com/davipraxedes',
+		linkedin: 'https://www.linkedin.com/in/davipraxedes/',
 		alt: 'foto de Davi',
 	},
 	{
 		name: 'João dos Santos',
 		photo: '/foto_joao.jpg',
 		rm: '560400',
+		github: 'https://github.com/joaoscj',
+		linkedin: 'https://www.linkedin.com/in/joaoscj/',
 		alt: 'foto de João',
 	},
 ];
@@ -39,7 +47,26 @@ export default function IntegrantesPage() {
 								loading="lazy"
 							/>
 							<div className={styles.name}>{item.name}</div>
-							<div className={''}>RM: {item.rm}</div>
+							<div className={styles.icones}>
+								<Link 
+									href={item.github} 
+									target="_blank" 
+									rel="noopener noreferrer"
+									className={styles.iconLink}
+									aria-label={`GitHub de ${item.name}`}
+								>
+									<FaGithub className={styles.icon} />
+								</Link>
+								<Link 
+									href={item.linkedin} 
+									target="_blank" 
+									rel="noopener noreferrer"
+									className={styles.iconLink}
+									aria-label={`LinkedIn de ${item.name}`}
+								>
+									<FaLinkedin className={styles.icon} />
+								</Link>
+							</div>
 						</div>
 					))}
 				</div>
