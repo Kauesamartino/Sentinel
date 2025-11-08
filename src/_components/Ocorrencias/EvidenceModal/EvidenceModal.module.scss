@@ -90,13 +90,19 @@
   box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
 }
 
-.imagePreview {
+.imageContainer {
+  position: relative;
   width: 100%;
-  max-height: 400px;
-  object-fit: contain;
+  height: 400px;
   border-radius: 8px;
   border: 1px solid #e5e7eb;
   background: #f9fafb;
+  overflow: hidden;
+}
+
+.imagePreview {
+  object-fit: contain;
+  border-radius: 8px;
 }
 
 .videoPreview {
@@ -113,7 +119,10 @@
     max-width: 90vw;
   }
   
-  .imagePreview,
+  .imageContainer {
+    height: 250px;
+  }
+  
   .videoPreview {
     max-height: 250px;
   }

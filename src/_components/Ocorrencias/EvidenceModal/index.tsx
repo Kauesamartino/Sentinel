@@ -120,15 +120,18 @@ const EvidenceModal: React.FC<EvidenceModalProps> = ({ open, onClose, occurrence
                                             const fileType = getFileType(selectedFile?.key || '');
                                             console.log('Renderizando preview para:', selectedFile?.key, 'Tipo:', fileType);
                                             return fileType === 'image' ? (
-                                            <Image
-                                                src={selectedUrl}
-                                                alt="Evidência"
-                                                className={styles.imagePreview}
-                                                onError={(e) => {
-                                                    console.error('Erro ao carregar imagem');
-                                                    e.currentTarget.style.display = 'none';
-                                                }}
-                                            />
+                                            <div className={styles.imageContainer}>
+                                                <Image
+                                                    src={selectedUrl}
+                                                    alt="Evidência"
+                                                    fill
+                                                    className={styles.imagePreview}
+                                                    onError={(e) => {
+                                                        console.error('Erro ao carregar imagem');
+                                                        e.currentTarget.style.display = 'none';
+                                                    }}
+                                                />
+                                            </div>
                                         ) : (
                                             <video
                                                 src={selectedUrl}
