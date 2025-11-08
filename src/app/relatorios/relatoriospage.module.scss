@@ -14,7 +14,7 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  margin: 20px 0 10px;
+  margin: 20px 0 30px;
 }
 
 .headerButtonWrapper {
@@ -61,6 +61,88 @@
 /* Centraliza a coluna ID */
 .cell.id {
   text-align: center;
+}
+
+/* Estilos para filtros e pesquisa */
+
+.searchContainer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.searchLabel {
+  font-weight: 600;
+  color: #374151;
+  font-size: 14px;
+  min-width: fit-content;
+}
+
+.searchWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.searchInput {
+  padding: 8px 12px;
+  padding-right: 36px;
+  border: 2px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 14px;
+  min-width: 250px;
+  transition: border-color 0.2s ease;
+
+  &:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+
+  &::placeholder {
+    color: #9ca3af;
+  }
+}
+
+.clearButton {
+  position: absolute;
+  right: 8px;
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: #6b7280;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: #f3f4f6;
+    color: #374151;
+  }
+
+  &:active {
+    background-color: #e5e7eb;
+  }
+}
+
+/* Estilos para colunas ordenáveis */
+.sortable {
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.2s ease;
+  position: relative;
+
+  &:hover {
+    background-color: #e5e7eb;
+  }
+}
+
+.sortIcon {
+  margin-left: 8px;
+  font-size: 12px;
+  font-weight: bold;
+  color: #3b82f6;
 }
 
 .tbody {
@@ -136,5 +218,24 @@
   }
   .dateRow {
     grid-template-columns: 1fr;
+  }
+  
+  .searchContainer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .searchWrapper {
+    width: 100%;
+  }
+  
+  .searchInput {
+    min-width: 100%;
+    width: 100%;
+  }
+  
+  .sortIcon {
+    font-size: 10px;
   }
 }

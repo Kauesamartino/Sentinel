@@ -65,6 +65,11 @@ export default function RelatoriosPage() {
     goToPrevious,
     goToNext,
     refreshList,
+    sortField,
+    sortDirection,
+    handleSort,
+    searchId,
+    setSearchId,
   } = useRelatorios();
 
   const {
@@ -145,15 +150,59 @@ export default function RelatoriosPage() {
           </div>
         </div>
 
+        {/* Filtros e Pesquisa */}
+        <div className={styles.filtersContainer}>
+          <div className={styles.searchContainer}>
+            <div className={styles.searchWrapper}>
+              <input
+                type="text"
+                placeholder="Digite o ID do relatório..."
+                value={searchId}
+                onChange={(e) => setSearchId(e.target.value)}
+                className={styles.searchInput}
+              />
+              {searchId && (
+                <button
+                  onClick={() => setSearchId('')}
+                  className={styles.clearButton}
+                  title="Limpar pesquisa"
+                >
+                  ×
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+
         {error && <div className={styles.loading}>{error}</div>}
 
         <table className={styles.table}>
           <thead className={styles.thead}>
             <tr className={styles.tr}>
-              <th className={`${styles.cell} ${styles.id}`}>ID</th>
+              <th 
+                className={`${styles.cell} ${styles.id} ${styles.sortable}`}
+                onClick={() => handleSort('id')}
+              >
+                ID 
+                {sortField === 'id' && (
+                  <span className={styles.sortIcon}>
+                    {sortDirection === 'ASC' ? '↑' : '↓'}
+                  </span>
+                )}
+              </th>
               <th className={styles.cell}>Título</th>
               <th className={styles.cell}>Tipo</th>
-              <th className={styles.cell}>Início</th>
+              <th 
+                className={`${styles.cell} ${styles.sortable}`}
+                onClick={() => handleSort('dataInicio')}
+              >
+                Início
+                {sortField === 'dataInicio' && (
+                  <span className={styles.sortIcon}>
+                    {sortDirection === 'ASC' ? '↑' : '↓'}
+                  </span>
+                )}
+              </th>
               <th className={styles.cell}>Fim</th>
               <th className={styles.cell}></th>
             </tr>

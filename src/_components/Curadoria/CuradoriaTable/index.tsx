@@ -31,6 +31,9 @@ interface CuradoriaTableProps {
     onDesaprovar: (id: number) => void;
     onAnalyzeLLM: (id: number) => void;
     isAnalyzingLLM?: (id: number) => boolean;
+    sortField?: string;
+    sortDirection?: string;
+    onSort?: (field: 'id' | 'data') => void;
 }
 
 const CuradoriaTable: React.FC<CuradoriaTableProps> = ({

@@ -53,6 +53,12 @@ const CuradoriaPage = () => {
         handleView,
         aprovarCuradoria,
         desaprovarCuradoria,
+        // Novos recursos de filtro
+        sortField,
+        sortDirection,
+        handleSort,
+        searchId,
+        setSearchId,
     } = useCuradoria();
 
     const [confirmModalOpen, setConfirmModalOpen] = React.useState(false);
@@ -136,6 +142,31 @@ const CuradoriaPage = () => {
                 <div className={styles.header}>
                     <h1 className={styles.title}>Curadoria</h1>
                 </div>
+
+                {/* Filtros e Pesquisa */}
+                <div className={styles.filtersContainer}>
+                    <div className={styles.searchContainer}>
+                        <div className={styles.searchWrapper}>
+                            <input
+                                type="text"
+                                placeholder="Digite o ID da ocorrência..."
+                                value={searchId}
+                                onChange={(e) => setSearchId(e.target.value)}
+                                className={styles.searchInput}
+                            />
+                            {searchId && (
+                                <button
+                                    onClick={() => setSearchId('')}
+                                    className={styles.clearButton}
+                                    title="Limpar pesquisa"
+                                >
+                                    ×
+                                </button>
+                            )}
+                        </div>
+                    </div>
+                </div>
+
                 {error && <div className={styles.errorMessage}>{error}</div>}
                 <CuradoriaTable
                     curadorias={curadorias}

@@ -1,9 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { getOcorrencias, getOcorrenciaById, createOcorrencia, updateOcorrencia } from '@/services/ocorrenciasService';
 import { getEvidencias } from '@/services/evidenciaService';
 import { Ocorrencia } from '@/_components/Ocorrencias/OcorrenciasTable';
 import { OcorrenciaDetalhe } from '@/_components/Ocorrencias/OcorrenciaViewModal';
 import { OcorrenciaPayload, OcorrenciaUpdatePayload } from '@/_components/Ocorrencias/OcorrenciaForm';
+
+type SortField = 'id' | 'data';
+type SortDirection = 'ASC' | 'DESC';
 
 export function useOcorrencias() {
   const [ocorrencias, setOcorrencias] = useState<Ocorrencia[]>([]);
@@ -13,6 +16,9 @@ export function useOcorrencias() {
   const [totalPages, setTotalPages] = useState(1);
   const [totalElements, setTotalElements] = useState(0);
   const [pageSize] = useState(50);
+  const [sortField, setSortField] = useState<SortField>('id');
+  const [sortDirection, setSortDirection] = useState<SortDirection>('DESC');
+  const [searchId, setSearchId] = useState('');
 
   const [viewOpen, setViewOpen] = useState<boolean>(false);
   const [viewData, setViewData] = useState<OcorrenciaDetalhe | null>(null);
@@ -21,15 +27,43 @@ export function useOcorrencias() {
   const [editInitial, setEditInitial] = useState<Partial<OcorrenciaUpdatePayload>>({});
   const [createOpen, setCreateOpen] = useState<boolean>(false);
 
-  const refreshList = async (pageToFetch = page) => {
+  const refreshList = useCallback(async (pageToFetch = page) => {
     setLoading(true);
     setError(null);
     try {
       const data = await getOcorrencias(pageToFetch, pageSize);
-      const ocorrenciasList = Array.isArray(data) ? data : (data.content || []);
+      let ocorrenciasList = Array.isArray(data) ? data : (data.content || []);
       
       console.log('Dados recebidos da API:', data);
       console.log('Lista de ocorrências:', ocorrenciasList);
+      
+      // Aplicar filtro de pesquisa por ID no frontend
+      if (searchId) {
+        ocorrenciasList = ocorrenciasList.filter((ocorrencia: Ocorrencia) => 
+          ocorrencia.id.toString().includes(searchId)
+        );
+      }
+      
+      // Aplicar ordenação no frontend
+      ocorrenciasList.sort((a: Ocorrencia, b: Ocorrencia) => {
+        let aValue, bValue;
+        
+        if (sortField === 'id') {
+          aValue = a.id;
+          bValue = b.id;
+        } else if (sortField === 'data') {
+          aValue = new Date(a.date).getTime();
+          bValue = new Date(b.date).getTime();
+        } else {
+          return 0;
+        }
+        
+        if (sortDirection === 'ASC') {
+          return aValue < bValue ? -1 : aValue > bValue ? 1 : 0;
+        } else {
+          return aValue > bValue ? -1 : aValue < bValue ? 1 : 0;
+        }
+      });
       
       // Buscar evidências para cada ocorrência
       const ocorrenciasComEvidencias = await Promise.all(
@@ -71,12 +105,20 @@ export function useOcorrencias() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [page, pageSize, sortField, sortDirection, searchId]);
 
   useEffect(() => {
     refreshList(page);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page]);
+  }, [page, refreshList]);
+
+  // Reset para primeira página quando mudar filtros
+  useEffect(() => {
+    if (page !== 0) {
+      setPage(0);
+    } else {
+      refreshList(0);
+    }
+  }, [sortField, sortDirection, searchId]);
 
 
 
@@ -147,6 +189,18 @@ export function useOcorrencias() {
     }
   };
 
+  // Função para alterar ordenação
+  const handleSort = (field: SortField) => {
+    if (field === sortField) {
+      // Se já está ordenando pelo mesmo campo, inverte a direção
+      setSortDirection(sortDirection === 'ASC' ? 'DESC' : 'ASC');
+    } else {
+      // Se é um campo novo, começa com DESC
+      setSortField(field);
+      setSortDirection('DESC');
+    }
+  };
+
   return {
     ocorrencias,
     loading,
@@ -179,5 +233,11 @@ export function useOcorrencias() {
     handleEdit,
     submitCreate,
     submitEdit,
+    // Novos recursos de filtro
+    sortField,
+    sortDirection,
+    handleSort,
+    searchId,
+    setSearchId,
   };
 }

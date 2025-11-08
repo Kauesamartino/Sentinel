@@ -63,6 +63,12 @@ const OcorrenciasPage = () => {
     handleEdit,
     submitCreate,
     submitEdit,
+    // Novos recursos de filtro
+    sortField,
+    sortDirection,
+    handleSort,
+    searchId,
+    setSearchId,
   } = useOcorrencias();
 
   // Estado para modal de evidências
@@ -92,6 +98,31 @@ const OcorrenciasPage = () => {
             </Button>
           </div>
         </div>
+
+        {/* Filtros e Pesquisa */}
+        <div className={styles.filtersContainer}>
+          <div className={styles.searchContainer}>
+            <div className={styles.searchWrapper}>
+              <input
+                type="text"
+                placeholder="Digite o ID da ocorrência..."
+                value={searchId}
+                onChange={(e) => setSearchId(e.target.value)}
+                className={styles.searchInput}
+              />
+              {searchId && (
+                <button
+                  onClick={() => setSearchId('')}
+                  className={styles.clearButton}
+                  title="Limpar pesquisa"
+                >
+                  ×
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+
         {error && <div className={styles.errorMessage}>{error}</div>}
         <OcorrenciasTable
           ocorrencias={ocorrencias}
@@ -101,6 +132,9 @@ const OcorrenciasPage = () => {
           onEdit={handleEdit}
           onViewEvidence={handleViewEvidence}
           formatDate={formatDate}
+          sortField={sortField}
+          sortDirection={sortDirection}
+          onSort={handleSort}
         />
         <Pagination
           currentPage={currentPage}

@@ -10,6 +10,9 @@ interface Relatorio {
   dataFim: string;
 }
 
+type SortField = 'id' | 'dataInicio';
+type SortDirection = 'ASC' | 'DESC';
+
 export function useRelatorios() {
   const [relatorios, setRelatorios] = useState<Relatorio[]>([]);
   const [loading, setLoading] = useState(false);
@@ -18,18 +21,30 @@ export function useRelatorios() {
   const [totalPages, setTotalPages] = useState(1);
   const [totalElements, setTotalElements] = useState(0);
   const [pageSize] = useState(50);
+  const [sortField, setSortField] = useState<SortField>('id');
+  const [sortDirection, setSortDirection] = useState<SortDirection>('DESC');
+  const [searchId, setSearchId] = useState('');
 
   const refreshList = useCallback(async (pageToFetch = page) => {
     setLoading(true);
     setError(null);
     try {
+      const sortParam = `${sortField},${sortDirection.toLowerCase()}`;
       const res = await listRelatorios({ 
         page: pageToFetch, 
         size: pageSize, 
-        sort: 'id' 
+        sort: sortParam 
       });
       
-      const content = Array.isArray(res?.content) ? res.content : [];
+      let content = Array.isArray(res?.content) ? res.content : [];
+      
+      // Aplicar filtro de pesquisa por ID no frontend
+      if (searchId) {
+        content = content.filter((relatorio: Relatorio) => 
+          relatorio.id.toString().includes(searchId)
+        );
+      }
+      
       setRelatorios(content);
       
       // Atualizar dados de paginação
@@ -46,11 +61,20 @@ export function useRelatorios() {
     } finally {
       setLoading(false);
     }
-  }, [page, pageSize]);
+  }, [page, pageSize, sortField, sortDirection, searchId]);
 
   useEffect(() => {
     refreshList(page);
   }, [page, refreshList]);
+
+  // Reset para primeira página quando mudar filtros
+  useEffect(() => {
+    if (page !== 0) {
+      setPage(0);
+    } else {
+      refreshList(0);
+    }
+  }, [sortField, sortDirection, searchId]);
 
   // Lógica de navegação prev/next
   const currentPage = page + 1; // Converter de base 0 para base 1 para exibição
@@ -69,6 +93,18 @@ export function useRelatorios() {
     }
   };
 
+  // Função para alterar ordenação
+  const handleSort = (field: SortField) => {
+    if (field === sortField) {
+      // Se já está ordenando pelo mesmo campo, inverte a direção
+      setSortDirection(sortDirection === 'ASC' ? 'DESC' : 'ASC');
+    } else {
+      // Se é um campo novo, começa com DESC
+      setSortField(field);
+      setSortDirection('DESC');
+    }
+  };
+
   return {
     relatorios,
     loading,
@@ -84,5 +120,11 @@ export function useRelatorios() {
     goToPrevious,
     goToNext,
     refreshList,
+    // Novos recursos de filtro
+    sortField,
+    sortDirection,
+    handleSort,
+    searchId,
+    setSearchId,
   };
 }

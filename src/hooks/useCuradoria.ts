@@ -4,6 +4,9 @@ import { useState, useEffect, useCallback } from "react";
 import { getOcorrenciaById } from "@/services/ocorrenciasService";
 import { getEvidencias } from "@/services/evidenciaService";
 
+type SortField = 'id' | 'data';
+type SortDirection = 'ASC' | 'DESC';
+
 export function useCuradoria() {
   type Curadoria = {
     id: number;
@@ -21,6 +24,9 @@ export function useCuradoria() {
   const [totalPages, setTotalPages] = useState(1);
   const [totalElements, setTotalElements] = useState(0);
   const [pageSize] = useState(50);
+  const [sortField, setSortField] = useState<SortField>('id');
+  const [sortDirection, setSortDirection] = useState<SortDirection>('DESC');
+  const [searchId, setSearchId] = useState('');
 
   // Modal de visualização
   const [viewOpen, setViewOpen] = useState(false);
@@ -39,7 +45,35 @@ export function useCuradoria() {
       if (!res.ok) throw new Error("Erro ao buscar curadorias");
       const data = await res.json();
       
-      const curadoriasList = Array.isArray(data) ? data : (data.content || []);
+      let curadoriasList = Array.isArray(data) ? data : (data.content || []);
+      
+      // Aplicar filtro de pesquisa por ID no frontend
+      if (searchId) {
+        curadoriasList = curadoriasList.filter((curadoria: Curadoria) => 
+          curadoria.id.toString().includes(searchId)
+        );
+      }
+      
+      // Aplicar ordenação no frontend
+      curadoriasList.sort((a: Curadoria, b: Curadoria) => {
+        let aValue, bValue;
+        
+        if (sortField === 'id') {
+          aValue = a.id;
+          bValue = b.id;
+        } else if (sortField === 'data') {
+          aValue = new Date(a.data).getTime();
+          bValue = new Date(b.data).getTime();
+        } else {
+          return 0;
+        }
+        
+        if (sortDirection === 'ASC') {
+          return aValue < bValue ? -1 : aValue > bValue ? 1 : 0;
+        } else {
+          return aValue > bValue ? -1 : aValue < bValue ? 1 : 0;
+        }
+      });
       
       // Buscar evidências para cada curadoria
       const curadoriasComEvidencias = await Promise.all(
@@ -71,11 +105,20 @@ export function useCuradoria() {
       setError("Erro ao buscar curadorias");
     }
     setLoading(false);
-  }, [pageSize]);
+  }, [pageSize, sortField, sortDirection, searchId]);
 
   useEffect(() => {
     fetchCuradorias(page);
   }, [page, fetchCuradorias]);
+
+  // Reset para primeira página quando mudar filtros
+  useEffect(() => {
+    if (page !== 0) {
+      setPage(0);
+    } else {
+      fetchCuradorias(0);
+    }
+  }, [sortField, sortDirection, searchId]);
 
   const handleView = async (id: number) => {
     try {
@@ -159,6 +202,18 @@ export function useCuradoria() {
     }
   };
 
+  // Função para alterar ordenação
+  const handleSort = (field: SortField) => {
+    if (field === sortField) {
+      // Se já está ordenando pelo mesmo campo, inverte a direção
+      setSortDirection(sortDirection === 'ASC' ? 'DESC' : 'ASC');
+    } else {
+      // Se é um campo novo, começa com DESC
+      setSortField(field);
+      setSortDirection('DESC');
+    }
+  };
+
   return {
     curadorias,
     loading,
@@ -179,5 +234,11 @@ export function useCuradoria() {
     setViewOpen,
     viewData,
     handleView,
+    // Novos recursos de filtro
+    sortField,
+    sortDirection,
+    handleSort,
+    searchId,
+    setSearchId,
   };
 }
