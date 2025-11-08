@@ -55,7 +55,7 @@ const OcorrenciaViewModal: React.FC<OcorrenciaViewModalProps> = ({ open, onClose
 	};
 
 	return (
-		<Modal open={open} title={`Ocorrência ${viewData?.id}${viewData?.cameraOutDto?.id ? ` - Camera: ${viewData.cameraOutDto.id}` : ''}`} onClose={onClose} width={600}>
+		<Modal open={open} title={`Ocorrência - ${viewData?.id}${viewData?.cameraOutDto?.id ? ` | Camera: ${viewData.cameraOutDto.id}` : ''}`} onClose={onClose} width={600}>
 		{!viewData ? (
 			<div>Carregando...</div>
 		) : (
