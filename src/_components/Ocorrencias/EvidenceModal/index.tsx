@@ -86,7 +86,6 @@ const EvidenceModal: React.FC<EvidenceModalProps> = ({ open, onClose, occurrence
                     <div className={styles.content}>
                         <div className={styles.info}>
                             <p><strong>Total de evidências:</strong> {evidence.count}</p>
-                            <p><strong>Modelo:</strong> {evidence.model}</p>
                         </div>
 
                         {evidence.urls.length > 0 && (
