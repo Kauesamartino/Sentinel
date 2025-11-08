@@ -151,7 +151,7 @@ const EvidenceModal: React.FC<EvidenceModalProps> = ({ open, onClose, occurrence
                     </div>
                 ) : (
                     <div className={styles.noEvidence}>
-                        Nenhuma evidência encontrada para esta ocorrência.
+                        Nenhuma evidência registrada para esta ocorrência.
                     </div>
                 )}
             </div>

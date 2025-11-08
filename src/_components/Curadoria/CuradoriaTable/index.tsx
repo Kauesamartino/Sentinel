@@ -4,6 +4,7 @@ import styles from "./CuradoriaTable.module.scss";
 import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 import tableStyles from "./CuradoriaTable.module.scss";
 import Button from "@/_components/Button";
+import { formatEnumValue } from "@/utils/formatEnumValue";
 
 interface Curadoria {
     id: number;
@@ -74,9 +75,9 @@ const CuradoriaTable: React.FC<CuradoriaTableProps> = ({
                             <tr className={styles.tr} key={index}>
                                 <td className={`${styles.cell} ${styles.idcell}`}>{curadoria.id}</td>
                                 <td className={styles.cell}>{curadoria.titulo}</td>
-                                <td className={styles.cell}>{curadoria.tipoOcorrencia}</td>
+                                <td className={styles.cell}>{formatEnumValue(curadoria.tipoOcorrencia)}</td>
                                 <td className={styles.cell}>{formatDate(curadoria.data)}</td>
-                                <td className={styles.cell}>{curadoria.status}</td>
+                                <td className={styles.cell}>{formatEnumValue(curadoria.status)}</td>
                                 <td className={styles.cell}>
                                     <div className={styles.evidenceActions}>
                                         {/* Botão para abrir modal de evidências */}
