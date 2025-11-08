@@ -16,20 +16,26 @@ export interface LLMJobSubmitResponse {
 export interface LLMJobStatus {
   jobId: string;
   status: string;
-  serviceRawHint: string;
-  ddb: {
+  serviceRawHint?: string;
+  ddb?: {
     occurrenceId: string;
     outputS3Uri: string;
     createdAt: string;
     lastKnownStatus: string;
   };
-  outputs: {
+  outputs?: {
     key: string;
     size: number;
     json: boolean;
     content?: Record<string, unknown>;
   }[];
-  inferredStatus: string;
+  inferredStatus?: string;
+  // Novos campos que vêm diretamente da API
+  occurrenceId?: string;
+  description?: string;
+  dangerous_items_detected?: boolean;
+  seller_detected?: boolean;
+  summary?: string;
 }
 
 export interface LLMAnalysisResult {
@@ -123,8 +129,12 @@ class LLMService {
           const status = await this.checkJobStatus(jobId);
           onStatusUpdate(status);
 
-          // Job concluído com sucesso
-          if (status.inferredStatus === 'SUCCEEDED' || status.status === 'PROCESSED') {
+          // Job concluído com sucesso - verificar se já tem dados de análise
+          if (status.inferredStatus === 'SUCCEEDED' || 
+              status.status === 'PROCESSED' || 
+              status.status === 'COMPLETED' ||
+              (status.description && status.dangerous_items_detected !== undefined)) {
+            console.log('LLMService - Job concluído, parando monitoramento');
             resolve(status);
             return;
           }
@@ -132,6 +142,13 @@ class LLMService {
           // Job falhou
           if (status.inferredStatus === 'FAILED' || status.status === 'FAILED') {
             reject(new Error(`Job falhou: ${status.status}`));
+            return;
+          }
+
+          // Se status é Unknown mas tem dados de análise, considerar concluído
+          if (status.status === 'Unknown' && status.description) {
+            console.log('LLMService - Status Unknown mas com dados, considerando concluído');
+            resolve(status);
             return;
           }
 
@@ -157,33 +174,48 @@ class LLMService {
    */
   extractAnalysisResult(jobStatus: LLMJobStatus): LLMAnalysisResult | null {
     try {
-      // Procurar pelo resultado customizado nos outputs
-      const customOutput = jobStatus.outputs.find(output => 
-        output.json && 
-        output.key.includes('custom_output') && 
-        output.content?.inference_result
-      );
-
-      if (customOutput?.content?.inference_result) {
-        const result = customOutput.content.inference_result as Record<string, unknown>;
-        
-        // Procurar também pelo summary no standard output
-        const standardOutput = jobStatus.outputs.find(output => 
-          output.json && 
-          output.key.includes('standard_output') && 
-          (output.content as Record<string, unknown>)?.video
-        );
-
-        const videoContent = standardOutput?.content as { video?: { summary?: string } };
-
+      // Se os dados já vêm diretamente na resposta (novo formato)
+      if (jobStatus.description || jobStatus.dangerous_items_detected !== undefined) {
+        console.log('LLMService - Extraindo dados do formato novo (direto)');
         return {
-          seller: Boolean(result.Seller) || false,
-          description: String(result.Description || ''),
-          dangerousItems: Boolean(result.Dangerous_Items) || false,
-          summary: videoContent?.video?.summary || ''
+          seller: Boolean(jobStatus.seller_detected) || false,
+          description: String(jobStatus.description || ''),
+          dangerousItems: Boolean(jobStatus.dangerous_items_detected) || false,
+          summary: String(jobStatus.summary || '')
         };
       }
 
+      // Fallback para formato antigo com outputs (se existir)
+      if (jobStatus.outputs && jobStatus.outputs.length > 0) {
+        console.log('LLMService - Tentando extrair do formato antigo (outputs)');
+        const customOutput = jobStatus.outputs.find(output => 
+          output.json && 
+          output.key.includes('custom_output') && 
+          output.content?.inference_result
+        );
+
+        if (customOutput?.content?.inference_result) {
+          const result = customOutput.content.inference_result as Record<string, unknown>;
+          
+          // Procurar também pelo summary no standard output
+          const standardOutput = jobStatus.outputs.find(output => 
+            output.json && 
+            output.key.includes('standard_output') && 
+            (output.content as Record<string, unknown>)?.video
+          );
+
+          const videoContent = standardOutput?.content as { video?: { summary?: string } };
+
+          return {
+            seller: Boolean(result.Seller) || false,
+            description: String(result.Description || ''),
+            dangerousItems: Boolean(result.Dangerous_Items) || false,
+            summary: videoContent?.video?.summary || ''
+          };
+        }
+      }
+
+      console.log('LLMService - Nenhum formato de dados encontrado');
       return null;
     } catch (error) {
       console.error('Erro ao extrair resultado da análise:', error);
