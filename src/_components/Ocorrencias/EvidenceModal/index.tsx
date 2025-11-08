@@ -47,10 +47,22 @@ const EvidenceModal: React.FC<EvidenceModalProps> = ({ open, onClose, occurrence
     };
 
     const getFileType = (key: string) => {
-        if (key.includes('snapshot') || key.endsWith('.jpg') || key.endsWith('.png')) {
+        const lowerKey = key.toLowerCase();
+        if (lowerKey.includes('snapshot') || 
+            lowerKey.endsWith('.jpg') || 
+            lowerKey.endsWith('.jpeg') || 
+            lowerKey.endsWith('.png') || 
+            lowerKey.endsWith('.gif') || 
+            lowerKey.endsWith('.bmp') || 
+            lowerKey.endsWith('.webp')) {
             return 'image';
         }
-        if (key.includes('clip') || key.endsWith('.mp4') || key.endsWith('.mov')) {
+        if (lowerKey.includes('clip') || 
+            lowerKey.endsWith('.mp4') || 
+            lowerKey.endsWith('.mov') || 
+            lowerKey.endsWith('.avi') || 
+            lowerKey.endsWith('.webm') || 
+            lowerKey.endsWith('.mkv')) {
             return 'video';
         }
         return 'unknown';
